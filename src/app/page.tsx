@@ -32,7 +32,7 @@ export default function Home() {
           {bestsellers.map(product => (
             <Card key={product.id} className="overflow-hidden shadow-lg hover:shadow-xl transition-shadow duration-300">
               <CardHeader className="p-0">
-                <Image src={product.image} alt={product.name} width={600} height={400} className="w-full h-48 object-cover" data-ai-hint={product.id === 1 ? 'cheeseburger' : `${product.name.split(' ')[0]} ${product.category.slice(0, -1)}`} />
+                <Image src={product.image} alt={product.name} width={600} height={400} className="w-full h-48 object-cover" data-ai-hint={product.id === 6 ? 'spicy burger' : product.id === 1 ? 'cheeseburger' : `${product.name.split(' ')[0]} ${product.category.slice(0, -1)}`} />
               </CardHeader>
               <CardContent className="p-4">
                 <CardTitle className="font-headline text-xl mb-2">{product.name}</CardTitle>

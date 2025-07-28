@@ -26,7 +26,7 @@ export function ProductCard({ product }: ProductCardProps) {
               width={400} 
               height={250} 
               className="w-full h-48 object-cover group-hover:scale-105 transition-transform duration-300" 
-              data-ai-hint={product.id === 1 ? 'cheeseburger' : `${product.name.split(' ')[0].toLowerCase()} ${product.category.slice(0, -1).toLowerCase()}`} 
+              data-ai-hint={product.id === 6 ? 'spicy burger' : product.id === 1 ? 'cheeseburger' : `${product.name.split(' ')[0].toLowerCase()} ${product.category.slice(0, -1).toLowerCase()}`} 
             />
         </Link>
         <div className="absolute top-2 right-2 bg-background/80 backdrop-blur-sm rounded-full px-3 py-1 text-sm font-bold flex items-center gap-1">

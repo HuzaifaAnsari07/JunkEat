@@ -45,7 +45,7 @@ export default function ProductDetailPage({ params }: { params: { id: string } }
                             layout="fill"
                             objectFit="cover"
                             className="transition-transform duration-300 hover:scale-105"
-                            data-ai-hint={product.id === 1 ? 'cheeseburger' : `${product.name.split(' ')[0].toLowerCase()} ${product.category.slice(0, -1).toLowerCase()}`} 
+                            data-ai-hint={product.id === 6 ? 'spicy burger' : product.id === 1 ? 'cheeseburger' : `${product.name.split(' ')[0].toLowerCase()} ${product.category.slice(0, -1).toLowerCase()}`} 
                         />
                     </div>
                     <div className="flex flex-col justify-center space-y-4">
