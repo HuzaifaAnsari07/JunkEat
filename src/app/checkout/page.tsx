@@ -43,7 +43,7 @@ export default function CheckoutPage() {
 
   useEffect(() => {
     if (cartItems.length === 0) {
-      router.push('/');
+      router.push('/dashboard');
     }
   }, [cartItems, router]);
 
@@ -76,7 +76,7 @@ export default function CheckoutPage() {
   if (cartItems.length === 0) {
     return (
         <div className="container mx-auto flex items-center justify-center min-h-[60vh]">
-            <p>Redirecting to homepage...</p>
+            <p>Redirecting to dashboard...</p>
         </div>
     );
   }
@@ -84,7 +84,7 @@ export default function CheckoutPage() {
   return (
     <div className="container mx-auto px-4 py-8 animate-in fade-in duration-500">
         <Button variant="outline" asChild className="mb-4">
-            <Link href="/">
+            <Link href="/dashboard">
                 <ArrowLeft className="mr-2 h-4 w-4" /> Back to Menu
             </Link>
         </Button>

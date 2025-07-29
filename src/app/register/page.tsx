@@ -20,7 +20,7 @@ export default function RegisterPage() {
     e.preventDefault();
     // Mock registration logic
     console.log('Registering with:', { name, email, password });
-    router.push('/');
+    router.push('/dashboard');
   };
 
   return (
@@ -76,7 +76,7 @@ export default function RegisterPage() {
         <CardFooter className="text-center text-sm">
             <p className="w-full">
                 Already have an account?{' '}
-                <Link href="/login" className="font-semibold text-primary hover:underline">
+                <Link href="/" className="font-semibold text-primary hover:underline">
                     Log in
                 </Link>
             </p>

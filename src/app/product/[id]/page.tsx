@@ -31,7 +31,7 @@ export default function ProductDetailPage({ params }: { params: { id: string } }
   return (
     <div className="container mx-auto px-4 py-8">
         <Button variant="outline" asChild className="mb-6">
-            <Link href="/#menu">
+            <Link href="/dashboard#menu">
                 <ArrowLeft className="mr-2 h-4 w-4" /> Back to Menu
             </Link>
         </Button>

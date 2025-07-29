@@ -55,9 +55,9 @@ function OrderConfirmationContent() {
                 </CardContent>
                 <CardFooter>
                      <Button asChild size="lg" className="w-full font-bold">
-                         <Link href="/">
+                         <Link href="/dashboard">
                              <Home className="mr-2 h-5 w-5" />
-                             Back to Home
+                             Back to Dashboard
                          </Link>
                      </Button>
                 </CardFooter>

@@ -1,6 +1,17 @@
+
+"use client";
+
 import { UtensilsCrossed } from 'lucide-react';
+import { usePathname } from 'next/navigation';
+
 
 export function Footer() {
+  const pathname = usePathname();
+
+  if (pathname === '/' || pathname === '/register') {
+    return null;
+  }
+
   return (
     <footer className="border-t mt-16">
       <div className="container flex flex-col items-center justify-center gap-4 py-10 md:h-24 md:flex-row md:py-0">
