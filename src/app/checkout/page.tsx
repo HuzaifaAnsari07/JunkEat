@@ -17,6 +17,7 @@ import { Form, FormControl, FormField, FormItem, FormLabel, FormMessage } from '
 import { Separator } from '@/components/ui/separator';
 import { CreditCard, Landmark, Truck, ArrowLeft } from 'lucide-react';
 import { ScrollArea } from '@/components/ui/scroll-area';
+import { Label } from '@/components/ui/label';
 
 const addressSchema = z.object({
   name: z.string().min(2, { message: "Name must be at least 2 characters." }),
@@ -65,7 +66,7 @@ export default function CheckoutPage() {
   }
 
   return (
-    <div className="container mx-auto px-4 py-8">
+    <div className="container mx-auto px-4 py-8 animate-in fade-in duration-500">
         <Button variant="outline" asChild className="mb-4">
             <Link href="/">
                 <ArrowLeft className="mr-2 h-4 w-4" /> Back to Menu
@@ -74,7 +75,7 @@ export default function CheckoutPage() {
         <h1 className="font-headline text-4xl font-bold text-center mb-8">Checkout</h1>
         <div className="grid grid-cols-1 lg:grid-cols-3 gap-8">
             <div className="lg:col-span-2">
-                <Card>
+                <Card className="transition-shadow hover:shadow-lg">
                     <CardHeader>
                         <CardTitle className="font-headline">Shipping Information</CardTitle>
                     </CardHeader>
@@ -120,17 +121,17 @@ export default function CheckoutPage() {
                                         <FormItem>
                                             <FormControl>
                                                 <RadioGroup onValueChange={field.onChange} defaultValue={field.value} className="grid grid-cols-1 md:grid-cols-3 gap-4">
-                                                    <Label htmlFor="card" className="border rounded-lg p-4 flex items-center gap-4 cursor-pointer hover:bg-accent/50 has-[:checked]:bg-accent has-[:checked]:text-accent-foreground has-[:checked]:border-accent-foreground">
+                                                    <Label htmlFor="card" className="border rounded-lg p-4 flex items-center gap-4 cursor-pointer hover:bg-accent/50 has-[:checked]:bg-accent has-[:checked]:text-accent-foreground has-[:checked]:border-accent-foreground transition-all duration-300 transform hover:scale-105">
                                                         <RadioGroupItem value="card" id="card" />
                                                         <CreditCard />
                                                         <span>Credit/Debit Card</span>
                                                     </Label>
-                                                    <Label htmlFor="upi" className="border rounded-lg p-4 flex items-center gap-4 cursor-pointer hover:bg-accent/50 has-[:checked]:bg-accent has-[:checked]:text-accent-foreground has-[:checked]:border-accent-foreground">
+                                                    <Label htmlFor="upi" className="border rounded-lg p-4 flex items-center gap-4 cursor-pointer hover:bg-accent/50 has-[:checked]:bg-accent has-[:checked]:text-accent-foreground has-[:checked]:border-accent-foreground transition-all duration-300 transform hover:scale-105">
                                                         <RadioGroupItem value="upi" id="upi" />
                                                         <Landmark />
                                                         <span>UPI</span>
                                                     </Label>
-                                                    <Label htmlFor="cod" className="border rounded-lg p-4 flex items-center gap-4 cursor-pointer hover:bg-accent/50 has-[:checked]:bg-accent has-[:checked]:text-accent-foreground has-[:checked]:border-accent-foreground">
+                                                    <Label htmlFor="cod" className="border rounded-lg p-4 flex items-center gap-4 cursor-pointer hover:bg-accent/50 has-[:checked]:bg-accent has-[:checked]:text-accent-foreground has-[:checked]:border-accent-foreground transition-all duration-300 transform hover:scale-105">
                                                         <RadioGroupItem value="cod" id="cod" />
                                                         <Truck />
                                                         <span>Cash on Delivery</span>
@@ -141,14 +142,14 @@ export default function CheckoutPage() {
                                         </FormItem>
                                     )} />
                                 </div>
-                                <Button type="submit" size="lg" className="w-full font-bold">Place Order</Button>
+                                <Button type="submit" size="lg" className="w-full font-bold transition-transform transform hover:scale-105">Place Order</Button>
                             </form>
                         </Form>
                     </CardContent>
                 </Card>
             </div>
             <div className="lg:col-span-1">
-                <Card className="sticky top-24">
+                <Card className="sticky top-24 transition-shadow hover:shadow-lg">
                     <CardHeader>
                         <CardTitle className="font-headline">Order Summary</CardTitle>
                     </CardHeader>
@@ -156,7 +157,7 @@ export default function CheckoutPage() {
                         <ScrollArea className="h-[250px] pr-4">
                             <div className="space-y-4">
                                 {cartItems.map(item => (
-                                    <div key={item.id} className="flex items-center justify-between">
+                                    <div key={item.id} className="flex items-center justify-between animate-in fade-in duration-300">
                                         <div className="flex items-center gap-4">
                                             <Image src={item.image} alt={item.name} width={64} height={64} className="rounded-md object-cover" data-ai-hint="cart item" />
                                             <div>
