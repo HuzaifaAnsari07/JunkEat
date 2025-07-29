@@ -7,7 +7,7 @@ export const products: Product[] = [
     description: 'A juicy beef patty with melted cheddar, lettuce, tomato, and our special sauce on a toasted bun.',
     price: 8.99,
     category: 'Burgers',
-    image: 'https://placehold.co/600x400.png',
+    image: '/burger.jpg',
     rating: 4.5,
     bestseller: true,
   },
