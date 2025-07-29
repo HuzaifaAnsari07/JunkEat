@@ -1,3 +1,4 @@
+
 "use client";
 
 import { ShoppingCart, UtensilsCrossed } from 'lucide-react';
@@ -6,6 +7,7 @@ import { Button } from '@/components/ui/button';
 import { Sheet, SheetContent, SheetHeader, SheetTitle, SheetTrigger, SheetDescription } from '@/components/ui/sheet';
 import { Cart } from '@/components/Cart';
 import { useCart } from '@/context/CartProvider';
+import { ThemeToggle } from './ThemeToggle';
 
 export function Header() {
   const { cartCount } = useCart();
@@ -23,6 +25,7 @@ export function Header() {
             <Link href="#offers" className="transition-colors hover:text-primary">Offers</Link>
             <Link href="#ai-assistant" className="transition-colors hover:text-primary">AI Combo</Link>
           </nav>
+          <ThemeToggle />
           <Sheet>
             <SheetTrigger asChild>
               <Button variant="outline" size="icon" className="relative rounded-full">
