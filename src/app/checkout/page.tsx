@@ -3,7 +3,7 @@
 
 import { useCart } from '@/context/CartProvider';
 import { useRouter } from 'next/navigation';
-import { useEffect } from 'react';
+import { useEffect, useState } from 'react';
 import { useForm } from 'react-hook-form';
 import { zodResolver } from '@hookform/resolvers/zod';
 import * as z from 'zod';
@@ -15,21 +15,31 @@ import { RadioGroup, RadioGroupItem } from '@/components/ui/radio-group';
 import { Card, CardContent, CardDescription, CardFooter, CardHeader, CardTitle } from '@/components/ui/card';
 import { Form, FormControl, FormField, FormItem, FormLabel, FormMessage } from '@/components/ui/form';
 import { Separator } from '@/components/ui/separator';
-import { CreditCard, Landmark, Truck, ArrowLeft } from 'lucide-react';
+import { CreditCard, Landmark, Truck, ArrowLeft, Building } from 'lucide-react';
 import { ScrollArea } from '@/components/ui/scroll-area';
 import { Label } from '@/components/ui/label';
 
 const addressSchema = z.object({
-  name: z.string().min(2, { message: "Name must be at least 2 characters." }),
-  address: z.string().min(5, { message: "Address must be at least 5 characters." }),
-  city: z.string().min(2, { message: "City must be at least 2 characters." }),
-  zip: z.string().regex(/^\d{5,6}$/, { message: "Must be a valid zip code." }),
+  name: z.string().min(2, { message: "Name must be at least 2 characters." }).optional(),
+  address: z.string().min(5, { message: "Address must be at least 5 characters." }).optional(),
+  city: z.string().min(2, { message: "City must be at least 2 characters." }).optional(),
+  zip: z.string().regex(/^\d{5,6}$/, { message: "Must be a valid zip code." }).optional(),
   paymentMethod: z.enum(['card', 'upi', 'cod'], { required_error: "You need to select a payment method." }),
+  orderType: z.enum(['delivery', 'dine-in'], { required_error: "Please select an order type." }),
+}).superRefine((data, ctx) => {
+    if (data.orderType === 'delivery') {
+        if (!data.name) ctx.addIssue({ code: z.ZodIssueCode.custom, message: "Name is required for delivery.", path: ['name'] });
+        if (!data.address) ctx.addIssue({ code: z.ZodIssueCode.custom, message: "Address is required for delivery.", path: ['address'] });
+        if (!data.city) ctx.addIssue({ code: z.ZodIssueCode.custom, message: "City is required for delivery.", path: ['city'] });
+        if (!data.zip) ctx.addIssue({ code: z.ZodIssueCode.custom, message: "Zip code is required for delivery.", path: ['zip'] });
+    }
 });
+
 
 export default function CheckoutPage() {
   const { cartItems, cartTotal, clearCart } = useCart();
   const router = useRouter();
+  const [orderType, setOrderType] = useState<'delivery' | 'dine-in'>('delivery');
 
   useEffect(() => {
     if (cartItems.length === 0) {
@@ -45,16 +55,22 @@ export default function CheckoutPage() {
       city: "",
       zip: "",
       paymentMethod: "card",
+      orderType: "delivery",
     },
   });
+  
+  const handleOrderTypeChange = (value: 'delivery' | 'dine-in') => {
+    setOrderType(value);
+    form.setValue('orderType', value);
+  }
 
   const onSubmit = (values: z.infer<typeof addressSchema>) => {
     console.log("Order placed with values:", values);
     clearCart();
-    router.push('/order-confirmation');
+    router.push(`/order-confirmation?type=${values.orderType}`);
   };
 
-  const shippingCost = 5.00;
+  const shippingCost = orderType === 'delivery' ? 5.00 : 0;
   const total = cartTotal + shippingCost;
 
   if (cartItems.length === 0) {
@@ -77,41 +93,60 @@ export default function CheckoutPage() {
             <div className="lg:col-span-2">
                 <Card className="transition-shadow hover:shadow-lg">
                     <CardHeader>
-                        <CardTitle className="font-headline">Shipping Information</CardTitle>
+                        <CardTitle className="font-headline">Your Order Details</CardTitle>
                     </CardHeader>
                     <CardContent>
                         <Form {...form}>
                             <form onSubmit={form.handleSubmit(onSubmit)} className="space-y-8">
-                                <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
-                                    <FormField control={form.control} name="name" render={({ field }) => (
-                                        <FormItem>
-                                            <FormLabel>Full Name</FormLabel>
-                                            <FormControl><Input placeholder="John Doe" {...field} /></FormControl>
-                                            <FormMessage />
-                                        </FormItem>
-                                    )} />
-                                    <FormField control={form.control} name="address" render={({ field }) => (
-                                        <FormItem>
-                                            <FormLabel>Address</FormLabel>
-                                            <FormControl><Input placeholder="123 JunkFood Lane" {...field} /></FormControl>
-                                            <FormMessage />
-                                        </FormItem>
-                                    )} />
-                                    <FormField control={form.control} name="city" render={({ field }) => (
-                                        <FormItem>
-                                            <FormLabel>City</FormLabel>
-                                            <FormControl><Input placeholder="Foodville" {...field} /></FormControl>
-                                            <FormMessage />
-                                        </FormItem>
-                                    )} />
-                                    <FormField control={form.control} name="zip" render={({ field }) => (
-                                        <FormItem>
-                                            <FormLabel>Zip Code</FormLabel>
-                                            <FormControl><Input placeholder="12345" {...field} /></FormControl>
-                                            <FormMessage />
-                                        </FormItem>
-                                    )} />
-                                </div>
+                                <RadioGroup defaultValue="delivery" onValueChange={handleOrderTypeChange} className="grid grid-cols-1 md:grid-cols-2 gap-4">
+                                     <Label htmlFor="delivery" className="border rounded-lg p-4 flex items-center gap-4 cursor-pointer hover:bg-accent/50 has-[:checked]:bg-accent has-[:checked]:text-accent-foreground has-[:checked]:border-accent-foreground transition-all duration-300 transform hover:scale-105">
+                                        <RadioGroupItem value="delivery" id="delivery" />
+                                        <Truck />
+                                        <span>Delivery</span>
+                                    </Label>
+                                    <Label htmlFor="dine-in" className="border rounded-lg p-4 flex items-center gap-4 cursor-pointer hover:bg-accent/50 has-[:checked]:bg-accent has-[:checked]:text-accent-foreground has-[:checked]:border-accent-foreground transition-all duration-300 transform hover:scale-105">
+                                        <RadioGroupItem value="dine-in" id="dine-in" />
+                                        <Building />
+                                        <span>Dine-in</span>
+                                    </Label>
+                                </RadioGroup>
+
+                                {orderType === 'delivery' && (
+                                    <div className="animate-in fade-in duration-500">
+                                        <Separator className="my-6" />
+                                        <h3 className="font-headline text-xl mb-4">Shipping Information</h3>
+                                        <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+                                            <FormField control={form.control} name="name" render={({ field }) => (
+                                                <FormItem>
+                                                    <FormLabel>Full Name</FormLabel>
+                                                    <FormControl><Input placeholder="John Doe" {...field} /></FormControl>
+                                                    <FormMessage />
+                                                </FormItem>
+                                            )} />
+                                            <FormField control={form.control} name="address" render={({ field }) => (
+                                                <FormItem>
+                                                    <FormLabel>Address</FormLabel>
+                                                    <FormControl><Input placeholder="123 JunkFood Lane" {...field} /></FormControl>
+                                                    <FormMessage />
+                                                </FormItem>
+                                            )} />
+                                            <FormField control={form.control} name="city" render={({ field }) => (
+                                                <FormItem>
+                                                    <FormLabel>City</FormLabel>
+                                                    <FormControl><Input placeholder="Foodville" {...field} /></FormControl>
+                                                    <FormMessage />
+                                                </FormItem>
+                                            )} />
+                                            <FormField control={form.control} name="zip" render={({ field }) => (
+                                                <FormItem>
+                                                    <FormLabel>Zip Code</FormLabel>
+                                                    <FormControl><Input placeholder="12345" {...field} /></FormControl>
+                                                    <FormMessage />
+                                                </FormItem>
+                                            )} />
+                                        </div>
+                                    </div>
+                                )}
                                 
                                 <Separator />
 
@@ -177,10 +212,12 @@ export default function CheckoutPage() {
                             <p className="text-muted-foreground">Subtotal</p>
                             <p className="font-semibold">${cartTotal.toFixed(2)}</p>
                         </div>
-                        <div className="flex justify-between">
-                            <p className="text-muted-foreground">Shipping</p>
-                            <p className="font-semibold">${shippingCost.toFixed(2)}</p>
-                        </div>
+                        {orderType === 'delivery' && (
+                             <div className="flex justify-between animate-in fade-in duration-300">
+                                <p className="text-muted-foreground">Shipping</p>
+                                <p className="font-semibold">${shippingCost.toFixed(2)}</p>
+                            </div>
+                        )}
                         <Separator />
                         <div className="flex justify-between text-lg font-bold">
                             <p>Total</p>
