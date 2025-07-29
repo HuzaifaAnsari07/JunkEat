@@ -1,7 +1,7 @@
 
 "use client";
 
-import { ShoppingCart, UtensilsCrossed } from 'lucide-react';
+import { ShoppingCart, UtensilsCrossed, LogIn, UserPlus } from 'lucide-react';
 import Link from 'next/link';
 import { Button } from '@/components/ui/button';
 import { Sheet, SheetContent, SheetHeader, SheetTitle, SheetTrigger, SheetDescription } from '@/components/ui/sheet';
@@ -19,12 +19,26 @@ export function Header() {
           <UtensilsCrossed className="h-8 w-8 text-primary" />
           <span className="font-headline text-2xl font-bold">JunkEats Express</span>
         </Link>
-        <div className="flex items-center gap-4">
-          <nav className="hidden md:flex gap-6 text-sm font-medium">
-            <Link href="#menu" className="transition-colors hover:text-primary">Menu</Link>
-            <Link href="#offers" className="transition-colors hover:text-primary">Offers</Link>
-            <Link href="#ai-assistant" className="transition-colors hover:text-primary">AI Combo</Link>
+        <div className="flex items-center gap-2">
+          <nav className="hidden md:flex gap-4 text-sm font-medium">
+            <Button variant="ghost" asChild>
+                <Link href="/#menu">Menu</Link>
+            </Button>
+            <Button variant="ghost" asChild>
+                <Link href="/#offers">Offers</Link>
+            </Button>
+             <Button variant="ghost" asChild>
+                <Link href="/#ai-assistant">AI Combo</Link>
+             </Button>
           </nav>
+          <div className="hidden md:flex items-center gap-2">
+            <Button asChild>
+                <Link href="/login"><LogIn/>Login</Link>
+            </Button>
+            <Button variant="secondary" asChild>
+                <Link href="/register"><UserPlus/>Register</Link>
+            </Button>
+          </div>
           <ThemeToggle />
           <Sheet>
             <SheetTrigger asChild>
