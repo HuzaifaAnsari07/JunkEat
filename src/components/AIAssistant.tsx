@@ -33,8 +33,9 @@ export default function AIAssistant() {
       };
       const result = await suggestCombo(input);
       setSuggestion(result);
-    } catch (e) {
-      setError('Sorry, our AI chef is busy. Please try again later.');
+    } catch (e: any) {
+      const errorMessage = e instanceof Error ? e.message : String(e);
+      setError(`Sorry, our AI chef is busy. Please try again later. (Error: ${errorMessage})`);
       console.error(e);
     } finally {
       setIsLoading(false);
