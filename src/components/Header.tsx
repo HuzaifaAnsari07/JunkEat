@@ -4,7 +4,7 @@
 import { ShoppingCart, UtensilsCrossed, LogIn, UserPlus } from 'lucide-react';
 import Link from 'next/link';
 import { Button } from '@/components/ui/button';
-import { Sheet, SheetContent, SheetHeader, SheetTitle, SheetDescription } from '@/components/ui/sheet';
+import { Sheet, SheetContent, SheetHeader, SheetTitle, SheetDescription, SheetTrigger } from '@/components/ui/sheet';
 import { Cart } from '@/components/Cart';
 import { useCart } from '@/context/CartProvider';
 import { ThemeToggle } from './ThemeToggle';
