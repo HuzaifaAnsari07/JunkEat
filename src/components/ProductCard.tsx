@@ -19,13 +19,13 @@ export function ProductCard({ product }: ProductCardProps) {
   return (
     <Card className="flex flex-col overflow-hidden shadow-lg hover:shadow-2xl transition-all duration-300 rounded-lg border-2 border-transparent hover:border-accent group">
       <CardHeader className="p-0 relative">
-        <Link href={`/product/${product.id}`}>
+        <Link href={`/product/${product.id}`} className="block h-48 w-full">
             <Image 
               src={product.image} 
               alt={product.name} 
-              width={400} 
-              height={250} 
-              className="w-full h-48 object-cover group-hover:scale-105 transition-transform duration-300" 
+              layout="fill"
+              objectFit="cover"
+              className="group-hover:scale-105 transition-transform duration-300" 
               data-ai-hint={product.id === 6 ? 'spicy burger' : product.id === 1 ? 'cheeseburger' : `${product.name.split(' ')[0].toLowerCase()} ${product.category.slice(0, -1).toLowerCase()}`} 
             />
         </Link>

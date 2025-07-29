@@ -31,8 +31,8 @@ export default function Home() {
         <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
           {bestsellers.map(product => (
             <Card key={product.id} className="overflow-hidden shadow-lg hover:shadow-xl transition-shadow duration-300">
-              <CardHeader className="p-0">
-                <Image src={product.image} alt={product.name} width={600} height={400} className="w-full h-48 object-cover" data-ai-hint={product.id === 6 ? 'spicy burger' : product.id === 1 ? 'cheeseburger' : `${product.name.split(' ')[0]} ${product.category.slice(0, -1)}`} />
+              <CardHeader className="p-0 relative h-48 w-full">
+                <Image src={product.image} alt={product.name} layout="fill" objectFit="cover" data-ai-hint={product.id === 6 ? 'spicy burger' : product.id === 1 ? 'cheeseburger' : `${product.name.split(' ')[0]} ${product.category.slice(0, -1)}`} />
               </CardHeader>
               <CardContent className="p-4">
                 <CardTitle className="font-headline text-xl mb-2">{product.name}</CardTitle>
