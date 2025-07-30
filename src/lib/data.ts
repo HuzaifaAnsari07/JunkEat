@@ -17,7 +17,7 @@ export const products: Product[] = [
     description: 'A crowd-pleaser with rich tomato sauce, mozzarella, and a generous layer of pepperoni.',
     price: 12.99,
     category: 'Pizza',
-    image: 'https://placehold.co/600x400.png',
+    image: '/chichken pepperoni.png',
     rating: 4.8,
     bestseller: true,
   },
