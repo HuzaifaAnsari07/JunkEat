@@ -9,14 +9,14 @@ interface MenuProps {
   allProducts: Product[];
 }
 
-const categories: Product['category'][] = ['Pizza', 'Burgers', 'Fries', 'Beverages', 'Combos'];
+const categories: Product['category'][] = ['Pizza', 'Burgers', 'Fries', 'Beverages', 'Combos', 'Desserts'];
 
 export function Menu({ allProducts }: MenuProps) {
   const [activeTab, setActiveTab] = useState<string>(categories[0]);
 
   return (
     <Tabs defaultValue={activeTab} onValueChange={setActiveTab} className="w-full">
-      <TabsList className="grid w-full grid-cols-2 sm:grid-cols-3 md:grid-cols-5 bg-secondary p-1 h-auto rounded-lg">
+      <TabsList className="grid w-full grid-cols-2 sm:grid-cols-3 md:grid-cols-6 bg-secondary p-1 h-auto rounded-lg">
         {categories.map(category => (
           <TabsTrigger key={category} value={category} className="data-[state=active]:bg-primary data-[state=active]:text-primary-foreground data-[state=active]:shadow-md rounded-md">
             {category}
