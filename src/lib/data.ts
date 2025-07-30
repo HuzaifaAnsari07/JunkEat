@@ -92,7 +92,7 @@ export const products: Product[] = [
     description: 'Simple yet delicious, with fresh basil, mozzarella, and our signature tomato sauce.',
     price: 10.99,
     category: 'Pizza',
-    image: 'https://placehold.co/600x400.png',
+    image: '/Margherita.png',
     rating: 4.1,
   },
   {
