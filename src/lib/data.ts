@@ -173,7 +173,7 @@ export const products: Product[] = [
     description: 'Fun, spring-shaped fries with a seasoned coating for extra flavor.',
     price: 4.49,
     category: 'Fries',
-    image: 'https://placehold.co/600x400.png',,
+    image: 'https://placehold.co/600x400.png',
     rating: 4.5,
   },
   {
