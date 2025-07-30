@@ -18,7 +18,7 @@ export const products: Product[] = [
     description: 'A crowd-pleaser with rich tomato sauce, mozzarella, and a generous layer of pepperoni.',
     price: 12.99,
     category: 'Pizza',
-    image: '/chicken%20pepperoni.png',
+    image: '/ClassicPepperoni.png',
     rating: 4.8,
     bestseller: true,
   },
