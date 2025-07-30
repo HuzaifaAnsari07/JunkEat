@@ -46,7 +46,7 @@ export const products: Product[] = [
     description: 'Loaded with fresh bell peppers, onions, olives, and mushrooms on our classic tomato base.',
     price: 14.99,
     category: 'Pizza',
-    image: 'https://placehold.co/600x400.png',
+    image: '/Veggies.png',
     rating: 4.4,
   },
   {
