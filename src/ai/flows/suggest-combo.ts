@@ -1,3 +1,4 @@
+
 'use server';
 
 /**
@@ -10,6 +11,7 @@
 
 import {ai} from '@/ai/genkit';
 import {z} from 'genkit';
+import { products } from '@/lib/data';
 
 const SuggestComboInputSchema = z.object({
   userOrderHistory: z.array(
@@ -42,7 +44,12 @@ const prompt = ai.definePrompt({
   name: 'suggestComboPrompt',
   input: {schema: SuggestComboInputSchema},
   output: {schema: SuggestComboOutputSchema},
-  prompt: `You are a personalized junk food combo suggestion expert. You will use the user's order history and preferences to create a combo suggestion.
+  prompt: `You are a personalized junk food combo suggestion expert. You will use the user's order history and preferences to create a combo suggestion from the available menu items.
+
+Available Menu Items:
+{{#each products}}
+- {{this.name}} ({{this.category}})
+{{/each}}
 
 User Order History:
 {{#each userOrderHistory}}
@@ -51,7 +58,7 @@ User Order History:
 
 User Preferences: {{preferences}}
 
-Based on the user's order history and preferences, suggest a personalized junk food combo. Provide a detailed reasoning behind the suggestion. The combo should have items from different categories. Return the combo suggestion in JSON format. The combo suggestion should be an array of objects with itemName, category and description (optional) fields. Make sure that your response follows the schema description. Ensure that the description is enticing.
+Based on the user's order history, preferences, and the available menu items, suggest a personalized junk food combo. Provide a detailed reasoning behind the suggestion. The combo should have items from different categories. Return the combo suggestion in JSON format. The combo suggestion should be an array of objects with itemName, category and description (optional) fields. Make sure that your response follows the schema description and only contains items from the menu. Ensure that the description is enticing.
 `,
 });
 
@@ -62,7 +69,7 @@ const suggestComboFlow = ai.defineFlow(
     outputSchema: SuggestComboOutputSchema,
   },
   async input => {
-    const {output} = await prompt(input);
+    const {output} = await prompt({...input, products});
     return output!;
   }
 );
