@@ -460,7 +460,7 @@ export const products: Product[] = [
     description: 'A decadent chocolate cake with a gooey, molten chocolate center, served warm.',
     price: 6.99,
     category: 'Desserts',
-    image: '/cake.png',
+    image: '/Cake.jpg',
     rating: 4.9,
     bestseller: true,
   },
