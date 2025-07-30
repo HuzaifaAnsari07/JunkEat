@@ -92,7 +92,7 @@ export const products: Product[] = [
     description: 'Simple yet delicious, with fresh basil, mozzarella, and our signature tomato sauce.',
     price: 10.99,
     category: 'Pizza',
-    image: '/Margherita.png',
+    image: '/Margehrita.jpg',
     rating: 4.1,
   },
   {
