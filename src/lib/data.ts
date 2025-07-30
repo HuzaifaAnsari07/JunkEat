@@ -1,3 +1,4 @@
+
 import type { Product } from '@/types';
 
 export const products: Product[] = [
@@ -17,7 +18,7 @@ export const products: Product[] = [
     description: 'A crowd-pleaser with rich tomato sauce, mozzarella, and a generous layer of pepperoni.',
     price: 12.99,
     category: 'Pizza',
-    image: '/chichken pepperoni.png',
+    image: '/chichken%20pepperoni.png',
     rating: 4.8,
     bestseller: true,
   },
