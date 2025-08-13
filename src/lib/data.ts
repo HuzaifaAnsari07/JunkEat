@@ -155,7 +155,7 @@ export const products: Product[] = [
     description: 'Tangy BBQ sauce, grilled chicken, red onions, and cilantro.',
     price: 15.49,
     category: 'Pizza',
-    image: '/BBQ%20pizza.png',
+    image: '/BBQ%20pizza.jpg',
     rating: 4.7,
   },
   {
@@ -263,7 +263,7 @@ export const products: Product[] = [
     description: 'A cheese lover\'s dream: mozzarella, cheddar, provolone, and parmesan.',
     price: 14.99,
     category: 'Pizza',
-    image: '/Four%20Cheese%20Pizza.png',
+    image: '/Four%20Cheese%20Pizza.jpg',
     rating: 4.9,
   },
   {
@@ -272,7 +272,7 @@ export const products: Product[] = [
     description: 'Spicy buffalo sauce, tender chicken, and a drizzle of ranch dressing.',
     price: 15.99,
     category: 'Pizza',
-    image: '/Buffalo%20Chicken%20Pizza.png',
+    image: '/Buffalo%20Chicken%20Pizza.jpg',
     rating: 4.6,
   },
   {
