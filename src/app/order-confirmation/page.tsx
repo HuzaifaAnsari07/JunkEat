@@ -39,7 +39,7 @@ function OrderConfirmationContent() {
         }
     }, [router]);
 
-    const formatCurrency = (amount: number) => `$${amount.toFixed(2)}`;
+    const formatCurrency = (amount: number) => `₹${amount.toFixed(2)}`;
 
     if (!order) {
         return (
@@ -127,7 +127,7 @@ function OrderConfirmationContent() {
                                 <p className="font-medium">{formatCurrency(order.subtotal)}</p>
                             </div>
                             <div className="flex justify-between">
-                                <p className="text-muted-foreground">Tax (8%)</p>
+                                <p className="text-muted-foreground">Tax (5%)</p>
                                 <p className="font-medium">{formatCurrency(order.tax)}</p>
                             </div>
                            {order.orderType === 'delivery' && (
@@ -181,3 +181,5 @@ export default function OrderConfirmationPage() {
         </Suspense>
     );
 }
+
+    

@@ -11,7 +11,7 @@ import Link from 'next/link';
 
 export function Cart() {
   const { cartItems, removeFromCart, updateQuantity, cartTotal, clearCart } = useCart();
-  const formatCurrency = (amount: number) => `$${amount.toFixed(2)}`;
+  const formatCurrency = (amount: number) => `₹${amount.toFixed(2)}`;
 
   if (cartItems.length === 0) {
     return (
@@ -76,11 +76,11 @@ export function Cart() {
                 </Button>
             </SheetClose>
         </div>
-        <p className="mt-4 text-center text-sm text-muted-foreground">
-          Shipping and taxes calculated at checkout.
-        </p>
-        <div className="mt-2 flex justify-center text-center text-sm text-muted-foreground">
-            <Button variant="link" onClick={clearCart} className="text-primary p-0 h-auto">
+        <div className="mt-4 flex justify-center text-center text-sm text-muted-foreground">
+            <p className="text-sm text-muted-foreground">
+              Shipping and taxes calculated at checkout.
+            </p>
+            <Button variant="link" onClick={clearCart} className="text-primary p-0 h-auto ml-2">
               Clear Cart
             </Button>
         </div>
@@ -88,3 +88,5 @@ export function Cart() {
     </div>
   );
 }
+
+    
