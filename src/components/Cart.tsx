@@ -67,7 +67,6 @@ export function Cart() {
           <p>Subtotal</p>
           <p>{formatCurrency(cartTotal)}</p>
         </div>
-        <p className="mt-0.5 text-sm text-muted-foreground">Shipping and taxes calculated at checkout.</p>
         <div className="mt-6">
             <SheetClose asChild>
                 <Button asChild className="w-full bg-primary text-primary-foreground hover:bg-primary/90 font-bold">
@@ -77,13 +76,13 @@ export function Cart() {
                 </Button>
             </SheetClose>
         </div>
-        <div className="mt-4 flex justify-center text-center text-sm text-muted-foreground">
-          <p>
-            or{' '}
+        <p className="mt-4 text-center text-sm text-muted-foreground">
+          Shipping and taxes calculated at checkout.
+        </p>
+        <div className="mt-2 flex justify-center text-center text-sm text-muted-foreground">
             <Button variant="link" onClick={clearCart} className="text-primary p-0 h-auto">
               Clear Cart
             </Button>
-          </p>
         </div>
       </div>
     </div>
