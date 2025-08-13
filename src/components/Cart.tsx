@@ -11,7 +11,7 @@ import Link from 'next/link';
 
 export function Cart() {
   const { cartItems, removeFromCart, updateQuantity, cartTotal, clearCart } = useCart();
-  const formatCurrency = (amount: number) => `₹${amount.toFixed(2)}`;
+  const formatCurrency = (amount: number) => `$${amount.toFixed(2)}`;
 
   if (cartItems.length === 0) {
     return (

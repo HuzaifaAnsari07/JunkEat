@@ -10,7 +10,7 @@ import Link from 'next/link';
 
 export default function Home() {
   const bestsellers = products.filter(p => p.bestseller);
-  const formatCurrency = (amount: number) => `₹${amount.toFixed(2)}`;
+  const formatCurrency = (amount: number) => `$${amount.toFixed(2)}`;
 
   return (
     <div className="container mx-auto px-4 py-8 space-y-16">
@@ -68,7 +68,7 @@ export default function Home() {
               </div>
               <div>
                 <h3 className="font-headline text-xl font-bold">Burger + Fries Combo</h3>
-                <p className="text-muted-foreground">Only for <span className="font-bold text-primary">{formatCurrency(129.99)}</span></p>
+                <p className="text-muted-foreground">Only for <span className="font-bold text-primary">{formatCurrency(8.99)}</span></p>
               </div>
             </div>
          </div>

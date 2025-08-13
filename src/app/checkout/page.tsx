@@ -64,12 +64,12 @@ export default function CheckoutPage() {
     form.setValue('orderType', value);
   }
 
-  const shippingCost = orderType === 'delivery' ? 25.00 : 0;
-  const taxRate = 0.05; // 5% GST
+  const shippingCost = orderType === 'delivery' ? 5.00 : 0;
+  const taxRate = 0.08; // 8% Tax
   const taxAmount = cartTotal * taxRate;
   const total = cartTotal + shippingCost + taxAmount;
   
-  const formatCurrency = (amount: number) => `₹${amount.toFixed(2)}`;
+  const formatCurrency = (amount: number) => `$${amount.toFixed(2)}`;
 
   const onSubmit = (values: z.infer<typeof addressSchema>) => {
     const orderDetails = {
@@ -237,7 +237,7 @@ export default function CheckoutPage() {
                             </div>
                         )}
                         <div className="flex justify-between">
-                            <p className="text-muted-foreground">GST (5%)</p>
+                            <p className="text-muted-foreground">Tax (8%)</p>
                             <p className="font-semibold">{formatCurrency(taxAmount)}</p>
                         </div>
                         <Separator />

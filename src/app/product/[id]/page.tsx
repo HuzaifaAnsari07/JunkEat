@@ -28,7 +28,7 @@ export default function ProductDetailPage({ params }: { params: { id: string } }
     return stars;
   };
   
-  const formatCurrency = (amount: number) => `₹${amount.toFixed(2)}`;
+  const formatCurrency = (amount: number) => `$${amount.toFixed(2)}`;
 
   return (
     <div className="container mx-auto px-4 py-8">
