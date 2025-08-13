@@ -64,14 +64,30 @@ export default function CheckoutPage() {
     form.setValue('orderType', value);
   }
 
+  const shippingCost = orderType === 'delivery' ? 25.00 : 0;
+  const taxRate = 0.05; // 5% GST
+  const taxAmount = cartTotal * taxRate;
+  const total = cartTotal + shippingCost + taxAmount;
+
   const onSubmit = (values: z.infer<typeof addressSchema>) => {
+    const orderDetails = {
+        items: cartItems,
+        subtotal: cartTotal,
+        shipping: shippingCost,
+        tax: taxAmount,
+        total: total,
+        customerName: values.name || 'Valued Customer',
+        orderType: values.orderType,
+        paymentMethod: values.paymentMethod,
+        address: values.orderType === 'delivery' ? `${values.address}, ${values.city}, ${values.zip}` : 'Dine-in'
+    };
+
+    sessionStorage.setItem('latestOrder', JSON.stringify(orderDetails));
+    
     console.log("Order placed with values:", values);
     clearCart();
-    router.push(`/order-confirmation?type=${values.orderType}`);
+    router.push(`/order-confirmation`);
   };
-
-  const shippingCost = orderType === 'delivery' ? 5.00 : 0;
-  const total = cartTotal + shippingCost;
 
   if (cartItems.length === 0) {
     return (
@@ -200,28 +216,32 @@ export default function CheckoutPage() {
                                                 <p className="text-sm text-muted-foreground">Qty: {item.quantity}</p>
                                             </div>
                                         </div>
-                                        <p className="font-semibold">${(item.price * item.quantity).toFixed(2)}</p>
+                                        <p className="font-semibold">₹{(item.price * item.quantity).toFixed(2)}</p>
                                     </div>
                                 ))}
                             </div>
                         </ScrollArea>
                     </CardContent>
-                    <CardFooter className="flex-col items-stretch space-y-4">
+                    <CardFooter className="flex-col items-stretch space-y-2">
                         <Separator />
                         <div className="flex justify-between">
                             <p className="text-muted-foreground">Subtotal</p>
-                            <p className="font-semibold">${cartTotal.toFixed(2)}</p>
+                            <p className="font-semibold">₹{cartTotal.toFixed(2)}</p>
                         </div>
                         {orderType === 'delivery' && (
                              <div className="flex justify-between animate-in fade-in duration-300">
                                 <p className="text-muted-foreground">Shipping</p>
-                                <p className="font-semibold">${shippingCost.toFixed(2)}</p>
+                                <p className="font-semibold">₹{shippingCost.toFixed(2)}</p>
                             </div>
                         )}
+                        <div className="flex justify-between">
+                            <p className="text-muted-foreground">GST (5%)</p>
+                            <p className="font-semibold">₹{taxAmount.toFixed(2)}</p>
+                        </div>
                         <Separator />
                         <div className="flex justify-between text-lg font-bold">
                             <p>Total</p>
-                            <p>${total.toFixed(2)}</p>
+                            <p>₹{total.toFixed(2)}</p>
                         </div>
                     </CardFooter>
                 </Card>

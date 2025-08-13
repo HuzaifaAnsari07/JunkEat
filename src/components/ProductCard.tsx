@@ -41,7 +41,7 @@ export function ProductCard({ product }: ProductCardProps) {
         <CardDescription className="text-sm h-12">{product.description}</CardDescription>
       </CardContent>
       <CardFooter className="p-4 flex justify-between items-center">
-        <p className="font-headline text-2xl font-bold text-primary">${product.price.toFixed(2)}</p>
+        <p className="font-headline text-2xl font-bold text-primary">₹{product.price.toFixed(2)}</p>
         <Button onClick={() => addToCart(product)} className="bg-primary hover:bg-primary/90 text-primary-foreground transition-transform transform hover:scale-110">
           <PlusCircle className="mr-2 h-5 w-5" /> Add
         </Button>
@@ -49,3 +49,5 @@ export function ProductCard({ product }: ProductCardProps) {
     </Card>
   );
 }
+
+    

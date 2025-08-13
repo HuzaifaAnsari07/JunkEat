@@ -38,7 +38,7 @@ export default function Home() {
                 <CardTitle className="font-headline text-xl mb-2">{product.name}</CardTitle>
                 <p className="text-muted-foreground text-sm mb-4 h-10">{product.description.substring(0, 80)}...</p>
                 <div className="flex justify-between items-center">
-                  <p className="font-bold text-lg text-primary">${product.price.toFixed(2)}</p>
+                  <p className="font-bold text-lg text-primary">₹{product.price.toFixed(2)}</p>
                   <Button asChild className="bg-accent text-accent-foreground hover:bg-accent/90">
                     <Link href={`/product/${product.id}`}>View Item</Link>
                   </Button>
@@ -67,7 +67,7 @@ export default function Home() {
               </div>
               <div>
                 <h3 className="font-headline text-xl font-bold">Burger + Fries Combo</h3>
-                <p className="text-muted-foreground">Only for <span className="font-bold text-primary">$9.99</span></p>
+                <p className="text-muted-foreground">Only for <span className="font-bold text-primary">₹9.99</span></p>
               </div>
             </div>
          </div>
@@ -84,3 +84,5 @@ export default function Home() {
     </div>
   );
 }
+
+    
