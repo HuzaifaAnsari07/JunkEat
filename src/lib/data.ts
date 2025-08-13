@@ -155,7 +155,7 @@ export const products: Product[] = [
     description: 'Tangy BBQ sauce, grilled chicken, red onions, and cilantro.',
     price: 15.49,
     category: 'Pizza',
-    image: 'https://placehold.co/600x400.png',
+    image: '/BBQ Chicken.png',
     rating: 4.7,
   },
   {
@@ -164,7 +164,7 @@ export const products: Product[] = [
     description: 'Packed with pepperoni, sausage, ham, bacon, and beef.',
     price: 16.99,
     category: 'Pizza',
-    image: 'https://placehold.co/600x400.png',
+    image: '/Meat Lover.png',
     rating: 4.8,
   },
   {
@@ -263,7 +263,7 @@ export const products: Product[] = [
     description: 'A cheese lover\'s dream: mozzarella, cheddar, provolone, and parmesan.',
     price: 14.99,
     category: 'Pizza',
-    image: 'https://placehold.co/600x400.png',
+    image: '/Four Cheese.png',
     rating: 4.9,
   },
   {
@@ -272,7 +272,7 @@ export const products: Product[] = [
     description: 'Spicy buffalo sauce, tender chicken, and a drizzle of ranch dressing.',
     price: 15.99,
     category: 'Pizza',
-    image: 'https://placehold.co/600x400.png',
+    image: '/Buffalo Chicken.png',
     rating: 4.6,
   },
   {
@@ -281,7 +281,7 @@ export const products: Product[] = [
     description: 'A vibrant pesto base with sun-dried tomatoes, spinach, and artichoke hearts.',
     price: 15.49,
     category: 'Pizza',
-    image: 'https://placehold.co/600x400.png',
+    image: '/Pesto Veggie.png',
     rating: 4.5,
   },
   {
@@ -290,7 +290,7 @@ export const products: Product[] = [
     description: 'The works! Pepperoni, sausage, peppers, onions, mushrooms, and olives.',
     price: 17.99,
     category: 'Pizza',
-    image: 'https://placehold.co/600x400.png',
+    image: '/Supreme.png',
     rating: 4.8,
   },
   {
