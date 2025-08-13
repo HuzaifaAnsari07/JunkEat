@@ -8,18 +8,39 @@ import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
 import { Label } from '@/components/ui/label';
 import { Card, CardContent, CardDescription, CardHeader, CardTitle, CardFooter } from '@/components/ui/card';
-import { UtensilsCrossed, LogIn } from 'lucide-react';
+import { UtensilsCrossed, LogIn, Phone, User, MapPin } from 'lucide-react';
 
 export default function LoginPage() {
   const router = useRouter();
+  const [name, setName] = useState('');
+  const [contactNumber, setContactNumber] = useState('');
   const [email, setEmail] = useState('');
   const [password, setPassword] = useState('');
+  const [locationEnabled, setLocationEnabled] = useState(false);
 
   const handleLogin = (e: React.FormEvent) => {
     e.preventDefault();
     // Mock login logic
-    console.log('Logging in with:', { email, password });
+    console.log('Logging in with:', { name, contactNumber, email, password, locationEnabled });
     router.push('/dashboard');
+  };
+
+  const handleEnableLocation = () => {
+    if (navigator.geolocation) {
+      navigator.geolocation.getCurrentPosition(
+        (position) => {
+          console.log('Location enabled:', position.coords.latitude, position.coords.longitude);
+          setLocationEnabled(true);
+        },
+        (error) => {
+          console.error('Error enabling location:', error);
+          alert('Could not enable location. Please check your browser settings.');
+          setLocationEnabled(false);
+        }
+      );
+    } else {
+      alert('Geolocation is not supported by this browser.');
+    }
   };
 
   return (
@@ -30,10 +51,32 @@ export default function LoginPage() {
             <UtensilsCrossed className="h-10 w-10 text-primary" />
           </div>
           <CardTitle className="font-headline text-3xl">Welcome to JunkEats!</CardTitle>
-          <CardDescription>Log in to get your junk food fix.</CardDescription>
+          <CardDescription>Log in or sign up to get your junk food fix.</CardDescription>
         </CardHeader>
         <CardContent>
           <form onSubmit={handleLogin} className="space-y-4">
+            <div className="space-y-2">
+              <Label htmlFor="name">Name</Label>
+              <Input
+                id="name"
+                type="text"
+                placeholder="John Doe"
+                value={name}
+                onChange={(e) => setName(e.target.value)}
+                required
+              />
+            </div>
+             <div className="space-y-2">
+              <Label htmlFor="contact">Contact Number</Label>
+              <Input
+                id="contact"
+                type="tel"
+                placeholder="123-456-7890"
+                value={contactNumber}
+                onChange={(e) => setContactNumber(e.target.value)}
+                required
+              />
+            </div>
             <div className="space-y-2">
               <Label htmlFor="email">Email</Label>
               <Input
@@ -56,18 +99,26 @@ export default function LoginPage() {
                 required
               />
             </div>
+
+            <Button
+              type="button"
+              variant={locationEnabled ? "secondary" : "outline"}
+              className="w-full"
+              onClick={handleEnableLocation}
+            >
+              <MapPin className="mr-2 h-5 w-5"/>
+              {locationEnabled ? 'Location Enabled' : 'Enable Live Location'}
+            </Button>
+            
             <Button type="submit" className="w-full font-bold">
                 <LogIn className="mr-2 h-5 w-5"/>
-                Log In
+                Continue
             </Button>
           </form>
         </CardContent>
         <CardFooter className="text-center text-sm">
           <p className="w-full">
-            Don't have an account?{' '}
-            <Link href="/register" className="font-semibold text-primary hover:underline">
-              Sign up
-            </Link>
+            By continuing, you agree to our terms of service.
           </p>
         </CardFooter>
       </Card>
