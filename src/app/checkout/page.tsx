@@ -69,7 +69,7 @@ export default function CheckoutPage() {
   const taxAmount = cartTotal * taxRate;
   const total = cartTotal + shippingCost + taxAmount;
   
-  const formatCurrency = (amount: number) => new Intl.NumberFormat('en-IN', { style: 'currency', currency: 'INR' }).format(amount);
+  const formatCurrency = (amount: number) => `₹${amount.toFixed(2)}`;
 
   const onSubmit = (values: z.infer<typeof addressSchema>) => {
     const orderDetails = {

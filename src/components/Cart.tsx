@@ -11,7 +11,7 @@ import Link from 'next/link';
 
 export function Cart() {
   const { cartItems, removeFromCart, updateQuantity, cartTotal, clearCart } = useCart();
-  const formatCurrency = (amount: number) => new Intl.NumberFormat('en-IN', { style: 'currency', currency: 'INR' }).format(amount);
+  const formatCurrency = (amount: number) => `₹${amount.toFixed(2)}`;
 
   if (cartItems.length === 0) {
     return (

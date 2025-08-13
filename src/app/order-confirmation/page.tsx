@@ -39,7 +39,7 @@ function OrderConfirmationContent() {
         }
     }, [router]);
 
-    const formatCurrency = (amount: number) => new Intl.NumberFormat('en-IN', { style: 'currency', currency: 'INR' }).format(amount);
+    const formatCurrency = (amount: number) => `₹${amount.toFixed(2)}`;
 
     if (!order) {
         return (
