@@ -1,4 +1,3 @@
-
 "use client";
 
 import { useCart } from '@/context/CartProvider';
@@ -71,7 +70,7 @@ export function Cart() {
             <SheetClose asChild>
                 <Button asChild className="w-full bg-primary text-primary-foreground hover:bg-primary/90 font-bold">
                     <Link href="/checkout">
-                        Proceed to Checkout
+                        Place Order
                     </Link>
                 </Button>
             </SheetClose>
