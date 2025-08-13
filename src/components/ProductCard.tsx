@@ -15,6 +15,7 @@ interface ProductCardProps {
 
 export function ProductCard({ product }: ProductCardProps) {
   const { addToCart } = useCart();
+  const formatCurrency = (amount: number) => new Intl.NumberFormat('en-IN', { style: 'currency', currency: 'INR' }).format(amount);
   
   return (
     <Card className="flex flex-col overflow-hidden shadow-lg hover:shadow-2xl transition-all duration-300 rounded-lg border-2 border-transparent hover:border-accent group">
@@ -41,7 +42,7 @@ export function ProductCard({ product }: ProductCardProps) {
         <CardDescription className="text-sm h-12">{product.description}</CardDescription>
       </CardContent>
       <CardFooter className="p-4 flex justify-between items-center">
-        <p className="font-headline text-2xl font-bold text-primary">₹{product.price.toFixed(2)}</p>
+        <p className="font-headline text-2xl font-bold text-primary">{formatCurrency(product.price)}</p>
         <Button onClick={() => addToCart(product)} className="bg-primary hover:bg-primary/90 text-primary-foreground transition-transform transform hover:scale-110">
           <PlusCircle className="mr-2 h-5 w-5" /> Add
         </Button>

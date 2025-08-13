@@ -27,6 +27,8 @@ export default function ProductDetailPage({ params }: { params: { id: string } }
     }
     return stars;
   };
+  
+  const formatCurrency = (amount: number) => new Intl.NumberFormat('en-IN', { style: 'currency', currency: 'INR' }).format(amount);
 
   return (
     <div className="container mx-auto px-4 py-8">
@@ -55,7 +57,7 @@ export default function ProductDetailPage({ params }: { params: { id: string } }
                             {renderStars(product.rating)}
                             <span className="text-muted-foreground">({product.rating} / 5.0)</span>
                         </div>
-                        <p className="font-headline text-4xl font-bold text-primary">₹{product.price.toFixed(2)}</p>
+                        <p className="font-headline text-4xl font-bold text-primary">{formatCurrency(product.price)}</p>
                         <p className="text-lg text-muted-foreground leading-relaxed">
                             {product.description}
                         </p>
@@ -82,5 +84,3 @@ export default function ProductDetailPage({ params }: { params: { id: string } }
     </div>
   );
 }
-
-    

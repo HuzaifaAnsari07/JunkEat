@@ -50,6 +50,8 @@ function OrderConfirmationContent() {
     const handlePrint = () => {
         window.print();
     }
+    
+    const formatCurrency = (amount: number) => new Intl.NumberFormat('en-IN', { style: 'currency', currency: 'INR' }).format(amount);
 
     return (
         <div className="container mx-auto px-4 py-8 bg-muted/30">
@@ -111,7 +113,7 @@ function OrderConfirmationContent() {
                                                 {item.name} <span className="text-muted-foreground">x {item.quantity}</span>
                                             </span>
                                         </div>
-                                        <p>₹{(item.price * item.quantity).toFixed(2)}</p>
+                                        <p>{formatCurrency(item.price * item.quantity)}</p>
                                     </div>
                                 ))}
                             </div>
@@ -122,16 +124,16 @@ function OrderConfirmationContent() {
                         <div className="space-y-2 text-sm">
                             <div className="flex justify-between">
                                 <p className="text-muted-foreground">Subtotal</p>
-                                <p className="font-medium">₹{order.subtotal.toFixed(2)}</p>
+                                <p className="font-medium">{formatCurrency(order.subtotal)}</p>
                             </div>
                             <div className="flex justify-between">
                                 <p className="text-muted-foreground">GST (5%)</p>
-                                <p className="font-medium">₹{order.tax.toFixed(2)}</p>
+                                <p className="font-medium">{formatCurrency(order.tax)}</p>
                             </div>
                            {order.orderType === 'delivery' && (
                                 <div className="flex justify-between">
                                     <p className="text-muted-foreground">Delivery Fee</p>
-                                    <p className="font-medium">₹{order.shipping.toFixed(2)}</p>
+                                    <p className="font-medium">{formatCurrency(order.shipping)}</p>
                                 </div>
                            )}
                            <div className="flex justify-between">
@@ -144,7 +146,7 @@ function OrderConfirmationContent() {
 
                         <div className="flex justify-between items-center font-bold text-xl bg-secondary/50 p-4 rounded-lg">
                             <p>Grand Total</p>
-                            <p>₹{order.total.toFixed(2)}</p>
+                            <p>{formatCurrency(order.total)}</p>
                         </div>
 
                         <p className="text-xs text-center text-muted-foreground pt-4">
@@ -179,5 +181,3 @@ export default function OrderConfirmationPage() {
         </Suspense>
     );
 }
-
-    

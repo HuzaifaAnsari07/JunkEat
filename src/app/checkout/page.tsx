@@ -68,6 +68,8 @@ export default function CheckoutPage() {
   const taxRate = 0.05; // 5% GST
   const taxAmount = cartTotal * taxRate;
   const total = cartTotal + shippingCost + taxAmount;
+  
+  const formatCurrency = (amount: number) => new Intl.NumberFormat('en-IN', { style: 'currency', currency: 'INR' }).format(amount);
 
   const onSubmit = (values: z.infer<typeof addressSchema>) => {
     const orderDetails = {
@@ -216,7 +218,7 @@ export default function CheckoutPage() {
                                                 <p className="text-sm text-muted-foreground">Qty: {item.quantity}</p>
                                             </div>
                                         </div>
-                                        <p className="font-semibold">₹{(item.price * item.quantity).toFixed(2)}</p>
+                                        <p className="font-semibold">{formatCurrency(item.price * item.quantity)}</p>
                                     </div>
                                 ))}
                             </div>
@@ -226,22 +228,22 @@ export default function CheckoutPage() {
                         <Separator />
                         <div className="flex justify-between">
                             <p className="text-muted-foreground">Subtotal</p>
-                            <p className="font-semibold">₹{cartTotal.toFixed(2)}</p>
+                            <p className="font-semibold">{formatCurrency(cartTotal)}</p>
                         </div>
                         {orderType === 'delivery' && (
                              <div className="flex justify-between animate-in fade-in duration-300">
                                 <p className="text-muted-foreground">Shipping</p>
-                                <p className="font-semibold">₹{shippingCost.toFixed(2)}</p>
+                                <p className="font-semibold">{formatCurrency(shippingCost)}</p>
                             </div>
                         )}
                         <div className="flex justify-between">
                             <p className="text-muted-foreground">GST (5%)</p>
-                            <p className="font-semibold">₹{taxAmount.toFixed(2)}</p>
+                            <p className="font-semibold">{formatCurrency(taxAmount)}</p>
                         </div>
                         <Separator />
                         <div className="flex justify-between text-lg font-bold">
                             <p>Total</p>
-                            <p>₹{total.toFixed(2)}</p>
+                            <p>{formatCurrency(total)}</p>
                         </div>
                     </CardFooter>
                 </Card>
@@ -250,5 +252,3 @@ export default function CheckoutPage() {
     </div>
   );
 }
-
-    

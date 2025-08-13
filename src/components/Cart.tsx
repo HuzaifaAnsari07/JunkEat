@@ -11,6 +11,7 @@ import Link from 'next/link';
 
 export function Cart() {
   const { cartItems, removeFromCart, updateQuantity, cartTotal, clearCart } = useCart();
+  const formatCurrency = (amount: number) => new Intl.NumberFormat('en-IN', { style: 'currency', currency: 'INR' }).format(amount);
 
   if (cartItems.length === 0) {
     return (
@@ -36,7 +37,7 @@ export function Cart() {
                   <div>
                     <div className="flex justify-between text-base font-medium text-foreground">
                       <h3 className="font-headline">{item.name}</h3>
-                      <p className="ml-4 font-semibold">₹{(item.price * item.quantity).toFixed(2)}</p>
+                      <p className="ml-4 font-semibold">{formatCurrency(item.price * item.quantity)}</p>
                     </div>
                   </div>
                   <div className="flex flex-1 items-end justify-between text-sm">
@@ -64,7 +65,7 @@ export function Cart() {
       <div className="border-t px-4 py-6 sm:px-6">
         <div className="flex justify-between text-lg font-medium text-foreground">
           <p>Subtotal</p>
-          <p>₹{cartTotal.toFixed(2)}</p>
+          <p>{formatCurrency(cartTotal)}</p>
         </div>
         <p className="mt-0.5 text-sm text-muted-foreground">Shipping and taxes calculated at checkout.</p>
         <div className="mt-6">
@@ -88,5 +89,3 @@ export function Cart() {
     </div>
   );
 }
-
-    

@@ -10,6 +10,7 @@ import Link from 'next/link';
 
 export default function Home() {
   const bestsellers = products.filter(p => p.bestseller);
+  const formatCurrency = (amount: number) => new Intl.NumberFormat('en-IN', { style: 'currency', currency: 'INR' }).format(amount);
 
   return (
     <div className="container mx-auto px-4 py-8 space-y-16">
@@ -38,7 +39,7 @@ export default function Home() {
                 <CardTitle className="font-headline text-xl mb-2">{product.name}</CardTitle>
                 <p className="text-muted-foreground text-sm mb-4 h-10">{product.description.substring(0, 80)}...</p>
                 <div className="flex justify-between items-center">
-                  <p className="font-bold text-lg text-primary">₹{product.price.toFixed(2)}</p>
+                  <p className="font-bold text-lg text-primary">{formatCurrency(product.price)}</p>
                   <Button asChild className="bg-accent text-accent-foreground hover:bg-accent/90">
                     <Link href={`/product/${product.id}`}>View Item</Link>
                   </Button>
@@ -67,7 +68,7 @@ export default function Home() {
               </div>
               <div>
                 <h3 className="font-headline text-xl font-bold">Burger + Fries Combo</h3>
-                <p className="text-muted-foreground">Only for <span className="font-bold text-primary">₹12.99</span></p>
+                <p className="text-muted-foreground">Only for <span className="font-bold text-primary">{formatCurrency(12.99)}</span></p>
               </div>
             </div>
          </div>
