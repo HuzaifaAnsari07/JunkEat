@@ -8,6 +8,7 @@ import { Minus, Plus, Trash2, ShoppingBag } from 'lucide-react';
 import { ScrollArea } from './ui/scroll-area';
 import { SheetClose } from './ui/sheet';
 import Link from 'next/link';
+import { Separator } from './ui/separator';
 
 export function Cart() {
   const { cartItems, removeFromCart, updateQuantity, cartTotal, clearCart } = useCart();
@@ -62,25 +63,23 @@ export function Cart() {
           </ul>
         </div>
       </ScrollArea>
-      <div className="border-t px-4 py-6 sm:px-6">
-        <div className="flex justify-between text-lg font-medium text-foreground">
+      <div className="border-t px-4 py-6 sm:px-6 space-y-4">
+        <div className="flex justify-between text-lg font-bold text-foreground">
           <p>Subtotal</p>
           <p>{formatCurrency(cartTotal)}</p>
         </div>
-        <div className="mt-6">
-            <SheetClose asChild>
-                <Button asChild className="w-full bg-primary text-primary-foreground hover:bg-primary/90 font-bold">
-                    <Link href="/checkout">
-                        Place Order
-                    </Link>
-                </Button>
-            </SheetClose>
-        </div>
-        <div className="mt-4 flex justify-center text-center text-sm text-muted-foreground">
-            <p className="text-sm text-muted-foreground">
-              Shipping and taxes calculated at checkout.
-            </p>
-            <Button variant="link" onClick={clearCart} className="text-primary p-0 h-auto ml-2">
+        <p className="text-sm text-muted-foreground text-center">
+            Shipping and taxes will be calculated at checkout.
+        </p>
+        <SheetClose asChild>
+            <Button asChild className="w-full bg-primary text-primary-foreground hover:bg-primary/90 font-bold text-lg py-6">
+                <Link href="/checkout">
+                    Place Order
+                </Link>
+            </Button>
+        </SheetClose>
+        <div className="flex justify-center">
+            <Button variant="link" onClick={clearCart} className="text-destructive p-0 h-auto">
               Clear Cart
             </Button>
         </div>
@@ -88,5 +87,3 @@ export function Cart() {
     </div>
   );
 }
-
-    
