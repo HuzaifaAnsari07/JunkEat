@@ -39,6 +39,8 @@ function OrderConfirmationContent() {
         }
     }, [router]);
 
+    const formatCurrency = (amount: number) => new Intl.NumberFormat('en-IN', { style: 'currency', currency: 'INR' }).format(amount);
+
     if (!order) {
         return (
             <div className="container mx-auto flex items-center justify-center min-h-[70vh]">
@@ -51,8 +53,6 @@ function OrderConfirmationContent() {
         window.print();
     }
     
-    const formatCurrency = (amount: number) => new Intl.NumberFormat('en-IN', { style: 'currency', currency: 'INR' }).format(amount);
-
     return (
         <div className="container mx-auto px-4 py-8 bg-muted/30">
             <style jsx global>{`
