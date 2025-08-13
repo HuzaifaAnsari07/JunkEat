@@ -33,8 +33,8 @@ export default function LoginPage() {
           setLocationEnabled(true);
         },
         (error) => {
-          console.error('Error enabling location:', error);
-          alert('Could not enable location. Please check your browser settings.');
+          console.error('Error enabling location:', error.message);
+          alert('Could not enable location. Please check your browser settings and grant permission.');
           setLocationEnabled(false);
         }
       );
