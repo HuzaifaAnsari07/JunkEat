@@ -67,7 +67,7 @@ export default function Home() {
               </div>
               <div>
                 <h3 className="font-headline text-xl font-bold">Burger + Fries Combo</h3>
-                <p className="text-muted-foreground">Only for <span className="font-bold text-primary">₹9.99</span></p>
+                <p className="text-muted-foreground">Only for <span className="font-bold text-primary">₹12.99</span></p>
               </div>
             </div>
          </div>
