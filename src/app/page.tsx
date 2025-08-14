@@ -20,6 +20,10 @@ export default function LoginPage() {
 
   const handleLogin = (e: React.FormEvent) => {
     e.preventDefault();
+    if (!locationEnabled) {
+      alert('Please enable your location to continue.');
+      return;
+    }
     // Mock login logic
     console.log('Logging in with:', { name, contactNumber, email, password, locationEnabled });
     router.push('/dashboard');
@@ -110,7 +114,7 @@ export default function LoginPage() {
               {locationEnabled ? 'Location Enabled' : 'Enable Live Location'}
             </Button>
             
-            <Button type="submit" className="w-full font-bold">
+            <Button type="submit" className="w-full font-bold" disabled={!locationEnabled}>
                 <LogIn className="mr-2 h-5 w-5"/>
                 Continue
             </Button>
