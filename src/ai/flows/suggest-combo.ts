@@ -42,7 +42,7 @@ export async function suggestCombo(input: SuggestComboInput): Promise<SuggestCom
 
 const prompt = ai.definePrompt({
   name: 'suggestComboPrompt',
-  input: {schema: SuggestComboInputSchema.extend({ creativitySeed: z.number() })},
+  input: {schema: SuggestComboInputSchema.extend({ products: z.any(), creativitySeed: z.number() })},
   output: {schema: SuggestComboOutputSchema},
   prompt: `You are a personalized junk food combo suggestion expert. You will use the user's order history and preferences to create a combo suggestion from the available menu items.
 
