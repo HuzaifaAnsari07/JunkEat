@@ -1,4 +1,3 @@
-
 "use client";
 
 import { useCart } from '@/context/CartProvider';
@@ -8,7 +7,6 @@ import { Minus, Plus, Trash2, ShoppingBag } from 'lucide-react';
 import { ScrollArea } from './ui/scroll-area';
 import { SheetClose } from './ui/sheet';
 import Link from 'next/link';
-import { Separator } from './ui/separator';
 
 export function Cart() {
   const { cartItems, removeFromCart, updateQuantity, cartTotal, clearCart } = useCart();
@@ -66,7 +64,7 @@ export function Cart() {
             </ul>
         </ScrollArea>
       </div>
-      <div className="border-t px-4 py-6 sm:px-6">
+      <div className="border-t px-4 py-6 sm:px-6 space-y-4">
         <div className="space-y-2">
             <div className="flex justify-between text-lg font-bold text-foreground">
               <p>Subtotal</p>
@@ -77,7 +75,7 @@ export function Cart() {
             </p>
         </div>
         
-        <div className="mt-6 space-y-4">
+        <div className="space-y-4">
           <SheetClose asChild>
             <Button asChild size="lg" className="w-full font-bold">
               <Link href="/checkout">
