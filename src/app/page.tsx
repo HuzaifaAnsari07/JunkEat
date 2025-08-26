@@ -25,6 +25,8 @@ export default function LoginPage() {
       return;
     }
     // Mock login logic
+    const user = { name, contactNumber, email };
+    sessionStorage.setItem('loggedInUser', JSON.stringify(user));
     console.log('Logging in with:', { name, contactNumber, email, password, locationEnabled });
     router.push('/dashboard');
   };

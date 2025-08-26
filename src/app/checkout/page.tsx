@@ -42,10 +42,16 @@ export default function CheckoutPage() {
   const router = useRouter();
   const [orderType, setOrderType] = useState<'delivery' | 'dine-in'>('delivery');
   const { toast } = useToast();
+  const [userName, setUserName] = useState('');
 
   useEffect(() => {
     if (cartItems.length === 0) {
       router.push('/dashboard');
+    }
+    const storedUser = sessionStorage.getItem('loggedInUser');
+    if (storedUser) {
+        const user = JSON.parse(storedUser);
+        setUserName(user.name);
     }
   }, [cartItems, router]);
 
@@ -61,6 +67,12 @@ export default function CheckoutPage() {
     },
   });
   
+  useEffect(() => {
+    if (userName) {
+      form.setValue('name', userName);
+    }
+  }, [userName, form]);
+
   const handleOrderTypeChange = (value: 'delivery' | 'dine-in') => {
     setOrderType(value);
     form.setValue('orderType', value);
@@ -71,7 +83,7 @@ export default function CheckoutPage() {
   const taxAmount = cartTotal * taxRate;
   const total = cartTotal + shippingCost + taxAmount;
   
-  const formatCurrency = (amount: number) => `$${amount.toFixed(2)}`;
+  const formatCurrency = (amount: number) => `₹${amount.toFixed(2)}`;
 
   const onSubmit = (values: z.infer<typeof addressSchema>) => {
     const orderDetails = {
@@ -81,12 +93,13 @@ export default function CheckoutPage() {
         shipping: shippingCost,
         tax: taxAmount,
         total: total,
-        customerName: values.name || 'Valued Customer',
+        customerName: values.name || userName || 'Valued Customer',
         orderType: values.orderType,
         paymentMethod: values.paymentMethod,
         address: values.orderType === 'delivery' ? `${values.address}, ${values.city}, ${values.zip}` : 'Dine-in',
         date: new Date().toISOString(),
         status: 'Order Placed',
+        placementTime: Date.now(), // Save the order placement time
     };
 
     // Save to a mock order history in sessionStorage

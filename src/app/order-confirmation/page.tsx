@@ -12,6 +12,7 @@ import type { CartItem } from '@/types';
 import Image from 'next/image';
 
 interface OrderDetails {
+    id: string;
     items: CartItem[];
     subtotal: number;
     shipping: number;
@@ -31,7 +32,13 @@ function OrderConfirmationContent() {
     useEffect(() => {
         const savedOrder = sessionStorage.getItem('latestOrder');
         if (savedOrder) {
-            setOrder(JSON.parse(savedOrder));
+            const parsedOrder = JSON.parse(savedOrder);
+            const storedUser = sessionStorage.getItem('loggedInUser');
+            if (storedUser) {
+                const user = JSON.parse(storedUser);
+                parsedOrder.customerName = user.name;
+            }
+            setOrder(parsedOrder);
             setDate(new Date().toLocaleString());
         } else {
             // If no order details are found, redirect to dashboard
@@ -80,7 +87,7 @@ function OrderConfirmationContent() {
                         <div className="flex items-center justify-between">
                             <div>
                                 <CardTitle className="font-headline text-3xl">Order Confirmed!</CardTitle>
-                                <CardDescription className="text-primary-foreground/80 mt-1">Here is your bill, ${order.customerName}.</CardDescription>
+                                <CardDescription className="text-primary-foreground/80 mt-1">Here is your bill, {order.customerName}.</CardDescription>
                             </div>
                             <UtensilsCrossed className="h-12 w-12" />
                         </div>

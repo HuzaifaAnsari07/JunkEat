@@ -16,21 +16,41 @@ interface Order {
     total: number;
     status: string;
     items: CartItem[];
+    placementTime?: number;
 }
+
+const ESTIMATED_DELIVERY_TIME_MS = 20 * 1000; // 20 seconds for simulation
 
 export default function ProfilePage() {
     const [orders, setOrders] = useState<Order[]>([]);
-    const [userName, setUserName] = useState('John Doe');
+    const [userName, setUserName] = useState('Valued Customer');
 
     useEffect(() => {
-        // Mock fetching order history from session storage
+        const storedUser = sessionStorage.getItem('loggedInUser');
+        if (storedUser) {
+            const user = JSON.parse(storedUser);
+            setUserName(user.name);
+        }
+
         const storedOrders = sessionStorage.getItem('orderHistory');
         if (storedOrders) {
-            setOrders(JSON.parse(storedOrders));
+            const parsedOrders: Order[] = JSON.parse(storedOrders);
+            const updatedOrders = parsedOrders.map(order => {
+                if (order.status === 'Order Placed' && order.placementTime) {
+                    const elapsedTime = Date.now() - order.placementTime;
+                    if (elapsedTime > ESTIMATED_DELIVERY_TIME_MS) {
+                        return { ...order, status: 'Delivered' };
+                    }
+                }
+                return order;
+            });
+            setOrders(updatedOrders);
+            // Persist the updated statuses back to session storage
+            sessionStorage.setItem('orderHistory', JSON.stringify(updatedOrders));
         }
     }, []);
 
-    const formatCurrency = (amount: number) => `$${amount.toFixed(2)}`;
+    const formatCurrency = (amount: number) => `₹${amount.toFixed(2)}`;
     const formatDate = (dateString: string) => new Date(dateString).toLocaleDateString('en-US', { year: 'numeric', month: 'long', day: 'numeric' });
 
     const totalOrders = orders.length;
