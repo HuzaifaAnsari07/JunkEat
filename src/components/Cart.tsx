@@ -65,15 +65,15 @@ export function Cart() {
             </ul>
         </ScrollArea>
       </div>
-      <div className="border-t px-4 py-8 sm:px-6 space-y-6">
-        <div className="flex justify-between text-xl font-bold text-foreground">
+      <div className="border-t px-4 py-6 sm:px-6 space-y-4">
+        <div className="flex justify-between text-lg font-bold text-foreground">
           <p>Subtotal</p>
           <p>{formatCurrency(cartTotal)}</p>
         </div>
-        <p className="mt-1 text-sm text-muted-foreground">
+        <p className="text-sm text-muted-foreground">
           Shipping and taxes calculated at checkout.
         </p>
-        <div className="space-y-4">
+        <div className="mt-6 space-y-3">
           <SheetClose asChild>
             <Button asChild size="lg" className="w-full font-bold">
               <Link href="/checkout">
@@ -81,16 +81,16 @@ export function Cart() {
               </Link>
             </Button>
           </SheetClose>
-        </div>
-        <div className="flex justify-between text-center text-sm">
-          <SheetClose asChild>
-            <Button variant="link" className="text-muted-foreground p-0 h-auto">
-              Continue Shopping
+           <div className="flex justify-between text-center text-sm">
+            <SheetClose asChild>
+              <Button variant="link" className="text-muted-foreground p-0 h-auto">
+                Continue Shopping
+              </Button>
+            </SheetClose>
+            <Button variant="link" onClick={() => clearCart()} className="text-destructive p-0 h-auto">
+              Empty Cart
             </Button>
-          </SheetClose>
-          <Button variant="link" onClick={() => clearCart()} className="text-destructive p-0 h-auto">
-            Empty Cart
-          </Button>
+          </div>
         </div>
       </div>
     </div>
