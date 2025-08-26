@@ -1,4 +1,3 @@
-
 "use client";
 
 import { useState, useEffect } from 'react';
@@ -10,10 +9,10 @@ import { Progress } from '@/components/ui/progress';
 
 const TOTAL_DELIVERY_TIME = 20000; // 20 seconds
 const STAGES = [
-    { name: "Order Placed", icon: <CheckCircle className="h-8 w-8 text-green-500" />, description: "We have received your order." },
-    { name: "Preparing", icon: <CookingPot className="h-8 w-8 text-amber-500" />, description: "Your meal is being prepared by our expert chefs." },
-    { name: "Out for Delivery", icon: <Bike className="h-8 w-8 text-blue-500" />, description: "Your order is on its way to you!" },
-    { name: "Delivered", icon: <Home className="h-8 w-8 text-primary" />, description: "Enjoy your delicious meal!" }
+    { name: "Order Placed", icon: <CheckCircle className="h-8 w-8" />, description: "We have received your order." },
+    { name: "Preparing", icon: <CookingPot className="h-8 w-8" />, description: "Your meal is being prepared by our expert chefs." },
+    { name: "Out for Delivery", icon: <Bike className="h-8 w-8" />, description: "Your order is on its way to you!" },
+    { name: "Delivered", icon: <Home className="h-8 w-8" />, description: "Enjoy your delicious meal!" }
 ];
 const TIME_PER_STAGE = TOTAL_DELIVERY_TIME / (STAGES.length -1);
 
@@ -29,10 +28,11 @@ export default function TrackOrderPage() {
             const parsedOrder = JSON.parse(latestOrder);
             setOrderId(parsedOrder.id);
             // Use placement time from the order if available to persist tracking
-            setStartTime(parsedOrder.placementTime || Date.now());
+            const orderPlacementTime = parsedOrder.placementTime || Date.now();
+            setStartTime(orderPlacementTime);
             if (!parsedOrder.placementTime) {
                 // if placementTime is not set, set it for next time.
-                 sessionStorage.setItem('latestOrder', JSON.stringify({...parsedOrder, placementTime: Date.now()}));
+                 sessionStorage.setItem('latestOrder', JSON.stringify({...parsedOrder, placementTime: orderPlacementTime}));
             }
         }
     }, []);
@@ -50,19 +50,23 @@ export default function TrackOrderPage() {
 
             if (elapsedTime >= TOTAL_DELIVERY_TIME) {
                 clearInterval(interval);
+                 // Update the main order in history to 'Delivered'
+                const history = JSON.parse(sessionStorage.getItem('orderHistory') || '[]');
+                const updatedHistory = history.map((o: any) => o.id === orderId ? { ...o, status: 'Delivered' } : o);
+                sessionStorage.setItem('orderHistory', JSON.stringify(updatedHistory));
             }
         }, 1000); // Update every second
 
         return () => clearInterval(interval);
-    }, [startTime]);
+    }, [startTime, orderId]);
 
-    const estimatedTimeRemaining = Math.max(0, Math.ceil((TOTAL_DELIVERY_TIME - (startTime ? Date.now() - startTime : 0)) / 1000 / 60));
+    const estimatedTimeRemaining = Math.max(0, Math.ceil((TOTAL_DELIVERY_TIME - (startTime ? Date.now() - startTime : 0)) / 60000));
 
     return (
         <div className="container mx-auto px-4 py-8">
             <Button variant="outline" asChild className="mb-6">
-                <Link href="/order-confirmation">
-                    <ArrowLeft className="mr-2 h-4 w-4" /> Back to Order
+                <Link href="/profile">
+                    <ArrowLeft className="mr-2 h-4 w-4" /> Back to Profile
                 </Link>
             </Button>
             <Card className="max-w-2xl mx-auto shadow-lg">
@@ -71,12 +75,23 @@ export default function TrackOrderPage() {
                     <CardDescription>Order #{orderId || '...'}</CardDescription>
                 </CardHeader>
                 <CardContent>
+                    <div className="my-8">
+                        <Progress value={progress} className="w-full h-2" />
+                        <div className="flex justify-between mt-2">
+                            {STAGES.map((status, index) => (
+                                <div key={index} className={`text-xs text-center ${index <= currentStatusIndex ? 'text-primary font-bold' : 'text-muted-foreground'}`}>
+                                    {status.name}
+                                </div>
+                            ))}
+                        </div>
+                    </div>
+                    
                     <div className="space-y-8 mt-8">
                         {STAGES.map((status, index) => (
                              <div key={index} className={`flex gap-6 items-start transition-opacity duration-500 ${index > currentStatusIndex ? 'opacity-40' : ''}`}>
-                                <div className={`flex flex-col items-center gap-2 transition-colors duration-500 ${index <= currentStatusIndex ? 'text-primary' : ''}`}>
+                                <div className={`flex flex-col items-center gap-2 transition-colors duration-500 ${index <= currentStatusIndex ? 'text-primary' : 'text-muted-foreground'}`}>
                                     <div className={`p-3 rounded-full transition-colors duration-500 ${index <= currentStatusIndex ? 'bg-primary/10' : 'bg-muted'}`}>
-                                       {status.icon}
+                                       {React.cloneElement(status.icon, {className: `h-8 w-8 ${index <= currentStatusIndex ? 'text-primary' : ''}`})}
                                     </div>
                                     {index < STAGES.length - 1 && (
                                         <div className={`w-0.5 grow transition-colors duration-500 ${index < currentStatusIndex ? 'bg-primary' : 'bg-border'}`} style={{height: '3rem'}}></div>
