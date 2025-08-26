@@ -19,11 +19,6 @@ export function AddToCart({ product }: AddToCartProps) {
 
     const handleAddToCart = () => {
         addToCart(product, quantity);
-        toast({
-          title: "Added to cart!",
-          description: `${quantity} x ${product.name} added to your cart.`,
-          duration: 3000,
-        });
     }
 
     return (

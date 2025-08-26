@@ -63,37 +63,33 @@ export function Cart() {
           </ul>
         </div>
       </ScrollArea>
-      <div className="border-t px-4 py-6 sm:px-6 space-y-4">
+      <div className="border-t px-4 py-6 sm:px-6">
         <div className="flex justify-between text-lg font-bold text-foreground">
           <p>Subtotal</p>
           <p>{formatCurrency(cartTotal)}</p>
         </div>
-        <Separator/>
-        <SheetClose asChild>
-            <Button asChild className="w-full bg-primary text-primary-foreground hover:bg-primary/90 font-bold text-lg py-6">
+        <p className="mt-1 text-sm text-muted-foreground">
+          Shipping and taxes calculated at checkout.
+        </p>
+        <div className="mt-6">
+          <SheetClose asChild>
+            <Button asChild size="lg" className="w-full font-bold">
                 <Link href="/checkout">
                     Place Order
                 </Link>
             </Button>
-        </SheetClose>
-        <div className="mt-6 flex justify-center text-center text-sm text-muted-foreground">
-          <p>
-            or{' '}
-            <SheetClose asChild>
-              <button
-                type="button"
-                className="font-medium text-primary hover:text-primary/80"
-              >
+          </SheetClose>
+        </div>
+        <div className="mt-4 flex flex-col items-center justify-center text-center text-sm text-muted-foreground">
+          <SheetClose asChild>
+              <Button variant="link" className="text-primary p-0 h-auto">
                 Continue Shopping
                 <span aria-hidden="true"> &rarr;</span>
-              </button>
-            </SheetClose>
-          </p>
-        </div>
-         <div className="flex justify-center">
-            <Button variant="link" onClick={clearCart} className="text-destructive p-0 h-auto">
-              Clear Cart
-            </Button>
+              </Button>
+          </SheetClose>
+          <Button variant="link" onClick={clearCart} className="text-destructive p-0 h-auto text-xs mt-2">
+            Clear Cart
+          </Button>
         </div>
       </div>
     </div>

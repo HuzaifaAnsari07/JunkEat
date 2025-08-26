@@ -35,7 +35,7 @@ export const CartProvider = ({ children }: { children: ReactNode }) => {
       title: "Added to cart!",
       description: `${quantity} x ${product.name} added to your cart.`,
       variant: 'default',
-      duration: 3000,
+      duration: 2000,
     });
   };
 
@@ -45,7 +45,7 @@ export const CartProvider = ({ children }: { children: ReactNode }) => {
         title: "Item removed",
         description: "The item has been removed from your cart.",
         variant: 'destructive',
-        duration: 3000,
+        duration: 2000,
       });
   };
 
@@ -68,7 +68,7 @@ export const CartProvider = ({ children }: { children: ReactNode }) => {
             title: "Cart cleared",
             description: "All items have been removed from your cart.",
             variant: 'destructive',
-            duration: 3000,
+            duration: 2000,
         });
     }
   };
