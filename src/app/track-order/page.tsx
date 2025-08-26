@@ -16,7 +16,7 @@ const STAGES = [
     { name: "Out for Delivery", icon: <Bike className="h-8 w-8" />, description: "Your order is on its way to you!" },
     { name: "Delivered", icon: <Home className="h-8 w-8" />, description: "Enjoy your delicious meal!" }
 ];
-const TIME_PER_STAGE = TOTAL_DELIVERY_TIME / (STAGES.length -1);
+const TIME_PER_STAGE = TOTAL_DELIVERY_TIME / (STAGES.length - 1);
 
 export default function TrackOrderPage() {
     const [progress, setProgress] = useState(0);
@@ -29,12 +29,10 @@ export default function TrackOrderPage() {
         if (latestOrder) {
             const parsedOrder = JSON.parse(latestOrder);
             setOrderId(parsedOrder.id);
-            // Use placement time from the order if available to persist tracking
             const orderPlacementTime = parsedOrder.placementTime || Date.now();
             setStartTime(orderPlacementTime);
             if (!parsedOrder.placementTime) {
-                // if placementTime is not set, set it for next time.
-                 sessionStorage.setItem('latestOrder', JSON.stringify({...parsedOrder, placementTime: orderPlacementTime}));
+                sessionStorage.setItem('latestOrder', JSON.stringify({...parsedOrder, placementTime: orderPlacementTime}));
             }
         }
     }, []);
@@ -52,17 +50,16 @@ export default function TrackOrderPage() {
 
             if (elapsedTime >= TOTAL_DELIVERY_TIME) {
                 clearInterval(interval);
-                 // Update the main order in history to 'Delivered'
                 const history = JSON.parse(sessionStorage.getItem('orderHistory') || '[]');
                 const updatedHistory = history.map((o: any) => o.id === orderId ? { ...o, status: 'Delivered' } : o);
                 sessionStorage.setItem('orderHistory', JSON.stringify(updatedHistory));
             }
-        }, 1000); // Update every second
+        }, 1000); 
 
         return () => clearInterval(interval);
     }, [startTime, orderId]);
 
-    const estimatedTimeRemaining = Math.max(0, Math.ceil((TOTAL_DELIVERY_TIME - (startTime ? Date.now() - startTime : 0)) / 60000));
+    const estimatedTimeRemaining = 15;
 
     return (
         <div className="container mx-auto px-4 py-8">
