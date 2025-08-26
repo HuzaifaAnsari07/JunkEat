@@ -6,7 +6,7 @@ import { useRouter } from 'next/navigation';
 import { Button } from "@/components/ui/button";
 import { Card, CardContent, CardDescription, CardFooter, CardHeader, CardTitle } from "@/components/ui/card";
 import { Separator } from "@/components/ui/separator";
-import { Home, UtensilsCrossed, Printer } from "lucide-react";
+import { Home, UtensilsCrossed, Printer, MapPin } from "lucide-react";
 import Link from "next/link";
 import type { CartItem } from '@/types';
 import Image from 'next/image';
@@ -157,11 +157,17 @@ function OrderConfirmationContent() {
 
                     </CardContent>
                 </Card>
-                <div className="mt-6 flex justify-center gap-4 no-print">
+                <div className="mt-6 flex flex-wrap justify-center gap-4 no-print">
                      <Button asChild size="lg" className="font-bold">
                          <Link href="/dashboard">
                              <Home className="mr-2 h-5 w-5" />
                              Back to Dashboard
+                         </Link>
+                     </Button>
+                     <Button asChild size="lg" variant="secondary" className="font-bold bg-accent text-accent-foreground hover:bg-accent/90">
+                         <Link href="/track-order">
+                            <MapPin className="mr-2 h-5 w-5" />
+                            Track Order
                          </Link>
                      </Button>
                      <Button onClick={handlePrint} size="lg" variant="outline">

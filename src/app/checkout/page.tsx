@@ -18,6 +18,7 @@ import { Separator } from '@/components/ui/separator';
 import { CreditCard, Landmark, Truck, ArrowLeft, Building } from 'lucide-react';
 import { ScrollArea } from '@/components/ui/scroll-area';
 import { Label } from '@/components/ui/label';
+import { useToast } from "@/hooks/use-toast";
 
 const addressSchema = z.object({
   name: z.string().min(2, { message: "Name must be at least 2 characters." }).optional(),
@@ -40,6 +41,7 @@ export default function CheckoutPage() {
   const { cartItems, cartTotal, clearCart } = useCart();
   const router = useRouter();
   const [orderType, setOrderType] = useState<'delivery' | 'dine-in'>('delivery');
+  const { toast } = useToast();
 
   useEffect(() => {
     if (cartItems.length === 0) {
@@ -85,6 +87,13 @@ export default function CheckoutPage() {
     };
 
     sessionStorage.setItem('latestOrder', JSON.stringify(orderDetails));
+    
+    toast({
+        title: "Order Placed!",
+        description: "Your order has been successfully placed.",
+        variant: 'default',
+        duration: 3000,
+    });
     
     console.log("Order placed with values:", values);
     clearCart();
