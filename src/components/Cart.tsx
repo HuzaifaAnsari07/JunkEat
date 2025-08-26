@@ -67,7 +67,7 @@ export function Cart() {
         </ScrollArea>
       </div>
       <div className="border-t px-4 py-6 sm:px-6">
-        <div className="space-y-4">
+        <div className="space-y-2">
             <div className="flex justify-between text-lg font-bold text-foreground">
               <p>Subtotal</p>
               <p>{formatCurrency(cartTotal)}</p>
@@ -77,9 +77,7 @@ export function Cart() {
             </p>
         </div>
         
-        <Separator className="my-6" />
-
-        <div className="space-y-4">
+        <div className="mt-6 space-y-4">
           <SheetClose asChild>
             <Button asChild size="lg" className="w-full font-bold">
               <Link href="/checkout">
