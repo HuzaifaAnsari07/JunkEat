@@ -8,6 +8,7 @@ import { useToast } from "@/hooks/use-toast";
 interface CartContextType {
   cartItems: CartItem[];
   addToCart: (product: Product, quantity?: number) => void;
+  addMultipleToCart: (products: Product[]) => void;
   removeFromCart: (productId: number) => void;
   updateQuantity: (productId: number, quantity: number) => void;
   clearCart: (suppressToast?: boolean) => void;
@@ -34,6 +35,27 @@ export const CartProvider = ({ children }: { children: ReactNode }) => {
     toast({
       title: "Added to cart!",
       description: `${quantity} x ${product.name} added to your cart.`,
+      variant: 'default',
+      duration: 2000,
+    });
+  };
+
+  const addMultipleToCart = (products: Product[]) => {
+    setCartItems(prevItems => {
+      const newItems = [...prevItems];
+      products.forEach(product => {
+        const existingItemIndex = newItems.findIndex(item => item.id === product.id);
+        if (existingItemIndex > -1) {
+          newItems[existingItemIndex].quantity += 1;
+        } else {
+          newItems.push({ ...product, quantity: 1 });
+        }
+      });
+      return newItems;
+    });
+    toast({
+      title: "Combo added!",
+      description: "The AI suggested combo has been added to your cart.",
       variant: 'default',
       duration: 2000,
     });
@@ -77,7 +99,7 @@ export const CartProvider = ({ children }: { children: ReactNode }) => {
   const cartTotal = cartItems.reduce((total, item) => total + item.price * item.quantity, 0);
 
   return (
-    <CartContext.Provider value={{ cartItems, addToCart, removeFromCart, updateQuantity, clearCart, cartCount, cartTotal }}>
+    <CartContext.Provider value={{ cartItems, addToCart, addMultipleToCart, removeFromCart, updateQuantity, clearCart, cartCount, cartTotal }}>
       {children}
     </CartContext.Provider>
   );

@@ -4,11 +4,14 @@
 import { useState } from 'react';
 import { Button } from '@/components/ui/button';
 import { Card, CardContent, CardDescription, CardHeader, CardTitle, CardFooter } from '@/components/ui/card';
-import { Wand2, Pizza, Ham, UtensilsCrossed, GlassWater, Flame, Eye } from 'lucide-react';
+import { Wand2, Pizza, Ham, UtensilsCrossed, GlassWater, Flame, Eye, ShoppingCart } from 'lucide-react';
 import { suggestCombo, SuggestComboInput, SuggestComboOutput } from '@/ai/flows/suggest-combo';
 import { Alert, AlertDescription, AlertTitle } from './ui/alert';
 import { Skeleton } from './ui/skeleton';
 import Link from 'next/link';
+import { useCart } from '@/context/CartProvider';
+import { products } from '@/lib/data';
+import type { Product } from '@/types';
 
 const mockOrderHistory = [
   { itemName: 'Cheeseburger Deluxe', category: 'Burgers' },
@@ -21,6 +24,7 @@ export default function AIAssistant() {
   const [suggestion, setSuggestion] = useState<SuggestComboOutput | null>(null);
   const [isLoading, setIsLoading] = useState(false);
   const [error, setError] = useState<string | null>(null);
+  const { addMultipleToCart } = useCart();
 
   const handleSuggestCombo = async () => {
     setIsLoading(true);
@@ -43,6 +47,18 @@ export default function AIAssistant() {
     }
   };
   
+  const handleAddComboToCart = () => {
+    if (!suggestion) return;
+
+    const itemsToAdd: Product[] = suggestion.comboSuggestion
+      .map(suggestedItem => products.find(p => p.id === suggestedItem.id))
+      .filter((p): p is Product => p !== undefined);
+    
+    if (itemsToAdd.length > 0) {
+      addMultipleToCart(itemsToAdd);
+    }
+  };
+
   const getIconForCategory = (category: string) => {
     switch (category) {
       case 'Pizza': return <Pizza className="h-6 w-6 text-primary" />;
@@ -109,13 +125,20 @@ export default function AIAssistant() {
                 </Card>
               ))}
             </div>
-            <Alert variant="default" className="bg-primary/10 border-primary/20">
-              <Wand2 className="h-4 w-4 text-primary" />
-              <AlertTitle className="font-headline text-primary">Chef's Reasoning</AlertTitle>
-              <AlertDescription>
-                {suggestion.reasoning}
-              </AlertDescription>
-            </Alert>
+
+            <div className="flex flex-col items-center gap-4">
+                <Button size="lg" onClick={handleAddComboToCart} className="font-bold w-full md:w-auto">
+                  <ShoppingCart className="mr-2 h-5 w-5"/>
+                  Add Entire Combo to Cart
+                </Button>
+                <Alert variant="default" className="bg-primary/10 border-primary/20 w-full">
+                  <Wand2 className="h-4 w-4 text-primary" />
+                  <AlertTitle className="font-headline text-primary">Chef's Reasoning</AlertTitle>
+                  <AlertDescription>
+                    {suggestion.reasoning}
+                  </AlertDescription>
+                </Alert>
+            </div>
           </div>
         )}
       </CardContent>
