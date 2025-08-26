@@ -80,7 +80,7 @@ function OrderConfirmationContent() {
                         <div className="flex items-center justify-between">
                             <div>
                                 <CardTitle className="font-headline text-3xl">Order Confirmed!</CardTitle>
-                                <CardDescription className="text-primary-foreground/80 mt-1">Here is your bill, {order.customerName}.</CardDescription>
+                                <CardDescription className="text-primary-foreground/80 mt-1">Here is your bill, ${order.customerName}.</CardDescription>
                             </div>
                             <UtensilsCrossed className="h-12 w-12" />
                         </div>
