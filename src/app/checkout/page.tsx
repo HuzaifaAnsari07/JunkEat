@@ -87,7 +87,7 @@ export default function CheckoutPage() {
 
   const onSubmit = (values: z.infer<typeof addressSchema>) => {
     const orderDetails = {
-        id: `JNK-${(Math.random() * 10000).toFixed(0)}`,
+        id: `JNK-${Math.floor(Math.random() * 10000)}`,
         items: cartItems,
         subtotal: cartTotal,
         shipping: shippingCost,

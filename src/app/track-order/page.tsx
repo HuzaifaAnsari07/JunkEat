@@ -20,9 +20,24 @@ const TIME_PER_STAGE = TOTAL_DELIVERY_TIME / STAGES.length;
 export default function TrackOrderPage() {
     const [progress, setProgress] = useState(0);
     const [currentStatusIndex, setCurrentStatusIndex] = useState(0);
-    const [startTime] = useState(Date.now());
+    const [startTime, setStartTime] = useState(Date.now());
+    const [orderId, setOrderId] = useState<string | null>(null);
 
     useEffect(() => {
+        const latestOrder = sessionStorage.getItem('latestOrder');
+        if (latestOrder) {
+            const parsedOrder = JSON.parse(latestOrder);
+            setOrderId(parsedOrder.id);
+            // Use placement time from the order if available to persist tracking
+            if (parsedOrder.placementTime) {
+                setStartTime(parsedOrder.placementTime);
+            }
+        }
+    }, []);
+
+    useEffect(() => {
+        if (!startTime) return;
+
         const interval = setInterval(() => {
             const elapsedTime = Date.now() - startTime;
             const newProgress = Math.min((elapsedTime / TOTAL_DELIVERY_TIME) * 100, 100);
@@ -51,7 +66,7 @@ export default function TrackOrderPage() {
             <Card className="max-w-2xl mx-auto shadow-lg">
                 <CardHeader>
                     <CardTitle className="font-headline text-3xl">Track Your Order</CardTitle>
-                    <CardDescription>Order #JNK-{(Math.random() * 10000).toFixed(0)}</CardDescription>
+                    <CardDescription>Order #{orderId || '...'}</CardDescription>
                 </CardHeader>
                 <CardContent>
                     <div className="mb-8">

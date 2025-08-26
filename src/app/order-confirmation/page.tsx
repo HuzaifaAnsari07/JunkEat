@@ -101,7 +101,7 @@ function OrderConfirmationContent() {
                             </div>
                             <div className="text-right">
                                 <p className="font-semibold text-muted-foreground">Order ID:</p>
-                                <p>#JNK-{(Math.random() * 10000).toFixed(0)}</p>
+                                <p>#{order.id}</p>
                                 <p className="font-semibold text-muted-foreground mt-2">Date:</p>
                                 <p>{date}</p>
                             </div>
