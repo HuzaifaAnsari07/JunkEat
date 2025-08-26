@@ -31,7 +31,7 @@ export function Cart() {
       <div className="flex-1 overflow-y-auto">
         <ScrollArea className="h-full">
           <div className="p-4 sm:p-6">
-            <ul className="-my-6 divide-y divide-border">
+            <ul className="divide-y divide-border">
               {cartItems.map((item) => (
                 <li key={item.id} className="flex py-6">
                   <div className="h-24 w-24 flex-shrink-0 overflow-hidden rounded-md border">
