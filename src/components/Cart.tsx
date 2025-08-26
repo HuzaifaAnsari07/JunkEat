@@ -28,43 +28,41 @@ export function Cart() {
 
   return (
     <div className="flex h-full flex-col">
-      <div className="flex-1 overflow-y-auto">
-        <ScrollArea className="h-full px-4 sm:px-6">
-            <ul className="divide-y divide-border -mx-4 sm:-mx-6">
-              {cartItems.map((item) => (
-                <li key={item.id} className="flex py-6 px-4 sm:px-6">
-                  <div className="h-24 w-24 flex-shrink-0 overflow-hidden rounded-md border">
-                    <Image src={item.image} alt={item.name} width={96} height={96} className="h-full w-full object-cover object-center" data-ai-hint="cart item" />
-                  </div>
-                  <div className="ml-4 flex flex-1 flex-col">
-                    <div>
-                      <div className="flex justify-between text-base font-medium text-foreground">
-                        <h3 className="font-headline">{item.name}</h3>
-                        <p className="ml-4 font-semibold">{formatCurrency(item.price * item.quantity)}</p>
-                      </div>
-                    </div>
-                    <div className="flex flex-1 items-end justify-between text-sm">
-                      <div className="flex items-center gap-2">
-                        <Button variant="outline" size="icon" className="h-6 w-6" onClick={() => updateQuantity(item.id, item.quantity - 1)}>
-                          <Minus className="h-4 w-4" />
-                        </Button>
-                        <span className="font-bold">{item.quantity}</span>
-                        <Button variant="outline" size="icon" className="h-6 w-6" onClick={() => updateQuantity(item.id, item.quantity + 1)}>
-                          <Plus className="h-4 w-4" />
-                        </Button>
-                      </div>
-                      <div className="flex">
-                        <Button variant="ghost" type="button" className="font-medium text-primary hover:text-primary/80" onClick={() => removeFromCart(item.id)}>
-                          <Trash2 className="h-4 w-4" />
-                        </Button>
-                      </div>
+      <ScrollArea className="flex-1 px-4 sm:px-6">
+          <ul className="divide-y divide-border -mx-4 sm:-mx-6">
+            {cartItems.map((item) => (
+              <li key={item.id} className="flex py-6 px-4 sm:px-6">
+                <div className="h-24 w-24 flex-shrink-0 overflow-hidden rounded-md border">
+                  <Image src={item.image} alt={item.name} width={96} height={96} className="h-full w-full object-cover object-center" data-ai-hint="cart item" />
+                </div>
+                <div className="ml-4 flex flex-1 flex-col">
+                  <div>
+                    <div className="flex justify-between text-base font-medium text-foreground">
+                      <h3 className="font-headline">{item.name}</h3>
+                      <p className="ml-4 font-semibold">{formatCurrency(item.price * item.quantity)}</p>
                     </div>
                   </div>
-                </li>
-              ))}
-            </ul>
-        </ScrollArea>
-      </div>
+                  <div className="flex flex-1 items-end justify-between text-sm">
+                    <div className="flex items-center gap-2">
+                      <Button variant="outline" size="icon" className="h-6 w-6" onClick={() => updateQuantity(item.id, item.quantity - 1)}>
+                        <Minus className="h-4 w-4" />
+                      </Button>
+                      <span className="font-bold">{item.quantity}</span>
+                      <Button variant="outline" size="icon" className="h-6 w-6" onClick={() => updateQuantity(item.id, item.quantity + 1)}>
+                        <Plus className="h-4 w-4" />
+                      </Button>
+                    </div>
+                    <div className="flex">
+                      <Button variant="ghost" type="button" className="font-medium text-primary hover:text-primary/80" onClick={() => removeFromCart(item.id)}>
+                        <Trash2 className="h-4 w-4" />
+                      </Button>
+                    </div>
+                  </div>
+                </div>
+              </li>
+            ))}
+          </ul>
+      </ScrollArea>
       <div className="border-t px-4 py-6 sm:px-6">
         <div className="flex justify-between text-lg font-bold text-foreground">
           <p>Subtotal</p>
