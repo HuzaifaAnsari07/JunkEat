@@ -76,10 +76,21 @@ export function Cart() {
                 </Link>
             </Button>
         </SheetClose>
-        <p className="text-sm text-muted-foreground text-center">
-            Shipping and taxes will be calculated at checkout.
-        </p>
-        <div className="flex justify-center">
+        <div className="mt-6 flex justify-center text-center text-sm text-muted-foreground">
+          <p>
+            or{' '}
+            <SheetClose asChild>
+              <button
+                type="button"
+                className="font-medium text-primary hover:text-primary/80"
+              >
+                Continue Shopping
+                <span aria-hidden="true"> &rarr;</span>
+              </button>
+            </SheetClose>
+          </p>
+        </div>
+         <div className="flex justify-center">
             <Button variant="link" onClick={clearCart} className="text-destructive p-0 h-auto">
               Clear Cart
             </Button>
