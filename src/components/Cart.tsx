@@ -8,6 +8,7 @@ import { Minus, Plus, Trash2, ShoppingBag } from 'lucide-react';
 import { ScrollArea } from './ui/scroll-area';
 import { SheetClose } from './ui/sheet';
 import Link from 'next/link';
+import { Separator } from './ui/separator';
 
 export function Cart() {
   const { cartItems, removeFromCart, updateQuantity, cartTotal, clearCart } = useCart();
@@ -15,7 +16,7 @@ export function Cart() {
 
   if (cartItems.length === 0) {
     return (
-      <div className="flex flex-col items-center justify-center h-full text-center p-4">
+      <div className="flex flex-col items-center justify-center h-full text-center p-8">
         <ShoppingBag className="h-24 w-24 text-muted-foreground" />
         <h3 className="mt-4 font-headline text-xl font-semibold">Your cart is empty</h3>
         <p className="text-muted-foreground mt-2 text-sm">Add some delicious junk food to get started!</p>
@@ -65,15 +66,20 @@ export function Cart() {
             </ul>
         </ScrollArea>
       </div>
-      <div className="border-t px-4 py-6 sm:px-6 space-y-4">
-        <div className="flex justify-between text-lg font-bold text-foreground">
-          <p>Subtotal</p>
-          <p>{formatCurrency(cartTotal)}</p>
+      <div className="border-t px-4 py-6 sm:px-6">
+        <div className="space-y-4">
+            <div className="flex justify-between text-lg font-bold text-foreground">
+              <p>Subtotal</p>
+              <p>{formatCurrency(cartTotal)}</p>
+            </div>
+            <p className="text-sm text-muted-foreground">
+              Shipping and taxes calculated at checkout.
+            </p>
         </div>
-        <p className="text-sm text-muted-foreground">
-          Shipping and taxes calculated at checkout.
-        </p>
-        <div className="mt-6 space-y-3">
+        
+        <Separator className="my-6" />
+
+        <div className="space-y-4">
           <SheetClose asChild>
             <Button asChild size="lg" className="w-full font-bold">
               <Link href="/checkout">
