@@ -29,11 +29,10 @@ export function Cart() {
   return (
     <div className="flex h-full flex-col">
       <div className="flex-1 overflow-y-auto">
-        <ScrollArea className="h-full">
-          <div className="p-4 sm:p-6">
-            <ul className="divide-y divide-border">
+        <ScrollArea className="h-full px-4 sm:px-6">
+            <ul className="divide-y divide-border -mx-4 sm:-mx-6">
               {cartItems.map((item) => (
-                <li key={item.id} className="flex py-6">
+                <li key={item.id} className="flex py-6 px-4 sm:px-6">
                   <div className="h-24 w-24 flex-shrink-0 overflow-hidden rounded-md border">
                     <Image src={item.image} alt={item.name} width={96} height={96} className="h-full w-full object-cover object-center" data-ai-hint="cart item" />
                   </div>
@@ -64,7 +63,6 @@ export function Cart() {
                 </li>
               ))}
             </ul>
-          </div>
         </ScrollArea>
       </div>
       <div className="border-t px-4 py-6 sm:px-6">
