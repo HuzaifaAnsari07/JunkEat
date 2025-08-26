@@ -19,13 +19,16 @@ export function Cart() {
         <ShoppingBag className="h-24 w-24 text-muted-foreground" />
         <h3 className="mt-4 font-headline text-xl font-semibold">Your cart is empty</h3>
         <p className="text-muted-foreground mt-2 text-sm">Add some delicious junk food to get started!</p>
+         <SheetClose asChild>
+          <Button variant="outline" className="mt-6">Continue Shopping</Button>
+        </SheetClose>
       </div>
     );
   }
 
   return (
     <div className="flex h-full flex-col">
-      <ScrollArea className="flex-1">
+      <ScrollArea className="flex-grow">
         <div className="p-4 sm:p-6">
           <ul className="-my-6 divide-y divide-border">
             {cartItems.map((item) => (
@@ -62,7 +65,7 @@ export function Cart() {
           </ul>
         </div>
       </ScrollArea>
-      <div className="border-t px-4 py-6 sm:px-6">
+      <div className="border-t px-4 py-6 sm:px-6 mt-auto">
         <div className="flex justify-between text-lg font-bold text-foreground">
           <p>Subtotal</p>
           <p>{formatCurrency(cartTotal)}</p>
@@ -79,15 +82,14 @@ export function Cart() {
             </Button>
           </SheetClose>
         </div>
-        <div className="mt-4 flex flex-col items-center justify-center text-center text-sm text-muted-foreground">
+        <div className="mt-4 flex justify-between text-center text-sm">
           <SheetClose asChild>
-            <Button variant="link" className="text-primary p-0 h-auto">
+            <Button variant="link" className="text-muted-foreground p-0 h-auto">
               Continue Shopping
-              <span aria-hidden="true"> &rarr;</span>
             </Button>
           </SheetClose>
-          <Button variant="link" onClick={() => clearCart()} className="text-destructive p-0 h-auto text-xs mt-2">
-            Clear Cart
+          <Button variant="link" onClick={() => clearCart()} className="text-destructive p-0 h-auto">
+            Empty Cart
           </Button>
         </div>
       </div>
