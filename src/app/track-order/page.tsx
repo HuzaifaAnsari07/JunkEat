@@ -15,12 +15,12 @@ const STAGES = [
     { name: "Out for Delivery", icon: <Bike className="h-8 w-8 text-blue-500" />, description: "Your order is on its way to you!" },
     { name: "Delivered", icon: <Home className="h-8 w-8 text-primary" />, description: "Enjoy your delicious meal!" }
 ];
-const TIME_PER_STAGE = TOTAL_DELIVERY_TIME / STAGES.length;
+const TIME_PER_STAGE = TOTAL_DELIVERY_TIME / (STAGES.length -1);
 
 export default function TrackOrderPage() {
     const [progress, setProgress] = useState(0);
     const [currentStatusIndex, setCurrentStatusIndex] = useState(0);
-    const [startTime, setStartTime] = useState(Date.now());
+    const [startTime, setStartTime] = useState<number | null>(null);
     const [orderId, setOrderId] = useState<string | null>(null);
 
     useEffect(() => {
@@ -29,14 +29,16 @@ export default function TrackOrderPage() {
             const parsedOrder = JSON.parse(latestOrder);
             setOrderId(parsedOrder.id);
             // Use placement time from the order if available to persist tracking
-            if (parsedOrder.placementTime) {
-                setStartTime(parsedOrder.placementTime);
+            setStartTime(parsedOrder.placementTime || Date.now());
+            if (!parsedOrder.placementTime) {
+                // if placementTime is not set, set it for next time.
+                 sessionStorage.setItem('latestOrder', JSON.stringify({...parsedOrder, placementTime: Date.now()}));
             }
         }
     }, []);
 
     useEffect(() => {
-        if (!startTime) return;
+        if (startTime === null) return;
 
         const interval = setInterval(() => {
             const elapsedTime = Date.now() - startTime;
@@ -49,12 +51,12 @@ export default function TrackOrderPage() {
             if (elapsedTime >= TOTAL_DELIVERY_TIME) {
                 clearInterval(interval);
             }
-        }, 100); // Update every 100ms for smooth animation
+        }, 1000); // Update every second
 
         return () => clearInterval(interval);
     }, [startTime]);
 
-    const estimatedTimeRemaining = Math.max(0, Math.ceil((TOTAL_DELIVERY_TIME - (Date.now() - startTime)) / 1000 / 60));
+    const estimatedTimeRemaining = Math.max(0, Math.ceil((TOTAL_DELIVERY_TIME - (startTime ? Date.now() - startTime : 0)) / 1000 / 60));
 
     return (
         <div className="container mx-auto px-4 py-8">
@@ -69,17 +71,7 @@ export default function TrackOrderPage() {
                     <CardDescription>Order #{orderId || '...'}</CardDescription>
                 </CardHeader>
                 <CardContent>
-                    <div className="mb-8">
-                        <Progress value={progress} className="h-3 transition-all duration-100 ease-linear" />
-                        <div className="flex justify-between text-xs text-muted-foreground mt-2">
-                            <span>Placed</span>
-                            <span>Preparing</span>
-                            <span>On its way</span>
-                            <span>Delivered</span>
-                        </div>
-                    </div>
-
-                    <div className="space-y-8">
+                    <div className="space-y-8 mt-8">
                         {STAGES.map((status, index) => (
                              <div key={index} className={`flex gap-6 items-start transition-opacity duration-500 ${index > currentStatusIndex ? 'opacity-40' : ''}`}>
                                 <div className={`flex flex-col items-center gap-2 transition-colors duration-500 ${index <= currentStatusIndex ? 'text-primary' : ''}`}>
@@ -87,7 +79,7 @@ export default function TrackOrderPage() {
                                        {status.icon}
                                     </div>
                                     {index < STAGES.length - 1 && (
-                                        <div className={`w-0.5 grow transition-colors duration-500 ${index < currentStatusIndex ? 'bg-primary' : 'bg-border'}`}></div>
+                                        <div className={`w-0.5 grow transition-colors duration-500 ${index < currentStatusIndex ? 'bg-primary' : 'bg-border'}`} style={{height: '3rem'}}></div>
                                     )}
                                 </div>
                                 <div>
