@@ -66,15 +66,16 @@ export default function CheckoutPage() {
     form.setValue('orderType', value);
   }
 
-  const shippingCost = orderType === 'delivery' ? 25.00 : 0;
+  const shippingCost = orderType === 'delivery' ? 5.00 : 0;
   const taxRate = 0.05; // 5% Tax
   const taxAmount = cartTotal * taxRate;
   const total = cartTotal + shippingCost + taxAmount;
   
-  const formatCurrency = (amount: number) => `₹${amount.toFixed(2)}`;
+  const formatCurrency = (amount: number) => `$${amount.toFixed(2)}`;
 
   const onSubmit = (values: z.infer<typeof addressSchema>) => {
     const orderDetails = {
+        id: `JNK-${(Math.random() * 10000).toFixed(0)}`,
         items: cartItems,
         subtotal: cartTotal,
         shipping: shippingCost,
@@ -83,9 +84,15 @@ export default function CheckoutPage() {
         customerName: values.name || 'Valued Customer',
         orderType: values.orderType,
         paymentMethod: values.paymentMethod,
-        address: values.orderType === 'delivery' ? `${values.address}, ${values.city}, ${values.zip}` : 'Dine-in'
+        address: values.orderType === 'delivery' ? `${values.address}, ${values.city}, ${values.zip}` : 'Dine-in',
+        date: new Date().toISOString(),
+        status: 'Order Placed',
     };
 
+    // Save to a mock order history in sessionStorage
+    const history = JSON.parse(sessionStorage.getItem('orderHistory') || '[]');
+    history.unshift(orderDetails);
+    sessionStorage.setItem('orderHistory', JSON.stringify(history));
     sessionStorage.setItem('latestOrder', JSON.stringify(orderDetails));
     
     toast({
@@ -96,7 +103,7 @@ export default function CheckoutPage() {
     });
     
     console.log("Order placed with values:", values);
-    clearCart();
+    clearCart(true); // pass true to suppress the "cart cleared" message
     router.push(`/order-confirmation`);
   };
 

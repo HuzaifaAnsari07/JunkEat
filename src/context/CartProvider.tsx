@@ -10,7 +10,7 @@ interface CartContextType {
   addToCart: (product: Product, quantity?: number) => void;
   removeFromCart: (productId: number) => void;
   updateQuantity: (productId: number, quantity: number) => void;
-  clearCart: () => void;
+  clearCart: (suppressToast?: boolean) => void;
   cartCount: number;
   cartTotal: number;
 }
@@ -61,9 +61,9 @@ export const CartProvider = ({ children }: { children: ReactNode }) => {
     }
   };
 
-  const clearCart = () => {
+  const clearCart = (suppressToast = false) => {
     setCartItems([]);
-    if (cartItems.length > 0) {
+    if (!suppressToast && cartItems.length > 0) {
         toast({
             title: "Cart cleared",
             description: "All items have been removed from your cart.",

@@ -1,7 +1,7 @@
 
 "use client";
 
-import { ShoppingCart, UtensilsCrossed, LogIn, UserPlus } from 'lucide-react';
+import { ShoppingCart, UtensilsCrossed, User } from 'lucide-react';
 import Link from 'next/link';
 import { Button } from '@/components/ui/button';
 import { Sheet, SheetContent, SheetHeader, SheetTitle, SheetDescription, SheetTrigger } from '@/components/ui/sheet';
@@ -37,12 +37,14 @@ export function Header() {
                 <Link href="/dashboard#ai-assistant">AI Combo</Link>
              </Button>
           </nav>
-          <div className="hidden md:flex items-center gap-2">
-             <Button variant="outline" asChild>
-                <Link href="/">Logout</Link>
-            </Button>
-          </div>
+          
           <ThemeToggle />
+          <Button variant="outline" size="icon" className="rounded-full" asChild>
+            <Link href="/profile">
+                <User className="h-5 w-5" />
+                <span className="sr-only">Profile</span>
+            </Link>
+          </Button>
           <Sheet>
             <SheetTrigger asChild>
               <Button variant="outline" size="icon" className="relative rounded-full">
@@ -62,6 +64,11 @@ export function Header() {
               <Cart />
             </SheetContent>
           </Sheet>
+           <div className="hidden md:flex items-center gap-2">
+             <Button variant="outline" asChild>
+                <Link href="/">Logout</Link>
+            </Button>
+          </div>
         </div>
       </div>
     </header>
