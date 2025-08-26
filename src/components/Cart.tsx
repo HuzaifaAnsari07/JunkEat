@@ -8,6 +8,7 @@ import { Minus, Plus, Trash2, ShoppingBag } from 'lucide-react';
 import { ScrollArea } from './ui/scroll-area';
 import { SheetClose } from './ui/sheet';
 import Link from 'next/link';
+import { Separator } from './ui/separator';
 
 export function Cart() {
   const { cartItems, removeFromCart, updateQuantity, cartTotal, clearCart } = useCart();
@@ -67,6 +68,7 @@ export function Cart() {
           <p>Subtotal</p>
           <p>{formatCurrency(cartTotal)}</p>
         </div>
+        <Separator/>
         <SheetClose asChild>
             <Button asChild className="w-full bg-primary text-primary-foreground hover:bg-primary/90 font-bold text-lg py-6">
                 <Link href="/checkout">
