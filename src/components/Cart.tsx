@@ -29,7 +29,6 @@ export function Cart() {
 
   return (
     <div className="h-full flex flex-col">
-      {/* Scrollable items */}
       <ScrollArea className="flex-grow">
         <div className="p-6">
           <ul className="divide-y divide-border -mx-6">
@@ -91,42 +90,36 @@ export function Cart() {
         </div>
       </ScrollArea>
   
-      {/* Footer - pinned at bottom */}
-      <div className="flex-shrink-0 border-t bg-background px-6 py-6">
+      <div className="flex-shrink-0 border-t bg-background px-6 py-4">
         <div className="space-y-4">
-          <div className="flex justify-between text-lg font-bold text-foreground">
-            <p>Subtotal</p>
-            <p>{formatCurrency(cartTotal)}</p>
-          </div>
-          <p className="text-sm text-muted-foreground">
-            Shipping and taxes calculated at checkout.
-          </p>
-  
-          <Separator />
-  
-          <SheetClose asChild>
-            <Button asChild size="lg" className="w-full font-bold">
-              <Link href="/checkout">Place Order</Link>
-            </Button>
-          </SheetClose>
-  
-          <div className="mt-2 flex justify-between text-center text-sm">
+            <div className="flex justify-between text-lg font-bold text-foreground">
+              <p>Subtotal</p>
+              <p>{formatCurrency(cartTotal)}</p>
+            </div>
+            <p className="text-sm text-muted-foreground">
+              Shipping and taxes calculated at checkout.
+            </p>
+            
+            <Separator />
+
             <SheetClose asChild>
-              <Button
-                variant="link"
-                className="text-muted-foreground p-0 h-auto"
-              >
-                Continue Shopping
-              </Button>
+                <Button asChild size="lg" className="w-full font-bold">
+                  <Link href="/checkout">
+                    Place Order
+                  </Link>
+                </Button>
             </SheetClose>
-            <Button
-              variant="link"
-              onClick={() => clearCart()}
-              className="text-destructive p-0 h-auto"
-            >
-              Empty Cart
-            </Button>
-          </div>
+            
+            <div className="mt-4 flex justify-between text-center text-sm">
+                <SheetClose asChild>
+                  <Button variant="link" className="text-muted-foreground p-0 h-auto">
+                    Continue Shopping
+                  </Button>
+                </SheetClose>
+                <Button variant="link" onClick={() => clearCart()} className="text-destructive p-0 h-auto">
+                  Empty Cart
+                </Button>
+            </div>
         </div>
       </div>
     </div>
