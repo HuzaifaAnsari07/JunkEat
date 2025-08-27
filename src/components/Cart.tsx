@@ -90,8 +90,8 @@ export function Cart() {
         </div>
       </ScrollArea>
   
-      <div className="flex-shrink-0 border-t bg-background px-6 py-10" id="order">
-        <div className="space-y-6">
+      <div className="flex-shrink-0 border-t bg-background px-6 py-12" id="order">
+        <div className="space-y-8">
             <div className="flex justify-between text-lg font-bold text-foreground">
               <p>Subtotal</p>
               <p>{formatCurrency(cartTotal)}</p>
