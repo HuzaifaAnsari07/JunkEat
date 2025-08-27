@@ -138,7 +138,7 @@ export default function CheckoutPage() {
         sessionStorage.setItem('latestOrder', JSON.stringify(orderDetails));
         toast({
             title: "Reservation Confirmed!",
-            description: "Your seat is reserved for the next one hour.",
+            description: `Table ${values.tableNumber} is booked for the next hour.`,
             variant: 'default',
             duration: 2000,
         });
@@ -363,5 +363,3 @@ export default function CheckoutPage() {
     </div>
   );
 }
-
-    
