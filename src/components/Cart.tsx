@@ -28,7 +28,7 @@ export function Cart() {
   }
 
   return (
-    <div className="flex h-full flex-col">
+    <div className="h-full flex flex-col">
       <ScrollArea className="flex-grow">
         <div className="p-6">
           <ul className="divide-y divide-border -mx-6">
