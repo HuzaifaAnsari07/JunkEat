@@ -131,25 +131,24 @@ export default function CheckoutPage() {
     
     clearCart(true); // pass true to suppress the "cart cleared" message
     
+    sessionStorage.setItem('latestOrder', JSON.stringify(orderDetails));
+    
     if (values.orderType === 'dine-in') {
-        sessionStorage.setItem('latestOrder', JSON.stringify(orderDetails));
         toast({
             title: "Reservation Confirmed!",
             description: `Table ${values.tableNumber} is booked for the next hour.`,
             variant: 'default',
             duration: 2000,
         });
-        router.push(`/dashboard`);
     } else {
-        sessionStorage.setItem('latestOrder', JSON.stringify(orderDetails));
         toast({
             title: "Order Placed!",
             description: "Your order has been successfully placed.",
             variant: 'default',
             duration: 3000,
         });
-        router.push(`/order-confirmation`);
     }
+    router.push(`/order-confirmation`);
   };
 
   if (cartItems.length === 0) {
@@ -360,5 +359,3 @@ export default function CheckoutPage() {
     </div>
   );
 }
-
-    
