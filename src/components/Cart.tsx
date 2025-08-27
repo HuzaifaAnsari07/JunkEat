@@ -90,7 +90,7 @@ export function Cart() {
         </div>
       </ScrollArea>
   
-      <div className="flex-shrink-0 border-t bg-background px-6 pt-6 pb-40" id="order">
+      <div className="flex-shrink-0 border-t bg-background px-6 pt-4 pb-32" id="order">
         <div className="space-y-4">
             <div className="flex justify-between text-lg font-bold text-foreground">
               <p>Subtotal</p>
