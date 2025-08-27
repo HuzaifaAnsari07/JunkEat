@@ -91,7 +91,7 @@ export function Cart() {
       </ScrollArea>
   
       <div className="flex-shrink-0 border-t bg-background px-6 pt-6 pb-40" id="order">
-        <div className="space-y-8">
+        <div className="space-y-4">
             <div className="flex justify-between text-lg font-bold text-foreground">
               <p>Subtotal</p>
               <p>{formatCurrency(cartTotal)}</p>
