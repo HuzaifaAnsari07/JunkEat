@@ -56,7 +56,7 @@ export function Header() {
                 )}
               </Button>
             </SheetTrigger>
-            <SheetContent className="w-[400px] sm:w-[540px] p-0 flex flex-col">
+            <SheetContent className="w-full sm:w-[600px] p-0 flex flex-col">
               <SheetHeader className="p-6 pb-0">
                 <SheetTitle className="font-headline text-2xl">Your Cart</SheetTitle>
                 <SheetDescription>Review your items before checkout.</SheetDescription>
