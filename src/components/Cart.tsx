@@ -21,7 +21,7 @@ export function Cart() {
         <h3 className="mt-4 font-headline text-xl font-semibold">Your cart is empty</h3>
         <p className="text-muted-foreground mt-2 text-sm">Add some delicious junk food to get started!</p>
         <SheetClose asChild>
-          <Button variant="outline" className="mt-6">Continue Shopping</Button>
+          <Button variant="outline" className="mt-4">Continue Shopping</Button>
         </SheetClose>
       </div>
     );
