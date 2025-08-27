@@ -16,7 +16,7 @@ export function Cart() {
 
   if (cartItems.length === 0) {
     return (
-      <div className="flex flex-col items-center justify-center h-full text-center p-8">
+      <div className="flex flex-col items-center justify-center h-full text-center p-6" id="head">
         <ShoppingBag className="h-24 w-24 text-muted-foreground" />
         <h3 className="mt-4 font-headline text-xl font-semibold">Your cart is empty</h3>
         <p className="text-muted-foreground mt-2 text-sm">Add some delicious junk food to get started!</p>
