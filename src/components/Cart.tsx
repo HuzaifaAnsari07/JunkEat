@@ -29,8 +29,7 @@ export function Cart() {
 
   return (
     <div className="flex h-full flex-col">
-      {/* This makes the item list scrollable and take up all available space */}
-      <ScrollArea className="flex-1">
+      <ScrollArea className="flex-grow">
         <div className="p-6">
           <ul className="divide-y divide-border -mx-6">
             {cartItems.map((item) => (
@@ -68,8 +67,7 @@ export function Cart() {
         </div>
       </ScrollArea>
 
-      {/* This is the footer that will be anchored to the bottom */}
-      <div className="border-t bg-background px-6 py-8">
+      <div className="flex-shrink-0 border-t bg-background px-6 py-4">
         <div className="space-y-4">
             <div className="flex justify-between text-lg font-bold text-foreground">
               <p>Subtotal</p>
@@ -89,7 +87,7 @@ export function Cart() {
                 </Button>
             </SheetClose>
             
-            <div className="mt-6 flex justify-between text-center text-sm">
+            <div className="mt-4 flex justify-between text-center text-sm">
                 <SheetClose asChild>
                   <Button variant="link" className="text-muted-foreground p-0 h-auto">
                     Continue Shopping
