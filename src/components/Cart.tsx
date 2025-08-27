@@ -1,4 +1,3 @@
-
 "use client";
 
 import { useCart } from '@/context/CartProvider';
@@ -90,7 +89,7 @@ export function Cart() {
         </div>
       </ScrollArea>
   
-      <div className="flex-shrink-0 border-t bg-background px-6 py-10" id="order">
+      <div className="flex-shrink-0 border-t bg-background px-6 py-20" id="order">
         <div className="space-y-4">
             <div className="flex justify-between text-lg font-bold text-foreground">
               <p>Subtotal</p>
