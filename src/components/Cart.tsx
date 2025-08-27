@@ -20,7 +20,7 @@ export function Cart() {
         <ShoppingBag className="h-24 w-24 text-muted-foreground" />
         <h3 className="mt-4 font-headline text-xl font-semibold">Your cart is empty</h3>
         <p className="text-muted-foreground mt-2 text-sm">Add some delicious junk food to get started!</p>
-         <SheetClose asChild>
+        <SheetClose asChild>
           <Button variant="outline" className="mt-6">Continue Shopping</Button>
         </SheetClose>
       </div>
@@ -29,36 +29,60 @@ export function Cart() {
 
   return (
     <div className="h-full flex flex-col">
+      {/* Scrollable items */}
       <ScrollArea className="flex-grow">
-        <div className="p-6">
+        <div className="p-6 pb-8">
           <ul className="divide-y divide-border -mx-6">
             {cartItems.map((item) => (
               <li key={item.id} className="flex py-6 px-6">
                 <div className="h-24 w-24 flex-shrink-0 overflow-hidden rounded-md border">
-                  <Image src={item.image} alt={item.name} width={96} height={96} className="h-full w-full object-cover object-center" data-ai-hint="cart item" />
+                  <Image
+                    src={item.image}
+                    alt={item.name}
+                    width={96}
+                    height={96}
+                    className="h-full w-full object-cover object-center"
+                  />
                 </div>
                 <div className="ml-4 flex flex-1 flex-col">
-                  <div>
-                    <div className="flex justify-between text-base font-medium text-foreground">
-                      <h3 className="font-headline">{item.name}</h3>
-                      <p className="ml-4 font-semibold">{formatCurrency(item.price * item.quantity)}</p>
-                    </div>
+                  <div className="flex justify-between text-base font-medium text-foreground">
+                    <h3 className="font-headline">{item.name}</h3>
+                    <p className="ml-4 font-semibold">
+                      {formatCurrency(item.price * item.quantity)}
+                    </p>
                   </div>
                   <div className="flex flex-1 items-end justify-between text-sm">
                     <div className="flex items-center gap-2">
-                      <Button variant="outline" size="icon" className="h-6 w-6" onClick={() => updateQuantity(item.id, item.quantity - 1)}>
+                      <Button
+                        variant="outline"
+                        size="icon"
+                        className="h-6 w-6"
+                        onClick={() =>
+                          updateQuantity(item.id, item.quantity - 1)
+                        }
+                      >
                         <Minus className="h-4 w-4" />
                       </Button>
                       <span className="font-bold">{item.quantity}</span>
-                      <Button variant="outline" size="icon" className="h-6 w-6" onClick={() => updateQuantity(item.id, item.quantity + 1)}>
+                      <Button
+                        variant="outline"
+                        size="icon"
+                        className="h-6 w-6"
+                        onClick={() =>
+                          updateQuantity(item.id, item.quantity + 1)
+                        }
+                      >
                         <Plus className="h-4 w-4" />
                       </Button>
                     </div>
-                    <div className="flex">
-                      <Button variant="ghost" type="button" className="font-medium text-primary hover:text-primary/80" onClick={() => removeFromCart(item.id)}>
-                        <Trash2 className="h-4 w-4" />
-                      </Button>
-                    </div>
+                    <Button
+                      variant="ghost"
+                      type="button"
+                      className="font-medium text-primary hover:text-primary/80"
+                      onClick={() => removeFromCart(item.id)}
+                    >
+                      <Trash2 className="h-4 w-4" />
+                    </Button>
                   </div>
                 </div>
               </li>
@@ -66,8 +90,9 @@ export function Cart() {
           </ul>
         </div>
       </ScrollArea>
-
-      <div className="flex-shrink-0 border-t bg-background px-6 py-6">
+  
+      {/* Footer - pinned at bottom */}
+      <div className="flex-shrink-0 border-t bg-background px-6 py-4">
         <div className="space-y-4">
             <div className="flex justify-between text-lg font-bold text-foreground">
               <p>Subtotal</p>
@@ -87,7 +112,7 @@ export function Cart() {
                 </Button>
             </SheetClose>
             
-            <div className="mt-2 flex justify-between text-center text-sm">
+            <div className="mt-4 flex justify-between text-center text-sm">
                 <SheetClose asChild>
                   <Button variant="link" className="text-muted-foreground p-0 h-auto">
                     Continue Shopping
@@ -102,3 +127,4 @@ export function Cart() {
     </div>
   );
 }
+  
