@@ -67,7 +67,7 @@ export function Cart() {
         </div>
       </ScrollArea>
 
-      <div className="flex-shrink-0 border-t bg-background px-6 py-4">
+      <div className="flex-shrink-0 border-t bg-background px-6 py-6">
         <div className="space-y-4">
             <div className="flex justify-between text-lg font-bold text-foreground">
               <p>Subtotal</p>
@@ -87,7 +87,7 @@ export function Cart() {
                 </Button>
             </SheetClose>
             
-            <div className="mt-4 flex justify-between text-center text-sm">
+            <div className="mt-2 flex justify-between text-center text-sm">
                 <SheetClose asChild>
                   <Button variant="link" className="text-muted-foreground p-0 h-auto">
                     Continue Shopping
