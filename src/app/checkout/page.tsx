@@ -27,7 +27,7 @@ const VACANT_TABLES = 8;
 const TOTAL_TABLES = 12;
 
 const addressSchema = z.object({
-  name: z.string().min(2, { message: "Name must be at least 2 characters." }).optional(),
+  name: z.string().optional(),
   address: z.string().min(5, { message: "Address must be at least 5 characters." }).optional(),
   city: z.string().min(2, { message: "City must be at least 2 characters." }).optional(),
   zip: z.string().regex(/^\d{5,6}$/, { message: "Must be a valid zip code." }).optional(),
@@ -36,7 +36,7 @@ const addressSchema = z.object({
   tableNumber: z.string().optional(),
 }).superRefine((data, ctx) => {
     if (data.orderType === 'delivery') {
-        if (!data.name) ctx.addIssue({ code: z.ZodIssueCode.custom, message: "Name is required for delivery.", path: ['name'] });
+        if (!data.name?.trim()) ctx.addIssue({ code: z.ZodIssueCode.custom, message: "Name is required for delivery.", path: ['name'] });
         if (!data.address) ctx.addIssue({ code: z.ZodIssueCode.custom, message: "Address is required for delivery.", path: ['address'] });
         if (!data.city) ctx.addIssue({ code: z.ZodIssueCode.custom, message: "City is required for delivery.", path: ['city'] });
         if (!data.zip) ctx.addIssue({ code: z.ZodIssueCode.custom, message: "Zip code is required for delivery.", path: ['zip'] });
@@ -363,3 +363,5 @@ export default function CheckoutPage() {
     </div>
   );
 }
+
+    
