@@ -29,9 +29,8 @@ export function Cart() {
 
   return (
     <div className="h-full flex flex-col">
-  
       {/* Scrollable items */}
-      <ScrollArea className="flex-1">
+      <ScrollArea className="flex-grow">
         <div className="p-6">
           <ul className="divide-y divide-border -mx-6">
             {cartItems.map((item) => (
@@ -93,7 +92,7 @@ export function Cart() {
       </ScrollArea>
   
       {/* Footer - pinned at bottom */}
-      <div className="border-t bg-background px-6 py-6 sticky bottom-0">
+      <div className="flex-shrink-0 border-t bg-background px-6 py-6">
         <div className="space-y-4">
           <div className="flex justify-between text-lg font-bold text-foreground">
             <p>Subtotal</p>
@@ -132,4 +131,4 @@ export function Cart() {
       </div>
     </div>
   );
-}  
+}
