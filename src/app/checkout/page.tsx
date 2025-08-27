@@ -45,9 +45,6 @@ const addressSchema = z.object({
         if (!data.tableNumber) {
             ctx.addIssue({ code: z.ZodIssueCode.custom, message: "Please select a table for dine-in.", path: ['tableNumber']});
         }
-        if (data.paymentMethod === 'cod') {
-            ctx.addIssue({ code: z.ZodIssueCode.custom, message: "Cash on Delivery is not available for Dine-in advance payment.", path: ['paymentMethod']});
-        }
     }
 });
 
@@ -285,8 +282,8 @@ export default function CheckoutPage() {
                                                         <Landmark />
                                                         <span>UPI</span>
                                                     </Label>
-                                                    <Label htmlFor="cod" className={cn("border rounded-lg p-4 flex items-center gap-4 cursor-pointer hover:bg-accent/50 has-[:checked]:bg-accent has-[:checked]:text-accent-foreground has-[:checked]:border-accent-foreground transition-all duration-300 transform hover:scale-105", orderType === 'dine-in' && 'cursor-not-allowed bg-muted text-muted-foreground opacity-50')}>
-                                                        <RadioGroupItem value="cod" id="cod" disabled={orderType === 'dine-in'} />
+                                                    <Label htmlFor="cod" className={cn("border rounded-lg p-4 flex items-center gap-4 cursor-pointer hover:bg-accent/50 has-[:checked]:bg-accent has-[:checked]:text-accent-foreground has-[:checked]:border-accent-foreground transition-all duration-300 transform hover:scale-105")}>
+                                                        <RadioGroupItem value="cod" id="cod" />
                                                         <Truck />
                                                         <span>Cash on Delivery</span>
                                                     </Label>
