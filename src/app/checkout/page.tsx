@@ -131,18 +131,28 @@ export default function CheckoutPage() {
     const history = JSON.parse(sessionStorage.getItem('orderHistory') || '[]');
     history.unshift(orderDetails);
     sessionStorage.setItem('orderHistory', JSON.stringify(history));
-    sessionStorage.setItem('latestOrder', JSON.stringify(orderDetails));
     
-    toast({
-        title: "Order Placed!",
-        description: "Your order has been successfully placed.",
-        variant: 'default',
-        duration: 3000,
-    });
-    
-    console.log("Order placed with values:", values);
     clearCart(true); // pass true to suppress the "cart cleared" message
-    router.push(`/order-confirmation`);
+    
+    if (values.orderType === 'dine-in') {
+        sessionStorage.setItem('latestOrder', JSON.stringify(orderDetails));
+        toast({
+            title: "Reservation Confirmed!",
+            description: "Your seat is reserved for the next one hour.",
+            variant: 'default',
+            duration: 2000,
+        });
+        router.push(`/dashboard`);
+    } else {
+        sessionStorage.setItem('latestOrder', JSON.stringify(orderDetails));
+        toast({
+            title: "Order Placed!",
+            description: "Your order has been successfully placed.",
+            variant: 'default',
+            duration: 3000,
+        });
+        router.push(`/order-confirmation`);
+    }
   };
 
   if (cartItems.length === 0) {
