@@ -151,6 +151,12 @@ export default function CheckoutPage() {
     sessionStorage.setItem('latestOrder', JSON.stringify(orderDetails));
     
     if (values.orderType === 'dine-in') {
+        toast({
+            title: "Table Reserved!",
+            description: `Your table T${orderDetails.tableNumber} has been successfully reserved.`,
+            variant: 'default',
+            duration: 3000,
+        });
         router.push(`/reservation-confirmed`);
     } else {
         toast({
@@ -386,5 +392,3 @@ export default function CheckoutPage() {
     </div>
   );
 }
-
-    
