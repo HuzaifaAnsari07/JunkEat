@@ -67,50 +67,56 @@ export const EllipticalCarousel: React.FC<EllipticalCarouselProps> = ({ images, 
 
   return (
     <div 
-      className="relative w-full h-[300px] md:h-[400px] flex items-center justify-center"
+      className="w-full flex flex-col items-center justify-center gap-4"
       onMouseEnter={() => setIsHovered(true)}
       onMouseLeave={() => setIsHovered(false)}
-      style={{ perspective: '1000px' }}
     >
-      <div className="absolute w-full h-full" style={{ transformStyle: 'preserve-3d' }}>
-        {images.map((src, index) => (
-          <div
-            key={index}
-            className="absolute top-0 left-0 w-full h-full flex items-center justify-center"
-            style={getStyle(index)}
-          >
-            <div className={cn(
-                "relative w-[200px] h-[200px] md:w-[300px] md:h-[300px] rounded-full overflow-hidden shadow-2xl",
-                activeIndex === index && "border-4 border-primary"
-            )}>
-              <Image
-                src={src}
-                alt={`Carousel image ${index + 1}`}
-                fill
-                className="object-cover"
-                sizes="(max-width: 768px) 200px, 300px"
-              />
-            </div>
+        <div 
+          className="relative w-full h-[300px] md:h-[400px] flex items-center justify-center"
+          style={{ perspective: '1000px' }}
+        >
+          <div className="absolute w-full h-full" style={{ transformStyle: 'preserve-3d' }}>
+            {images.map((src, index) => (
+              <div
+                key={index}
+                className="absolute top-0 left-0 w-full h-full flex items-center justify-center"
+                style={getStyle(index)}
+              >
+                <div className={cn(
+                    "relative w-[200px] h-[200px] md:w-[300px] md:h-[300px] rounded-full overflow-hidden shadow-2xl",
+                    activeIndex === index && "border-4 border-primary"
+                )}>
+                  <Image
+                    src={src}
+                    alt={`Carousel image ${index + 1}`}
+                    fill
+                    className="object-cover"
+                    sizes="(max-width: 768px) 200px, 300px"
+                  />
+                </div>
+              </div>
+            ))}
           </div>
-        ))}
-      </div>
+        </div>
       
-      <Button 
-        variant="outline" 
-        size="icon" 
-        className="absolute left-4 md:left-16 z-30 rounded-full"
-        onClick={goToPrev}
-      >
-        <ChevronLeft className="h-6 w-6" />
-      </Button>
-      <Button 
-        variant="outline" 
-        size="icon" 
-        className="absolute right-4 md:right-16 z-30 rounded-full"
-        onClick={goToNext}
-      >
-        <ChevronRight className="h-6 w-6" />
-      </Button>
+        <div className="flex items-center justify-center gap-4 z-30">
+            <Button 
+                variant="outline" 
+                size="icon" 
+                className="rounded-full"
+                onClick={goToPrev}
+            >
+                <ChevronLeft className="h-6 w-6" />
+            </Button>
+            <Button 
+                variant="outline" 
+                size="icon" 
+                className="rounded-full"
+                onClick={goToNext}
+            >
+                <ChevronRight className="h-6 w-6" />
+            </Button>
+        </div>
     </div>
   );
 };
