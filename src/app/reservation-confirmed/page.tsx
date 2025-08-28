@@ -9,6 +9,7 @@ import { Separator } from "@/components/ui/separator";
 import { Home, XCircle, Clock, MapPin, ClipboardCopy, Check, Share2, CheckCircle } from "lucide-react";
 import Link from "next/link";
 import { useToast } from "@/hooks/use-toast";
+import { Badge } from '@/components/ui/badge';
 
 interface OrderDetails {
     id: string;
@@ -35,7 +36,7 @@ function ReservationConfirmedContent() {
             const parsedOrder = JSON.parse(savedOrder);
             if (parsedOrder.orderType === 'dine-in') {
                 setOrder(parsedOrder);
-                if (parsedOrder.status === 'Completed' || parsedOrder.status === 'Checked-in') {
+                if (parsedOrder.status === 'Completed' || parsedOrder.status === 'Cancelled') {
                     setIsCheckedIn(true);
                 }
             } else {
@@ -47,7 +48,7 @@ function ReservationConfirmedContent() {
     }, [router]);
 
     useEffect(() => {
-        if (!order || isCheckedIn) return;
+        if (!order || isCheckedIn || order.status === 'Completed' || order.status === 'Cancelled') return;
 
         const interval = setInterval(() => {
             const elapsedTime = Date.now() - order.placementTime;
@@ -95,11 +96,13 @@ function ReservationConfirmedContent() {
         setIsCheckedIn(true);
         const history = JSON.parse(sessionStorage.getItem('orderHistory') || '[]');
         if (order) {
+            const updatedOrder = { ...order, status: 'Completed' };
             const updatedHistory = history.map((o: any) =>
-                o.id === order.id ? { ...o, status: 'Completed' } : o
+                o.id === order.id ? updatedOrder : o
             );
             sessionStorage.setItem('orderHistory', JSON.stringify(updatedHistory));
-            setOrder(prev => prev ? { ...prev, status: 'Completed' } : null);
+            sessionStorage.setItem('latestOrder', JSON.stringify(updatedOrder));
+            setOrder(updatedOrder);
         }
         toast({
             title: "Check-in Successful!",
@@ -123,21 +126,26 @@ function ReservationConfirmedContent() {
             </div>
         );
     }
+    
+    const isCompleted = order.status === 'Completed';
+    const isCancelled = order.status === 'Cancelled';
 
     return (
         <div className="container mx-auto flex items-center justify-center min-h-[80vh] px-4 py-8">
             <Card className="w-full max-w-lg shadow-2xl animate-in fade-in-50 zoom-in-95 duration-500">
                 <CardHeader className="text-center bg-primary/5 rounded-t-lg">
                     <div className="mx-auto bg-primary/10 p-4 rounded-full w-fit mb-4">
-                        {isCheckedIn ? <CheckCircle className="h-12 w-12 text-green-500" /> : <Clock className="h-12 w-12 text-primary" />}
+                        {isCompleted ? <CheckCircle className="h-12 w-12 text-green-500" /> : isCancelled ? <XCircle className="h-12 w-12 text-destructive" /> : <Clock className="h-12 w-12 text-primary" />}
                     </div>
-                    <CardTitle className="font-headline text-3xl">{isCheckedIn ? 'Checked-in!' : 'Reservation Confirmed!'}</CardTitle>
+                    <CardTitle className="font-headline text-3xl">
+                        {isCompleted ? 'Checked-in!' : isCancelled ? 'Reservation Cancelled' : 'Reservation Confirmed!'}
+                    </CardTitle>
                     <CardDescription>
-                        {isCheckedIn ? 'Enjoy your meal at JunkEats Express.' : 'Your table is reserved at JunkEats Express.'}
+                        {isCompleted ? 'Enjoy your meal at JunkEats Express.' : isCancelled ? 'This reservation is no longer valid.' : 'Your table is reserved at JunkEats Express.'}
                     </CardDescription>
                 </CardHeader>
                 <CardContent className="p-6 space-y-4">
-                    {!isCheckedIn && (
+                    {!isCompleted && !isCancelled && (
                         <div className="bg-muted/50 p-4 rounded-lg text-center">
                            <p className="text-muted-foreground">Time Remaining</p>
                            <p className={`font-mono text-5xl font-bold ${timeLeft < 10 * 60 * 1000 ? 'text-destructive' : 'text-primary'}`}>{formatTime(timeLeft)}</p>
@@ -174,17 +182,20 @@ function ReservationConfirmedContent() {
                     </div>
                     
                     <p className="text-xs text-center text-muted-foreground pt-2">
-                        {isCheckedIn ? 'Thank you for choosing us.' : 'Please show this confirmation at the restaurant. Your table will be held for the duration of the timer.'}
+                        {isCompleted ? 'Thank you for choosing us.' : isCancelled ? 'Please contact support for any questions.' : 'Please show this confirmation at the restaurant. Your table will be held for the duration of the timer.'}
                     </p>
                 </CardContent>
                 <CardFooter className="flex-col gap-3 p-6 bg-muted/20 rounded-b-lg">
-                    {isCheckedIn ? (
-                        <Button asChild className="w-full" size="lg">
-                            <Link href="/dashboard">
-                                <Home className="mr-2 h-5 w-5" />
-                                Back to Home
-                            </Link>
-                        </Button>
+                    {isCompleted || isCancelled ? (
+                        <>
+                           {isCompleted && <Badge variant="default" className="bg-green-500 mb-4">Reservation Completed</Badge>}
+                           <Button asChild className="w-full" size="lg">
+                                <Link href="/dashboard">
+                                    <Home className="mr-2 h-5 w-5" />
+                                    Back to Home
+                                </Link>
+                            </Button>
+                        </>
                     ) : (
                         <>
                             <Button onClick={handleCheckIn} size="lg" className="w-full font-bold bg-green-600 hover:bg-green-700">
@@ -230,3 +241,4 @@ export default function ReservationConfirmedPage() {
         </Suspense>
     );
 }
+
