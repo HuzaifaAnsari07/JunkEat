@@ -101,17 +101,17 @@ export const EllipticalCarousel: React.FC<EllipticalCarouselProps> = ({ images, 
       
         <div className="flex items-center justify-center gap-4 z-30">
             <Button 
-                variant="outline" 
+                variant="secondary"
                 size="icon" 
-                className="rounded-full"
+                className="rounded-full shadow-md transition-all hover:bg-primary/20 hover:scale-110"
                 onClick={goToPrev}
             >
                 <ChevronLeft className="h-6 w-6" />
             </Button>
             <Button 
-                variant="outline" 
+                variant="secondary"
                 size="icon" 
-                className="rounded-full"
+                className="rounded-full shadow-md transition-all hover:bg-primary/20 hover:scale-110"
                 onClick={goToNext}
             >
                 <ChevronRight className="h-6 w-6" />
