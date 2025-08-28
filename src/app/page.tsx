@@ -1,7 +1,7 @@
 
 "use client";
 
-import { useState } from 'react';
+import { useState, useEffect } from 'react';
 import { useRouter } from 'next/navigation';
 import Link from 'next/link';
 import { Button } from '@/components/ui/button';
@@ -17,6 +17,11 @@ export default function LoginPage() {
   const [email, setEmail] = useState('');
   const [password, setPassword] = useState('');
   const [locationEnabled, setLocationEnabled] = useState(false);
+  const [isClient, setIsClient] = useState(false);
+
+  useEffect(() => {
+    setIsClient(true);
+  }, []);
 
   const handleLogin = (e: React.FormEvent) => {
     e.preventDefault();
@@ -106,15 +111,17 @@ export default function LoginPage() {
               />
             </div>
 
-            <Button
-              type="button"
-              variant={locationEnabled ? "secondary" : "outline"}
-              className="w-full"
-              onClick={handleEnableLocation}
-            >
-              <MapPin className="mr-2 h-5 w-5"/>
-              {locationEnabled ? 'Location Enabled' : 'Enable Live Location'}
-            </Button>
+            {isClient && (
+                <Button
+                  type="button"
+                  variant={locationEnabled ? "secondary" : "outline"}
+                  className="w-full"
+                  onClick={handleEnableLocation}
+                >
+                  <MapPin className="mr-2 h-5 w-5"/>
+                  {locationEnabled ? 'Location Enabled' : 'Enable Live Location'}
+                </Button>
+            )}
             
             <Button type="submit" className="w-full font-bold" disabled={!locationEnabled}>
                 <LogIn className="mr-2 h-5 w-5"/>
