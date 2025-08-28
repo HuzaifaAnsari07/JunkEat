@@ -303,7 +303,7 @@ export default function CheckoutPage() {
                                         </FormItem>
                                     )} />
                                 </div>
-                                <Button type="submit" size="lg" className="w-full font-bold transition-transform transform hover:scale-105">{orderType === 'dine-in' ? `Pay Advance & Place Order` : `Place Order`}</Button>
+                                <Button type="submit" size="lg" className="w-full font-bold transition-all hover:bg-primary/80 active:scale-95">{orderType === 'dine-in' ? `Pay Advance & Place Order` : `Place Order`}</Button>
                             </form>
                         </Form>
                     </CardContent>
@@ -370,3 +370,5 @@ export default function CheckoutPage() {
     </div>
   );
 }
+
+    
