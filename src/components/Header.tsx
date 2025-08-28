@@ -19,8 +19,10 @@ export function Header() {
   const { cartCount } = useCart();
   const pathname = usePathname();
   const [hasPendingOrder, setHasPendingOrder] = useState(false);
+  const [isClient, setIsClient] = useState(false);
 
   useEffect(() => {
+    setIsClient(true);
     const checkPendingOrders = () => {
         const storedOrders = sessionStorage.getItem('orderHistory');
         if (storedOrders) {
@@ -72,7 +74,7 @@ export function Header() {
           <ThemeToggle />
           <Button variant="outline" size="icon" className="rounded-full relative" asChild>
             <Link href="/profile">
-                {hasPendingOrder && (
+                {isClient && hasPendingOrder && (
                   <span className="absolute top-0 right-0 block h-2.5 w-2.5 rounded-full bg-destructive ring-2 ring-background animate-pulse" />
                 )}
                 <User className="h-5 w-5" />
