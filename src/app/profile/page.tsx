@@ -5,7 +5,7 @@ import { useState, useEffect } from 'react';
 import { Button } from "@/components/ui/button";
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card";
 import { Separator } from "@/components/ui/separator";
-import { User, Package, CheckCheck, Clock, MapPin } from "lucide-react";
+import { User, Package, CheckCheck, Clock, MapPin, Building } from "lucide-react";
 import Link from "next/link";
 import { Badge } from '@/components/ui/badge';
 import type { CartItem } from '@/types';
@@ -55,15 +55,26 @@ export default function ProfilePage() {
     const formatDate = (dateString: string) => new Date(dateString).toLocaleDateString('en-US', { year: 'numeric', month: 'long', day: 'numeric' });
 
     const totalOrders = orders.length;
-    const deliveredOrders = orders.filter(o => o.status === 'Delivered').length;
-    const pendingOrders = totalOrders - deliveredOrders;
+    const completedOrders = orders.filter(o => o.status === 'Delivered' || (o.orderType === 'dine-in' && o.status !== 'Cancelled')).length;
+    const pendingOrders = orders.filter(o => o.orderType === 'delivery' && o.status === 'Order Placed').length;
 
-    const getStatusVariant = (status: string): "default" | "secondary" | "destructive" | "outline" | null | undefined => {
-        if (status === 'Delivered' || status === 'Reserved') return 'default';
+    const getStatusVariant = (status: string, orderType: string): "default" | "secondary" | "destructive" | "outline" | null | undefined => {
+        if (status === 'Delivered') return 'default';
+        if (orderType === 'dine-in' && status === 'Order Placed') return 'default';
         if (status === 'Order Placed' || status === 'Preparing' || status === 'Out for Delivery') return 'secondary';
         if (status === 'Cancelled') return 'destructive';
         return 'outline';
     }
+    
+    const getStatusText = (order: Order) => {
+        if (order.orderType === 'dine-in') {
+            if (order.status === 'Order Placed') return 'Reserved';
+            if (order.status === 'Cancelled') return 'Cancelled';
+            return 'Completed'; // Assuming dine-in is completed after the fact
+        }
+        return order.status;
+    }
+
 
     return (
         <div className="container mx-auto px-4 py-8">
@@ -90,13 +101,13 @@ export default function ProfilePage() {
                             </Card>
                             <Card className="p-4">
                                 <CheckCheck className="h-8 w-8 text-green-500 mx-auto mb-2" />
-                                <p className="text-2xl font-bold">{deliveredOrders}</p>
+                                <p className="text-2xl font-bold">{completedOrders}</p>
                                 <p className="text-muted-foreground">Orders Completed</p>
                             </Card>
                             <Card className="p-4">
                                 <Clock className="h-8 w-8 text-amber-500 mx-auto mb-2" />
                                 <p className="text-2xl font-bold">{pendingOrders}</p>
-                                <p className="text-muted-foreground">Pending Orders</p>
+                                <p className="text-muted-foreground">Pending Deliveries</p>
                             </Card>
                         </div>
                     </section>
@@ -116,7 +127,7 @@ export default function ProfilePage() {
                                             </div>
                                             <div className="text-right">
                                                  <p className="font-bold text-lg text-primary">{formatCurrency(order.total)}</p>
-                                                  <Badge variant={getStatusVariant(order.status)}>{order.orderType === 'dine-in' && order.status === 'Order Placed' ? 'Reserved' : order.status}</Badge>
+                                                  <Badge variant={getStatusVariant(order.status, order.orderType)}>{getStatusText(order)}</Badge>
                                             </div>
                                         </CardHeader>
                                         <CardContent className="p-4">
@@ -126,12 +137,22 @@ export default function ProfilePage() {
                                                     <li key={item.id}>{item.name} (x{item.quantity})</li>
                                                 ))}
                                             </ul>
-                                             {order.orderType === 'delivery' && order.status !== 'Delivered' && (
+                                             {order.orderType === 'delivery' && order.status === 'Order Placed' && (
                                                 <div className="text-right mt-4">
                                                      <Button asChild>
                                                         <Link href="/track-order">
                                                             <MapPin className="mr-2 h-4 w-4" />
                                                             Track Order
+                                                        </Link>
+                                                    </Button>
+                                                </div>
+                                            )}
+                                            {order.orderType === 'dine-in' && order.status === 'Order Placed' && (
+                                                <div className="text-right mt-4">
+                                                     <Button asChild>
+                                                        <Link href="/reservation-confirmed">
+                                                            <Building className="mr-2 h-4 w-4" />
+                                                            View Reservation
                                                         </Link>
                                                     </Button>
                                                 </div>
