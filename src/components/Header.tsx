@@ -9,10 +9,41 @@ import { Cart } from '@/components/Cart';
 import { useCart } from '@/context/CartProvider';
 import { ThemeToggle } from './ThemeToggle';
 import { usePathname } from 'next/navigation';
+import { useState, useEffect } from 'react';
+
+interface Order {
+    status: string;
+}
 
 export function Header() {
   const { cartCount } = useCart();
   const pathname = usePathname();
+  const [hasPendingOrder, setHasPendingOrder] = useState(false);
+
+  useEffect(() => {
+    const checkPendingOrders = () => {
+        const storedOrders = sessionStorage.getItem('orderHistory');
+        if (storedOrders) {
+            const orders: Order[] = JSON.parse(storedOrders);
+            const pending = orders.some(order => 
+                order.status !== 'Delivered' && 
+                order.status !== 'Completed' && 
+                order.status !== 'Cancelled'
+            );
+            setHasPendingOrder(pending);
+        } else {
+            setHasPendingOrder(false);
+        }
+    }
+    
+    checkPendingOrders();
+
+    // Re-check on navigation change
+    const interval = setInterval(checkPendingOrders, 3000); // Check every 3 seconds
+
+    return () => clearInterval(interval);
+  }, [pathname]);
+
 
   if (pathname === '/' || pathname === '/register') {
     return null;
@@ -39,8 +70,11 @@ export function Header() {
           </nav>
           
           <ThemeToggle />
-          <Button variant="outline" size="icon" className="rounded-full" asChild>
+          <Button variant="outline" size="icon" className="rounded-full relative" asChild>
             <Link href="/profile">
+                {hasPendingOrder && (
+                  <span className="absolute top-0 right-0 block h-2.5 w-2.5 rounded-full bg-destructive ring-2 ring-background animate-pulse" />
+                )}
                 <User className="h-5 w-5" />
                 <span className="sr-only">Profile</span>
             </Link>
