@@ -72,15 +72,17 @@ export function Header() {
           </nav>
           
           <ThemeToggle />
-          <Button variant="outline" size="icon" className="rounded-full relative" asChild>
-            <Link href="/profile">
-                {isClient && hasPendingOrder && (
-                  <span className="absolute top-0 right-0 block h-2.5 w-2.5 rounded-full bg-destructive ring-2 ring-background animate-pulse" />
-                )}
-                <User className="h-5 w-5" />
-                <span className="sr-only">Profile</span>
-            </Link>
-          </Button>
+          {isClient && (
+            <Button variant="outline" size="icon" className="rounded-full relative" asChild>
+              <Link href="/profile">
+                  {hasPendingOrder && (
+                    <span className="absolute top-0 right-0 block h-2.5 w-2.5 rounded-full bg-destructive ring-2 ring-background animate-pulse" />
+                  )}
+                  <User className="h-5 w-5" />
+                  <span className="sr-only">Profile</span>
+              </Link>
+            </Button>
+          )}
           <Sheet>
             <SheetTrigger asChild>
               <Button variant="outline" size="icon" className="relative rounded-full">
