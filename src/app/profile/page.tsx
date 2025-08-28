@@ -5,10 +5,11 @@ import { useState, useEffect } from 'react';
 import { Button } from "@/components/ui/button";
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card";
 import { Separator } from "@/components/ui/separator";
-import { User, Package, CheckCheck, Clock, MapPin, Building } from "lucide-react";
+import { User, Package, CheckCheck, Clock, MapPin, Building, Utensils } from "lucide-react";
 import Link from "next/link";
 import { Badge } from '@/components/ui/badge';
 import type { CartItem } from '@/types';
+import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs';
 
 interface Order {
     id: string;
@@ -51,16 +52,23 @@ export default function ProfilePage() {
         }
     }, []);
 
+    const deliveryOrders = orders.filter(o => o.orderType === 'delivery');
+    const dineInOrders = orders.filter(o => o.orderType === 'dine-in');
+
     const formatCurrency = (amount: number) => `₹${amount.toFixed(2)}`;
     const formatDate = (dateString: string) => new Date(dateString).toLocaleDateString('en-US', { year: 'numeric', month: 'long', day: 'numeric' });
 
-    const totalOrders = orders.length;
-    const completedOrders = orders.filter(o => o.status === 'Delivered' || (o.orderType === 'dine-in' && o.status !== 'Cancelled')).length;
-    const pendingOrders = orders.filter(o => o.orderType === 'delivery' && o.status === 'Order Placed').length;
+    const totalDeliveries = deliveryOrders.length;
+    const completedDeliveries = deliveryOrders.filter(o => o.status === 'Delivered').length;
+    const pendingDeliveries = totalDeliveries - completedDeliveries;
+    
+    const upcomingReservations = dineInOrders.filter(o => o.status === 'Order Placed').length;
 
     const getStatusVariant = (status: string, orderType: string): "default" | "secondary" | "destructive" | "outline" | null | undefined => {
         if (status === 'Delivered') return 'default';
-        if (orderType === 'dine-in' && status === 'Order Placed') return 'default';
+        if (orderType === 'dine-in' && status === 'Order Placed') return 'secondary';
+        if (orderType === 'dine-in' && status === 'Cancelled') return 'destructive';
+        if (orderType === 'dine-in') return 'default';
         if (status === 'Order Placed' || status === 'Preparing' || status === 'Out for Delivery') return 'secondary';
         if (status === 'Cancelled') return 'destructive';
         return 'outline';
@@ -75,6 +83,48 @@ export default function ProfilePage() {
         return order.status;
     }
 
+    const OrderCard = ({ order }: { order: Order }) => (
+        <Card className="overflow-hidden">
+            <CardHeader className="flex flex-row justify-between items-center p-4 bg-secondary/30">
+                <div>
+                    <p className="font-bold">Order ID: {order.id}</p>
+                    <p className="text-sm text-muted-foreground">Date: {formatDate(order.date)}</p>
+                </div>
+                <div className="text-right">
+                        <p className="font-bold text-lg text-primary">{formatCurrency(order.total)}</p>
+                        <Badge variant={getStatusVariant(order.status, order.orderType)}>{getStatusText(order)}</Badge>
+                </div>
+            </CardHeader>
+            <CardContent className="p-4">
+                <p className="font-semibold mb-2">Items:</p>
+                <ul className="list-disc list-inside text-sm text-muted-foreground">
+                    {order.items.map(item => (
+                        <li key={item.id}>{item.name} (x{item.quantity})</li>
+                    ))}
+                </ul>
+                    {order.orderType === 'delivery' && order.status === 'Order Placed' && (
+                    <div className="text-right mt-4">
+                            <Button asChild>
+                            <Link href="/track-order">
+                                <MapPin className="mr-2 h-4 w-4" />
+                                Track Order
+                            </Link>
+                        </Button>
+                    </div>
+                )}
+                {order.orderType === 'dine-in' && order.status === 'Order Placed' && (
+                    <div className="text-right mt-4">
+                            <Button asChild>
+                            <Link href="/reservation-confirmed">
+                                <Building className="mr-2 h-4 w-4" />
+                                View Reservation
+                            </Link>
+                        </Button>
+                    </div>
+                )}
+            </CardContent>
+        </Card>
+    );
 
     return (
         <div className="container mx-auto px-4 py-8">
@@ -92,22 +142,22 @@ export default function ProfilePage() {
                 </CardHeader>
                 <CardContent className="p-6">
                     <section id="order-summary" className="mb-8">
-                        <h2 className="font-headline text-2xl font-bold mb-4">Order Summary</h2>
+                        <h2 className="font-headline text-2xl font-bold mb-4">Account Summary</h2>
                         <div className="grid grid-cols-1 md:grid-cols-3 gap-4 text-center">
                             <Card className="p-4">
                                 <Package className="h-8 w-8 text-primary mx-auto mb-2" />
-                                <p className="text-2xl font-bold">{totalOrders}</p>
-                                <p className="text-muted-foreground">Total Orders</p>
-                            </Card>
-                            <Card className="p-4">
-                                <CheckCheck className="h-8 w-8 text-green-500 mx-auto mb-2" />
-                                <p className="text-2xl font-bold">{completedOrders}</p>
-                                <p className="text-muted-foreground">Orders Completed</p>
+                                <p className="text-2xl font-bold">{totalDeliveries}</p>
+                                <p className="text-muted-foreground">Total Deliveries</p>
                             </Card>
                             <Card className="p-4">
                                 <Clock className="h-8 w-8 text-amber-500 mx-auto mb-2" />
-                                <p className="text-2xl font-bold">{pendingOrders}</p>
+                                <p className="text-2xl font-bold">{pendingDeliveries}</p>
                                 <p className="text-muted-foreground">Pending Deliveries</p>
+                            </Card>
+                            <Card className="p-4">
+                                <Utensils className="h-8 w-8 text-green-500 mx-auto mb-2" />
+                                <p className="text-2xl font-bold">{upcomingReservations}</p>
+                                <p className="text-muted-foreground">Upcoming Reservations</p>
                             </Card>
                         </div>
                     </section>
@@ -115,55 +165,31 @@ export default function ProfilePage() {
                     <Separator className="my-8" />
                     
                     <section id="order-history">
-                        <h2 className="font-headline text-2xl font-bold mb-4">Order History</h2>
-                        <div className="space-y-4">
-                            {orders.length > 0 ? (
-                                orders.map(order => (
-                                    <Card key={order.id} className="overflow-hidden">
-                                        <CardHeader className="flex flex-row justify-between items-center p-4 bg-secondary/30">
-                                            <div>
-                                                <p className="font-bold">Order ID: {order.id}</p>
-                                                <p className="text-sm text-muted-foreground">Date: {formatDate(order.date)}</p>
-                                            </div>
-                                            <div className="text-right">
-                                                 <p className="font-bold text-lg text-primary">{formatCurrency(order.total)}</p>
-                                                  <Badge variant={getStatusVariant(order.status, order.orderType)}>{getStatusText(order)}</Badge>
-                                            </div>
-                                        </CardHeader>
-                                        <CardContent className="p-4">
-                                            <p className="font-semibold mb-2">Items:</p>
-                                            <ul className="list-disc list-inside text-sm text-muted-foreground">
-                                                {order.items.map(item => (
-                                                    <li key={item.id}>{item.name} (x{item.quantity})</li>
-                                                ))}
-                                            </ul>
-                                             {order.orderType === 'delivery' && order.status === 'Order Placed' && (
-                                                <div className="text-right mt-4">
-                                                     <Button asChild>
-                                                        <Link href="/track-order">
-                                                            <MapPin className="mr-2 h-4 w-4" />
-                                                            Track Order
-                                                        </Link>
-                                                    </Button>
-                                                </div>
-                                            )}
-                                            {order.orderType === 'dine-in' && order.status === 'Order Placed' && (
-                                                <div className="text-right mt-4">
-                                                     <Button asChild>
-                                                        <Link href="/reservation-confirmed">
-                                                            <Building className="mr-2 h-4 w-4" />
-                                                            View Reservation
-                                                        </Link>
-                                                    </Button>
-                                                </div>
-                                            )}
-                                        </CardContent>
-                                    </Card>
-                                ))
-                            ) : (
-                                <p className="text-muted-foreground text-center py-8">You haven't placed any orders yet.</p>
-                            )}
-                        </div>
+                        <h2 className="font-headline text-2xl font-bold mb-4">Your Activity</h2>
+                        <Tabs defaultValue="delivery">
+                            <TabsList className="grid w-full grid-cols-2">
+                                <TabsTrigger value="delivery">Delivery History</TabsTrigger>
+                                <TabsTrigger value="reservations">Dine-in Reservations</TabsTrigger>
+                            </TabsList>
+                            <TabsContent value="delivery" className="mt-6">
+                                <div className="space-y-4">
+                                    {deliveryOrders.length > 0 ? (
+                                        deliveryOrders.map(order => <OrderCard key={order.id} order={order} />)
+                                    ) : (
+                                        <p className="text-muted-foreground text-center py-8">You haven't placed any delivery orders yet.</p>
+                                    )}
+                                </div>
+                            </TabsContent>
+                            <TabsContent value="reservations" className="mt-6">
+                                 <div className="space-y-4">
+                                    {dineInOrders.length > 0 ? (
+                                        dineInOrders.map(order => <OrderCard key={order.id} order={order} />)
+                                    ) : (
+                                        <p className="text-muted-foreground text-center py-8">You don't have any dine-in reservations.</p>
+                                    )}
+                                </div>
+                            </TabsContent>
+                        </Tabs>
                     </section>
                 </CardContent>
             </Card>
