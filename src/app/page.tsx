@@ -21,6 +21,8 @@ export default function LoginPage() {
 
   useEffect(() => {
     setIsClient(true);
+    // Clear session storage on component mount to ensure a fresh session
+    sessionStorage.clear();
   }, []);
 
   const handleLogin = (e: React.FormEvent) => {
