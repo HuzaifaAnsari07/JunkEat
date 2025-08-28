@@ -25,7 +25,7 @@ export default function Home() {
     <div className="container mx-auto px-4 py-8 space-y-16">
       <section className="relative w-full overflow-hidden flex flex-col items-center justify-center min-h-[500px] md:min-h-[600px]">
         <div className="text-center z-20 mb-8 px-4">
-            <h1 className="font-headline text-5xl md:text-7xl font-bold">Cravings Calling?</h1>
+            <h1 className="font-headline text-5xl md:text-7xl font-bold animate-text-pop-up">Cravings Calling?</h1>
             <p className="mt-4 max-w-2xl mx-auto text-lg md:text-xl text-muted-foreground">
                 Get your favorite junk food delivered to your door, faster than you can say "extra cheese".
             </p>
