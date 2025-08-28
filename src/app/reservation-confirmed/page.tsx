@@ -6,7 +6,7 @@ import { useRouter } from 'next/navigation';
 import { Button } from "@/components/ui/button";
 import { Card, CardContent, CardDescription, CardHeader, CardTitle, CardFooter } from "@/components/ui/card";
 import { Separator } from "@/components/ui/separator";
-import { Home, XCircle, Clock, MapPin, QrCode, ClipboardCopy, Check, FileDown, Share2 } from "lucide-react";
+import { Home, XCircle, Clock, MapPin, ClipboardCopy, Check, Share2, CheckCircle } from "lucide-react";
 import Link from "next/link";
 import { useToast } from "@/hooks/use-toast";
 
@@ -16,6 +16,7 @@ interface OrderDetails {
     placementTime: number;
     specialRequests?: string;
     advancePaid?: number;
+    status?: string;
 }
 
 const RESERVATION_DURATION_MS = 60 * 60 * 1000; // 1 hour
@@ -26,6 +27,7 @@ function ReservationConfirmedContent() {
     const [order, setOrder] = useState<OrderDetails | null>(null);
     const [timeLeft, setTimeLeft] = useState(RESERVATION_DURATION_MS);
     const [isCopied, setIsCopied] = useState(false);
+    const [isCheckedIn, setIsCheckedIn] = useState(false);
 
     useEffect(() => {
         const savedOrder = sessionStorage.getItem('latestOrder');
@@ -33,6 +35,9 @@ function ReservationConfirmedContent() {
             const parsedOrder = JSON.parse(savedOrder);
             if (parsedOrder.orderType === 'dine-in') {
                 setOrder(parsedOrder);
+                if (parsedOrder.status === 'Completed' || parsedOrder.status === 'Checked-in') {
+                    setIsCheckedIn(true);
+                }
             } else {
                 router.push('/dashboard');
             }
@@ -42,7 +47,7 @@ function ReservationConfirmedContent() {
     }, [router]);
 
     useEffect(() => {
-        if (!order) return;
+        if (!order || isCheckedIn) return;
 
         const interval = setInterval(() => {
             const elapsedTime = Date.now() - order.placementTime;
@@ -56,9 +61,10 @@ function ReservationConfirmedContent() {
         }, 1000);
 
         return () => clearInterval(interval);
-    }, [order]);
+    }, [order, isCheckedIn]);
 
     const formatTime = (ms: number) => {
+        if (ms <= 0) return "00:00";
         const totalSeconds = Math.floor(ms / 1000);
         const minutes = Math.floor(totalSeconds / 60);
         const seconds = totalSeconds % 60;
@@ -85,6 +91,23 @@ function ReservationConfirmedContent() {
         router.push('/dashboard');
     }
     
+    const handleCheckIn = () => {
+        setIsCheckedIn(true);
+        const history = JSON.parse(sessionStorage.getItem('orderHistory') || '[]');
+        if (order) {
+            const updatedHistory = history.map((o: any) =>
+                o.id === order.id ? { ...o, status: 'Completed' } : o
+            );
+            sessionStorage.setItem('orderHistory', JSON.stringify(updatedHistory));
+            setOrder(prev => prev ? { ...prev, status: 'Completed' } : null);
+        }
+        toast({
+            title: "Check-in Successful!",
+            description: `Welcome to JunkEats! Enjoy your meal at Table ${order?.tableNumber}.`,
+            variant: 'default',
+        });
+    };
+    
     const handleCopyId = () => {
         if (order?.id) {
             navigator.clipboard.writeText(order.id);
@@ -106,18 +129,20 @@ function ReservationConfirmedContent() {
             <Card className="w-full max-w-lg shadow-2xl animate-in fade-in-50 zoom-in-95 duration-500">
                 <CardHeader className="text-center bg-primary/5 rounded-t-lg">
                     <div className="mx-auto bg-primary/10 p-4 rounded-full w-fit mb-4">
-                        <Clock className="h-12 w-12 text-primary" />
+                        {isCheckedIn ? <CheckCircle className="h-12 w-12 text-green-500" /> : <Clock className="h-12 w-12 text-primary" />}
                     </div>
-                    <CardTitle className="font-headline text-3xl">Reservation Confirmed!</CardTitle>
+                    <CardTitle className="font-headline text-3xl">{isCheckedIn ? 'Checked-in!' : 'Reservation Confirmed!'}</CardTitle>
                     <CardDescription>
-                        Your table is reserved at JunkEats Express.
+                        {isCheckedIn ? 'Enjoy your meal at JunkEats Express.' : 'Your table is reserved at JunkEats Express.'}
                     </CardDescription>
                 </CardHeader>
                 <CardContent className="p-6 space-y-4">
-                    <div className="bg-muted/50 p-4 rounded-lg text-center">
-                       <p className="text-muted-foreground">Time Remaining</p>
-                       <p className="font-mono text-5xl font-bold text-primary">{formatTime(timeLeft)}</p>
-                    </div>
+                    {!isCheckedIn && (
+                        <div className="bg-muted/50 p-4 rounded-lg text-center">
+                           <p className="text-muted-foreground">Time Remaining</p>
+                           <p className={`font-mono text-5xl font-bold ${timeLeft < 10 * 60 * 1000 ? 'text-destructive' : 'text-primary'}`}>{formatTime(timeLeft)}</p>
+                        </div>
+                    )}
 
                     <div className="grid grid-cols-2 gap-4 text-sm">
                         <div>
@@ -149,34 +174,49 @@ function ReservationConfirmedContent() {
                     </div>
                     
                     <p className="text-xs text-center text-muted-foreground pt-2">
-                        Please show this confirmation at the restaurant. Your table will be held for the duration of the timer.
+                        {isCheckedIn ? 'Thank you for choosing us.' : 'Please show this confirmation at the restaurant. Your table will be held for the duration of the timer.'}
                     </p>
                 </CardContent>
                 <CardFooter className="flex-col gap-3 p-6 bg-muted/20 rounded-b-lg">
-                    <div className="grid grid-cols-2 gap-2 w-full">
-                       <Button asChild className="w-full">
-                          <a href="https://www.google.com/maps" target="_blank" rel="noopener noreferrer">
-                              <MapPin className="mr-2 h-5 w-5" />
-                              Get Directions
-                          </a>
-                       </Button>
-                       <Button variant="secondary" className="w-full" onClick={() => alert("Share functionality not implemented.")}>
-                          <Share2 className="mr-2 h-5 w-5" />
-                          Share
-                       </Button>
-                    </div>
-                    <div className="grid grid-cols-2 gap-2 w-full">
-                         <Button onClick={handleCancelReservation} variant="destructive" className="w-full">
-                            <XCircle className="mr-2 h-5 w-5" />
-                            Cancel
-                        </Button>
-                         <Button asChild variant="outline" className="w-full">
+                    {isCheckedIn ? (
+                        <Button asChild className="w-full" size="lg">
                             <Link href="/dashboard">
                                 <Home className="mr-2 h-5 w-5" />
-                                Home
+                                Back to Home
                             </Link>
                         </Button>
-                    </div>
+                    ) : (
+                        <>
+                            <Button onClick={handleCheckIn} size="lg" className="w-full font-bold bg-green-600 hover:bg-green-700">
+                                <CheckCircle className="mr-2 h-5 w-5" />
+                                Reached at Restaurant
+                            </Button>
+                            <div className="grid grid-cols-2 gap-2 w-full">
+                               <Button asChild className="w-full">
+                                  <a href="https://www.google.com/maps" target="_blank" rel="noopener noreferrer">
+                                      <MapPin className="mr-2 h-5 w-5" />
+                                      Get Directions
+                                  </a>
+                               </Button>
+                               <Button variant="secondary" className="w-full" onClick={() => alert("Share functionality not implemented.")}>
+                                  <Share2 className="mr-2 h-5 w-5" />
+                                  Share
+                               </Button>
+                            </div>
+                            <div className="grid grid-cols-2 gap-2 w-full">
+                                 <Button onClick={handleCancelReservation} variant="destructive" className="w-full">
+                                    <XCircle className="mr-2 h-5 w-5" />
+                                    Cancel
+                                </Button>
+                                 <Button asChild variant="outline" className="w-full">
+                                    <Link href="/dashboard">
+                                        <Home className="mr-2 h-5 w-5" />
+                                        Home
+                                    </Link>
+                                </Button>
+                            </div>
+                        </>
+                    )}
                 </CardFooter>
             </Card>
         </div>

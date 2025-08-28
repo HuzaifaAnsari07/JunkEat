@@ -69,13 +69,12 @@ export default function ProfilePage() {
     // Dine-in Stats
     const totalReservations = dineInOrders.length;
     const upcomingReservations = dineInOrders.filter(o => o.status === 'Order Placed').length;
-    const completedReservations = dineInOrders.filter(o => o.status !== 'Order Placed' && o.status !== 'Cancelled').length;
+    const completedReservations = dineInOrders.filter(o => o.status === 'Completed').length;
 
 
     const getStatusVariant = (status: string, orderType: string): "default" | "secondary" | "destructive" | "outline" | null | undefined => {
-        if (status === 'Delivered') return 'default';
+        if (status === 'Delivered' || status === 'Completed') return 'default';
         if (orderType === 'dine-in' && status === 'Order Placed') return 'secondary';
-        if (orderType === 'dine-in' && (status === 'Completed' || status === 'Delivered')) return 'default';
         if (status === 'Cancelled') return 'destructive';
         if (status === 'Order Placed' || status === 'Preparing' || status === 'Out for Delivery') return 'secondary';
         return 'outline';
@@ -84,8 +83,6 @@ export default function ProfilePage() {
     const getStatusText = (order: Order) => {
         if (order.orderType === 'dine-in') {
             if (order.status === 'Order Placed') return 'Reserved';
-            if (order.status === 'Cancelled') return 'Cancelled';
-            return 'Completed'; // Assuming dine-in is completed after the fact
         }
         return order.status;
     }
@@ -124,7 +121,7 @@ export default function ProfilePage() {
                             </Button>
                         </div>
                     )}
-                    {order.orderType === 'dine-in' && order.status === 'Order Placed' && (
+                    {order.orderType === 'dine-in' && order.status !== 'Cancelled' && (
                         <div className="text-right mt-4">
                             <Button onClick={() => handleViewReservation(order)}>
                                 <Building className="mr-2 h-4 w-4" />
