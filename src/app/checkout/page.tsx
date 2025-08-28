@@ -3,7 +3,7 @@
 
 import { useCart } from '@/context/CartProvider';
 import { useRouter } from 'next/navigation';
-import { useEffect, useState } from 'react';
+import { useEffect, useState, useMemo } from 'react';
 import { useForm } from 'react-hook-form';
 import { zodResolver } from '@hookform/resolvers/zod';
 import * as z from 'zod';
@@ -59,6 +59,16 @@ export default function CheckoutPage() {
   const { toast } = useToast();
   const [userName, setUserName] = useState('');
   const [selectedTable, setSelectedTable] = useState<string | null>(null);
+
+  const tableNumbers = useMemo(() => {
+    const numbers = Array.from({ length: TOTAL_TABLES }, (_, i) => i + 1);
+    // Fisher-Yates shuffle
+    for (let i = numbers.length - 1; i > 0; i--) {
+        const j = Math.floor(Math.random() * (i + 1));
+        [numbers[i], numbers[j]] = [numbers[j], numbers[i]];
+    }
+    return numbers;
+  }, []);
 
   useEffect(() => {
     if (cartItems.length === 0) {
@@ -140,12 +150,7 @@ export default function CheckoutPage() {
     sessionStorage.setItem('latestOrder', JSON.stringify(orderDetails));
     
     if (values.orderType === 'dine-in') {
-        toast({
-            title: "Reservation Confirmed!",
-            description: `Table ${values.tableNumber} is booked for the next hour.`,
-            variant: 'default',
-            duration: 2000,
-        });
+        router.push(`/reservation-confirmed`);
     } else {
         toast({
             title: "Order Placed!",
@@ -153,8 +158,8 @@ export default function CheckoutPage() {
             variant: 'default',
             duration: 3000,
         });
+        router.push(`/order-confirmation`);
     }
-    router.push(`/order-confirmation`);
   };
 
   if (cartItems.length === 0) {
@@ -245,7 +250,7 @@ export default function CheckoutPage() {
                                                 <FormField control={form.control} name="tableNumber" render={({ field }) => (
                                                     <FormItem>
                                                         <RadioGroup onValueChange={handleTableSelection} className="grid grid-cols-4 gap-4">
-                                                          {Array.from({ length: TOTAL_TABLES }, (_, i) => i + 1).map(tableNum => (
+                                                          {tableNumbers.map(tableNum => (
                                                               <Label key={tableNum} htmlFor={`table-${tableNum}`} className={cn("border rounded-lg p-2 flex flex-col items-center justify-center gap-2 cursor-pointer hover:bg-accent/50 has-[:checked]:bg-accent has-[:checked]:text-accent-foreground has-[:checked]:border-accent-foreground transition-all duration-300",
                                                                   tableNum > VACANT_TABLES ? 'cursor-not-allowed bg-muted text-muted-foreground opacity-50' : ''
                                                               )}>
