@@ -5,7 +5,7 @@ import { useState, useEffect } from 'react';
 import { Button } from "@/components/ui/button";
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card";
 import { Separator } from "@/components/ui/separator";
-import { User, Package, Clock, MapPin, Building, Utensils } from "lucide-react";
+import { User, Package, Clock, MapPin, Building, Utensils, XCircle, CheckCircle } from "lucide-react";
 import Link from "next/link";
 import { Badge } from '@/components/ui/badge';
 import type { CartItem } from '@/types';
@@ -26,6 +26,7 @@ const ESTIMATED_DELIVERY_TIME_MS = 20 * 1000; // 20 seconds for simulation
 export default function ProfilePage() {
     const [orders, setOrders] = useState<Order[]>([]);
     const [userName, setUserName] = useState('Valued Customer');
+    const [activeTab, setActiveTab] = useState('delivery');
 
     useEffect(() => {
         const storedUser = sessionStorage.getItem('loggedInUser');
@@ -57,20 +58,25 @@ export default function ProfilePage() {
 
     const formatCurrency = (amount: number) => `₹${amount.toFixed(2)}`;
     const formatDate = (dateString: string) => new Date(dateString).toLocaleDateString('en-US', { year: 'numeric', month: 'long', day: 'numeric' });
-
-    const totalDeliveries = deliveryOrders.length;
-    const completedDeliveries = deliveryOrders.filter(o => o.status === 'Delivered').length;
-    const pendingDeliveries = totalDeliveries - completedDeliveries;
     
+    // Delivery Stats
+    const totalDeliveries = deliveryOrders.length;
+    const deliveredOrders = deliveryOrders.filter(o => o.status === 'Delivered').length;
+    const pendingDeliveries = totalDeliveries - deliveredOrders;
+
+    // Dine-in Stats
+    const totalReservations = dineInOrders.length;
     const upcomingReservations = dineInOrders.filter(o => o.status === 'Order Placed').length;
+    const completedReservations = dineInOrders.filter(o => o.status !== 'Order Placed' && o.status !== 'Cancelled').length;
+    const cancelledReservations = dineInOrders.filter(o => o.status === 'Cancelled').length;
+
 
     const getStatusVariant = (status: string, orderType: string): "default" | "secondary" | "destructive" | "outline" | null | undefined => {
         if (status === 'Delivered') return 'default';
         if (orderType === 'dine-in' && status === 'Order Placed') return 'secondary';
-        if (orderType === 'dine-in' && status === 'Cancelled') return 'destructive';
-        if (orderType === 'dine-in') return 'default';
-        if (status === 'Order Placed' || status === 'Preparing' || status === 'Out for Delivery') return 'secondary';
+        if (orderType === 'dine-in' && status === 'Completed') return 'default';
         if (status === 'Cancelled') return 'destructive';
+        if (status === 'Order Placed' || status === 'Preparing' || status === 'Out for Delivery') return 'secondary';
         return 'outline';
     }
     
@@ -102,26 +108,26 @@ export default function ProfilePage() {
                         <li key={item.id}>{item.name} (x{item.quantity})</li>
                     ))}
                 </ul>
-                    {order.orderType === 'delivery' && order.status === 'Order Placed' && (
-                    <div className="text-right mt-4">
-                            <Button asChild>
-                            <Link href="/track-order">
-                                <MapPin className="mr-2 h-4 w-4" />
-                                Track Order
-                            </Link>
-                        </Button>
-                    </div>
-                )}
-                {order.orderType === 'dine-in' && order.status === 'Order Placed' && (
-                    <div className="text-right mt-4">
-                            <Button asChild>
-                            <Link href="/reservation-confirmed">
-                                <Building className="mr-2 h-4 w-4" />
-                                View Reservation
-                            </Link>
-                        </Button>
-                    </div>
-                )}
+                    {order.orderType === 'delivery' && (order.status !== 'Delivered' && order.status !== 'Cancelled') && (
+                        <div className="text-right mt-4">
+                                <Button asChild>
+                                <Link href="/track-order">
+                                    <MapPin className="mr-2 h-4 w-4" />
+                                    Track Order
+                                </Link>
+                            </Button>
+                        </div>
+                    )}
+                    {order.orderType === 'dine-in' && order.status === 'Order Placed' && (
+                        <div className="text-right mt-4">
+                                <Button asChild>
+                                <Link href="/reservation-confirmed">
+                                    <Building className="mr-2 h-4 w-4" />
+                                    View Reservation
+                                </Link>
+                            </Button>
+                        </div>
+                    )}
             </CardContent>
         </Card>
     );
@@ -141,37 +147,61 @@ export default function ProfilePage() {
                     </div>
                 </CardHeader>
                 <CardContent className="p-6">
-                    <section id="order-summary" className="mb-8">
-                        <h2 className="font-headline text-2xl font-bold mb-4">Account Summary</h2>
-                        <div className="grid grid-cols-1 md:grid-cols-3 gap-4 text-center">
-                            <Card className="p-4">
-                                <Package className="h-8 w-8 text-primary mx-auto mb-2" />
-                                <p className="text-2xl font-bold">{totalDeliveries}</p>
-                                <p className="text-muted-foreground">Total Deliveries</p>
-                            </Card>
-                            <Card className="p-4">
-                                <Clock className="h-8 w-8 text-amber-500 mx-auto mb-2" />
-                                <p className="text-2xl font-bold">{pendingDeliveries}</p>
-                                <p className="text-muted-foreground">Pending Deliveries</p>
-                            </Card>
-                            <Card className="p-4">
-                                <Utensils className="h-8 w-8 text-green-500 mx-auto mb-2" />
-                                <p className="text-2xl font-bold">{upcomingReservations}</p>
-                                <p className="text-muted-foreground">Upcoming Reservations</p>
-                            </Card>
-                        </div>
-                    </section>
-
-                    <Separator className="my-8" />
-                    
-                    <section id="order-history">
-                        <h2 className="font-headline text-2xl font-bold mb-4">Your Activity</h2>
-                        <Tabs defaultValue="delivery">
+                     <section id="order-history">
+                        <Tabs defaultValue="delivery" onValueChange={setActiveTab}>
                             <TabsList className="grid w-full grid-cols-2">
                                 <TabsTrigger value="delivery">Delivery History</TabsTrigger>
                                 <TabsTrigger value="reservations">Dine-in Reservations</TabsTrigger>
                             </TabsList>
-                            <TabsContent value="delivery" className="mt-6">
+                            
+                            <div className="my-8">
+                                <h2 className="font-headline text-2xl font-bold mb-4">Account Summary</h2>
+                                {activeTab === 'delivery' ? (
+                                    <div className="grid grid-cols-1 md:grid-cols-3 gap-4 text-center animate-in fade-in-50 duration-300">
+                                        <Card className="p-4">
+                                            <Package className="h-8 w-8 text-primary mx-auto mb-2" />
+                                            <p className="text-2xl font-bold">{totalDeliveries}</p>
+                                            <p className="text-muted-foreground">Total Orders</p>
+                                        </Card>
+                                        <Card className="p-4">
+                                            <Clock className="h-8 w-8 text-amber-500 mx-auto mb-2" />
+                                            <p className="text-2xl font-bold">{pendingDeliveries}</p>
+                                            <p className="text-muted-foreground">Pending</p>
+                                        </Card>
+                                        <Card className="p-4">
+                                            <CheckCircle className="h-8 w-8 text-green-500 mx-auto mb-2" />
+                                            <p className="text-2xl font-bold">{deliveredOrders}</p>
+                                            <p className="text-muted-foreground">Delivered</p>
+                                        </Card>
+                                    </div>
+                                ) : (
+                                    <div className="grid grid-cols-1 md:grid-cols-3 gap-4 text-center animate-in fade-in-50 duration-300">
+                                        <Card className="p-4">
+                                            <Utensils className="h-8 w-8 text-primary mx-auto mb-2" />
+                                            <p className="text-2xl font-bold">{totalReservations}</p>
+                                            <p className="text-muted-foreground">Total Reservations</p>
+                                        </Card>
+                                        <Card className="p-4">
+                                            <Building className="h-8 w-8 text-amber-500 mx-auto mb-2" />
+                                            <p className="text-2xl font-bold">{upcomingReservations}</p>
+                                            <p className="text-muted-foreground">Upcoming</p>
+                                        </Card>
+                                        <Card className="p-4">
+                                            <CheckCircle className="h-8 w-8 text-green-500 mx-auto mb-2" />
+                                            <p className="text-2xl font-bold">{completedReservations}</p>
+                                            <p className="text-muted-foreground">Completed</p>
+                                        </Card>
+                                    </div>
+                                )}
+                            </div>
+                            
+                            <Separator className="my-8" />
+                            
+                            <h2 className="font-headline text-2xl font-bold mb-4">
+                                {activeTab === 'delivery' ? 'Delivery History' : 'Your Reservations'}
+                            </h2>
+
+                            <TabsContent value="delivery" className="mt-6 p-0">
                                 <div className="space-y-4">
                                     {deliveryOrders.length > 0 ? (
                                         deliveryOrders.map(order => <OrderCard key={order.id} order={order} />)
@@ -180,7 +210,7 @@ export default function ProfilePage() {
                                     )}
                                 </div>
                             </TabsContent>
-                            <TabsContent value="reservations" className="mt-6">
+                            <TabsContent value="reservations" className="mt-6 p-0">
                                  <div className="space-y-4">
                                     {dineInOrders.length > 0 ? (
                                         dineInOrders.map(order => <OrderCard key={order.id} order={order} />)
