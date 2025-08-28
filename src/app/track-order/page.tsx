@@ -23,14 +23,26 @@ export default function TrackOrderPage() {
     const [currentStatusIndex, setCurrentStatusIndex] = useState(0);
     const [startTime, setStartTime] = useState<number | null>(null);
     const [orderId, setOrderId] = useState<string | null>(null);
+    const [isDelivery, setIsDelivery] = useState(true);
 
     useEffect(() => {
         const latestOrder = sessionStorage.getItem('latestOrder');
         if (latestOrder) {
             const parsedOrder = JSON.parse(latestOrder);
             setOrderId(parsedOrder.id);
+            setIsDelivery(parsedOrder.orderType === 'delivery');
+            
             const orderPlacementTime = parsedOrder.placementTime || Date.now();
-            setStartTime(orderPlacementTime);
+            
+            // Only set start time if it's a delivery order that's not delivered
+            if (parsedOrder.orderType === 'delivery' && parsedOrder.status !== 'Delivered') {
+                setStartTime(orderPlacementTime);
+            } else {
+                 const finalIndex = STAGES.length -1;
+                 setCurrentStatusIndex(finalIndex);
+                 setProgress(100);
+            }
+            
             if (!parsedOrder.placementTime) {
                 sessionStorage.setItem('latestOrder', JSON.stringify({...parsedOrder, placementTime: orderPlacementTime}));
             }
@@ -38,7 +50,7 @@ export default function TrackOrderPage() {
     }, []);
 
     useEffect(() => {
-        if (startTime === null) return;
+        if (startTime === null || !isDelivery) return;
 
         const interval = setInterval(() => {
             const elapsedTime = Date.now() - startTime;
@@ -57,9 +69,10 @@ export default function TrackOrderPage() {
         }, 1000); 
 
         return () => clearInterval(interval);
-    }, [startTime, orderId]);
+    }, [startTime, orderId, isDelivery]);
+    
+    const minutesRemaining = Math.max(0, Math.ceil((TOTAL_DELIVERY_TIME * (1 - progress / 100)) / (1000 * 60)));
 
-    const estimatedTimeRemaining = 15;
 
     return (
         <div className="container mx-auto px-4 py-8">
@@ -74,48 +87,59 @@ export default function TrackOrderPage() {
                     <CardDescription>Order #{orderId || '...'}</CardDescription>
                 </CardHeader>
                 <CardContent>
-                    <div className="my-8">
-                        <Progress value={progress} className="w-full h-2" />
-                        <div className="flex justify-between mt-2">
-                            {STAGES.map((status, index) => (
-                                <div key={index} className={`text-xs text-center ${index <= currentStatusIndex ? 'text-primary font-bold' : 'text-muted-foreground'}`}>
-                                    {status.name}
-                                </div>
-                            ))}
-                        </div>
-                    </div>
-                    
-                    <div className="space-y-8 mt-8">
-                        {STAGES.map((status, index) => (
-                             <div key={index} className={`flex gap-6 items-start transition-opacity duration-500 ${index > currentStatusIndex ? 'opacity-40' : ''}`}>
-                                <div className={`flex flex-col items-center gap-2 transition-colors duration-500 ${index <= currentStatusIndex ? 'text-primary' : 'text-muted-foreground'}`}>
-                                    <div className={`p-3 rounded-full transition-colors duration-500 ${index <= currentStatusIndex ? 'bg-primary/10' : 'bg-muted'}`}>
-                                       {React.cloneElement(status.icon, {className: `h-8 w-8 ${index <= currentStatusIndex ? 'text-primary' : ''}`})}
-                                    </div>
-                                    {index < STAGES.length - 1 && (
-                                        <div className={`w-0.5 grow transition-colors duration-500 ${index < currentStatusIndex ? 'bg-primary' : 'bg-border'}`} style={{height: '3rem'}}></div>
-                                    )}
-                                </div>
-                                <div>
-                                    <h3 className={`font-headline text-xl font-semibold transition-colors duration-500 ${index > currentStatusIndex ? 'text-muted-foreground' : ''}`}>{status.name}</h3>
-                                    <p className="text-muted-foreground">{status.description}</p>
-                                    {index === currentStatusIndex && progress < 100 && (
-                                        <p className="text-sm text-primary font-bold animate-pulse mt-1">Current Status</p>
-                                    )}
+                    {isDelivery ? (
+                        <>
+                            <div className="my-8">
+                                <Progress value={progress} className="w-full h-2" />
+                                <div className="flex justify-between mt-2">
+                                    {STAGES.map((status, index) => (
+                                        <div key={index} className={`text-xs text-center ${index <= currentStatusIndex ? 'text-primary font-bold' : 'text-muted-foreground'}`}>
+                                            {status.name}
+                                        </div>
+                                    ))}
                                 </div>
                             </div>
-                        ))}
-                    </div>
+                            
+                            <div className="space-y-8 mt-8">
+                                {STAGES.map((status, index) => (
+                                     <div key={index} className={`flex gap-6 items-start transition-opacity duration-500 ${index > currentStatusIndex ? 'opacity-40' : ''}`}>
+                                        <div className={`flex flex-col items-center gap-2 transition-colors duration-500 ${index <= currentStatusIndex ? 'text-primary' : 'text-muted-foreground'}`}>
+                                            <div className={`p-3 rounded-full transition-colors duration-500 ${index <= currentStatusIndex ? 'bg-primary/10' : 'bg-muted'}`}>
+                                               {React.cloneElement(status.icon, {className: `h-8 w-8 ${index <= currentStatusIndex ? 'text-primary' : ''}`})}
+                                            </div>
+                                            {index < STAGES.length - 1 && (
+                                                <div className={`w-0.5 grow transition-colors duration-500 ${index < currentStatusIndex ? 'bg-primary' : 'bg-border'}`} style={{height: '3rem'}}></div>
+                                            )}
+                                        </div>
+                                        <div>
+                                            <h3 className={`font-headline text-xl font-semibold transition-colors duration-500 ${index > currentStatusIndex ? 'text-muted-foreground' : ''}`}>{status.name}</h3>
+                                            <p className="text-muted-foreground">{status.description}</p>
+                                            {index === currentStatusIndex && progress < 100 && (
+                                                <p className="text-sm text-primary font-bold animate-pulse mt-1">Current Status</p>
+                                            )}
+                                        </div>
+                                    </div>
+                                ))}
+                            </div>
 
-                    <div className="my-8 h-px bg-border" />
-                    
-                    <div className="text-center">
-                        <p className="text-muted-foreground">Estimated Delivery Time:</p>
-                        <p className="font-bold text-xl font-headline">
-                             {progress < 100 ? `${estimatedTimeRemaining} minutes` : "Delivered"}
-                        </p>
-                    </div>
-
+                            <div className="my-8 h-px bg-border" />
+                            
+                            <div className="text-center">
+                                <p className="text-muted-foreground">Estimated Delivery Time:</p>
+                                <p className="font-bold text-xl font-headline">
+                                     {progress < 100 ? `${minutesRemaining} minutes` : "Delivered"}
+                                </p>
+                            </div>
+                        </>
+                     ) : (
+                        <div className="text-center py-10">
+                            <h3 className="font-headline text-xl">This is a Dine-in Order</h3>
+                            <p className="text-muted-foreground">Tracking is not applicable for dine-in orders. Please check your reservation details.</p>
+                            <Button asChild className="mt-4">
+                                <Link href="/reservation-confirmed">View Reservation</Link>
+                            </Button>
+                        </div>
+                     )}
                 </CardContent>
             </Card>
         </div>

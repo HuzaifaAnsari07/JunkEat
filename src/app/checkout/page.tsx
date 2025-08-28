@@ -21,6 +21,7 @@ import { Label } from '@/components/ui/label';
 import { useToast } from "@/hooks/use-toast";
 import { cn } from '@/lib/utils';
 import { Alert, AlertDescription, AlertTitle } from '@/components/ui/alert';
+import { Textarea } from '@/components/ui/textarea';
 
 const DINE_IN_ADVANCE_AMOUNT = 100;
 const VACANT_TABLES = 8;
@@ -34,6 +35,7 @@ const addressSchema = z.object({
   paymentMethod: z.enum(['card', 'upi', 'cod'], { required_error: "You need to select a payment method." }),
   orderType: z.enum(['delivery', 'dine-in'], { required_error: "Please select an order type." }),
   tableNumber: z.string().optional(),
+  specialRequests: z.string().optional(),
 }).superRefine((data, ctx) => {
     if (data.orderType === 'delivery') {
         if (!data.name?.trim()) ctx.addIssue({ code: z.ZodIssueCode.custom, message: "Name is required for delivery.", path: ['name'] });
@@ -44,9 +46,6 @@ const addressSchema = z.object({
     if (data.orderType === 'dine-in') {
         if (!data.tableNumber) {
             ctx.addIssue({ code: z.ZodIssueCode.custom, message: "Please select a table for dine-in.", path: ['tableNumber']});
-        }
-        if (data.paymentMethod === 'cod') {
-            ctx.addIssue({ code: z.ZodIssueCode.custom, message: "Cash on Delivery is not available for dine-in.", path: ['paymentMethod']});
         }
     }
 });
@@ -90,6 +89,7 @@ export default function CheckoutPage() {
       zip: "",
       paymentMethod: "card",
       orderType: "delivery",
+      specialRequests: "",
     },
   });
   
@@ -134,6 +134,7 @@ export default function CheckoutPage() {
         customerName: values.name || userName || 'Valued Customer',
         orderType: values.orderType,
         tableNumber: values.tableNumber,
+        specialRequests: values.specialRequests,
         paymentMethod: values.paymentMethod,
         address: values.orderType === 'delivery' ? `${values.address}, ${values.city}, ${values.zip}` : `Dine-in at Table ${values.tableNumber}`,
         date: new Date().toISOString(),
@@ -238,7 +239,7 @@ export default function CheckoutPage() {
                                 )}
 
                                 {orderType === 'dine-in' && (
-                                    <div className="animate-in fade-in duration-500">
+                                    <div className="animate-in fade-in duration-500 space-y-6">
                                         <Separator className="my-6" />
                                         <h3 className="font-headline text-xl mb-4">Dine-in Options</h3>
                                         <Card className='bg-muted/50 p-4'>
@@ -265,6 +266,21 @@ export default function CheckoutPage() {
                                                 )} />
                                             </CardContent>
                                         </Card>
+                                        
+                                        <FormField control={form.control} name="specialRequests" render={({ field }) => (
+                                          <FormItem>
+                                              <FormLabel>Special Requests</FormLabel>
+                                                <FormControl>
+                                                  <Textarea
+                                                    placeholder="e.g. High chair for a kid, birthday celebration setup, etc."
+                                                    className="resize-none"
+                                                    {...field}
+                                                  />
+                                                </FormControl>
+                                              <FormMessage />
+                                          </FormItem>
+                                        )} />
+                                        
                                         <Alert variant="default" className="mt-4 bg-primary/10 border-primary/20">
                                             <AlertTitle className="font-headline text-primary">Advance Payment</AlertTitle>
                                             <AlertDescription>
@@ -370,5 +386,3 @@ export default function CheckoutPage() {
     </div>
   );
 }
-
-    

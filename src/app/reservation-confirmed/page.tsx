@@ -4,8 +4,9 @@
 import { Suspense, useEffect, useState } from 'react';
 import { useRouter } from 'next/navigation';
 import { Button } from "@/components/ui/button";
-import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card";
-import { Home, XCircle, Clock } from "lucide-react";
+import { Card, CardContent, CardDescription, CardHeader, CardTitle, CardFooter } from "@/components/ui/card";
+import { Separator } from "@/components/ui/separator";
+import { Home, XCircle, Clock, MapPin, QrCode, ClipboardCopy, Check, FileDown, Share2 } from "lucide-react";
 import Link from "next/link";
 import { useToast } from "@/hooks/use-toast";
 
@@ -13,6 +14,8 @@ interface OrderDetails {
     id: string;
     tableNumber?: string;
     placementTime: number;
+    specialRequests?: string;
+    advancePaid?: number;
 }
 
 const RESERVATION_DURATION_MS = 60 * 60 * 1000; // 1 hour
@@ -22,6 +25,7 @@ function ReservationConfirmedContent() {
     const { toast } = useToast();
     const [order, setOrder] = useState<OrderDetails | null>(null);
     const [timeLeft, setTimeLeft] = useState(RESERVATION_DURATION_MS);
+    const [isCopied, setIsCopied] = useState(false);
 
     useEffect(() => {
         const savedOrder = sessionStorage.getItem('latestOrder');
@@ -48,7 +52,6 @@ function ReservationConfirmedContent() {
             } else {
                 setTimeLeft(0);
                 clearInterval(interval);
-                // Optionally handle expiry
             }
         }, 1000);
 
@@ -61,7 +64,9 @@ function ReservationConfirmedContent() {
         const seconds = totalSeconds % 60;
         return `${String(minutes).padStart(2, '0')}:${String(seconds).padStart(2, '0')}`;
     };
-    
+
+    const formatCurrency = (amount: number) => `₹${amount.toFixed(2)}`;
+
     const handleCancelReservation = () => {
         sessionStorage.removeItem('latestOrder');
         const history = JSON.parse(sessionStorage.getItem('orderHistory') || '[]');
@@ -79,6 +84,14 @@ function ReservationConfirmedContent() {
         });
         router.push('/dashboard');
     }
+    
+    const handleCopyId = () => {
+        if (order?.id) {
+            navigator.clipboard.writeText(order.id);
+            setIsCopied(true);
+            setTimeout(() => setIsCopied(false), 2000);
+        }
+    }
 
     if (!order) {
         return (
@@ -89,43 +102,86 @@ function ReservationConfirmedContent() {
     }
 
     return (
-        <div className="container mx-auto flex items-center justify-center min-h-[80vh] px-4">
-            <Card className="w-full max-w-lg text-center shadow-2xl animate-in fade-in-50 zoom-in-95 duration-500">
-                <CardHeader>
+        <div className="container mx-auto flex items-center justify-center min-h-[80vh] px-4 py-8">
+            <Card className="w-full max-w-lg shadow-2xl animate-in fade-in-50 zoom-in-95 duration-500">
+                <CardHeader className="text-center bg-primary/5 rounded-t-lg">
                     <div className="mx-auto bg-primary/10 p-4 rounded-full w-fit mb-4">
                         <Clock className="h-12 w-12 text-primary" />
                     </div>
                     <CardTitle className="font-headline text-3xl">Reservation Confirmed!</CardTitle>
                     <CardDescription>
-                        Your Table <span className="font-bold text-primary">T{order.tableNumber}</span> is reserved for the next hour.
+                        Your table is reserved at JunkEats Express.
                     </CardDescription>
                 </CardHeader>
-                <CardContent className="space-y-6">
-                    <div>
-                        <p className="text-muted-foreground">Time Remaining</p>
-                        <p className="font-mono text-5xl font-bold text-primary">{formatTime(timeLeft)}</p>
+                <CardContent className="p-6 space-y-4">
+                    <div className="bg-muted/50 p-4 rounded-lg text-center">
+                       <p className="text-muted-foreground">Time Remaining</p>
+                       <p className="font-mono text-5xl font-bold text-primary">{formatTime(timeLeft)}</p>
                     </div>
-                    <p className="text-sm text-muted-foreground px-4">
-                        Please arrive within this time to claim your table. After this time, your reservation will be automatically cancelled.
+
+                    <div className="grid grid-cols-2 gap-4 text-sm">
+                        <div>
+                            <p className="font-semibold text-muted-foreground">Table Number</p>
+                            <p className="font-bold text-lg">T{order.tableNumber}</p>
+                        </div>
+                        <div className="text-right">
+                           <p className="font-semibold text-muted-foreground">Advance Paid</p>
+                           <p className="font-bold text-lg">{formatCurrency(order.advancePaid || 0)}</p>
+                        </div>
+                    </div>
+                     {order.specialRequests && (
+                         <div>
+                            <p className="font-semibold text-muted-foreground text-sm">Special Requests</p>
+                            <p className="text-sm p-2 bg-muted/30 rounded-md">{order.specialRequests}</p>
+                        </div>
+                     )}
+
+                    <Separator />
+
+                    <div>
+                        <p className="font-semibold text-muted-foreground text-sm mb-2">Your Booking ID</p>
+                        <div className="flex items-center gap-2">
+                           <p className="font-mono text-sm p-2 bg-muted/50 rounded-md flex-grow">{order.id}</p>
+                           <Button variant="outline" size="icon" onClick={handleCopyId}>
+                               {isCopied ? <Check className="h-4 w-4 text-green-500" /> : <ClipboardCopy className="h-4 w-4" />}
+                           </Button>
+                        </div>
+                    </div>
+                    
+                    <p className="text-xs text-center text-muted-foreground pt-2">
+                        Please show this confirmation at the restaurant. Your table will be held for the duration of the timer.
                     </p>
-                    <div className="flex justify-center gap-4 pt-4">
-                        <Button onClick={handleCancelReservation} variant="destructive">
+                </CardContent>
+                <CardFooter className="flex-col gap-3 p-6 bg-muted/20 rounded-b-lg">
+                    <div className="grid grid-cols-2 gap-2 w-full">
+                       <Button asChild className="w-full">
+                          <a href="https://www.google.com/maps" target="_blank" rel="noopener noreferrer">
+                              <MapPin className="mr-2 h-5 w-5" />
+                              Get Directions
+                          </a>
+                       </Button>
+                       <Button variant="secondary" className="w-full" onClick={() => alert("Share functionality not implemented.")}>
+                          <Share2 className="mr-2 h-5 w-5" />
+                          Share
+                       </Button>
+                    </div>
+                    <div className="grid grid-cols-2 gap-2 w-full">
+                         <Button onClick={handleCancelReservation} variant="destructive" className="w-full">
                             <XCircle className="mr-2 h-5 w-5" />
-                            Cancel Reservation
+                            Cancel
                         </Button>
-                         <Button asChild>
+                         <Button asChild variant="outline" className="w-full">
                             <Link href="/dashboard">
                                 <Home className="mr-2 h-5 w-5" />
-                                Back to Home
+                                Home
                             </Link>
                         </Button>
                     </div>
-                </CardContent>
+                </CardFooter>
             </Card>
         </div>
     );
 }
-
 
 export default function ReservationConfirmedPage() {
     return (
@@ -134,4 +190,3 @@ export default function ReservationConfirmedPage() {
         </Suspense>
     );
 }
-

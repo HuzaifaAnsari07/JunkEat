@@ -17,6 +17,7 @@ interface Order {
     status: string;
     items: CartItem[];
     placementTime?: number;
+    orderType: 'delivery' | 'dine-in';
 }
 
 const ESTIMATED_DELIVERY_TIME_MS = 20 * 1000; // 20 seconds for simulation
@@ -36,7 +37,7 @@ export default function ProfilePage() {
         if (storedOrders) {
             const parsedOrders: Order[] = JSON.parse(storedOrders);
             const updatedOrders = parsedOrders.map(order => {
-                if (order.status === 'Order Placed' && order.placementTime) {
+                if (order.status === 'Order Placed' && order.placementTime && order.orderType === 'delivery') {
                     const elapsedTime = Date.now() - order.placementTime;
                     if (elapsedTime > ESTIMATED_DELIVERY_TIME_MS) {
                         return { ...order, status: 'Delivered' };
@@ -58,8 +59,9 @@ export default function ProfilePage() {
     const pendingOrders = totalOrders - deliveredOrders;
 
     const getStatusVariant = (status: string): "default" | "secondary" | "destructive" | "outline" | null | undefined => {
-        if (status === 'Delivered') return 'default';
+        if (status === 'Delivered' || status === 'Reserved') return 'default';
         if (status === 'Order Placed' || status === 'Preparing' || status === 'Out for Delivery') return 'secondary';
+        if (status === 'Cancelled') return 'destructive';
         return 'outline';
     }
 
@@ -89,7 +91,7 @@ export default function ProfilePage() {
                             <Card className="p-4">
                                 <CheckCheck className="h-8 w-8 text-green-500 mx-auto mb-2" />
                                 <p className="text-2xl font-bold">{deliveredOrders}</p>
-                                <p className="text-muted-foreground">Orders Delivered</p>
+                                <p className="text-muted-foreground">Orders Completed</p>
                             </Card>
                             <Card className="p-4">
                                 <Clock className="h-8 w-8 text-amber-500 mx-auto mb-2" />
@@ -114,7 +116,7 @@ export default function ProfilePage() {
                                             </div>
                                             <div className="text-right">
                                                  <p className="font-bold text-lg text-primary">{formatCurrency(order.total)}</p>
-                                                  <Badge variant={getStatusVariant(order.status)}>{order.status}</Badge>
+                                                  <Badge variant={getStatusVariant(order.status)}>{order.orderType === 'dine-in' && order.status === 'Order Placed' ? 'Reserved' : order.status}</Badge>
                                             </div>
                                         </CardHeader>
                                         <CardContent className="p-4">
@@ -124,7 +126,7 @@ export default function ProfilePage() {
                                                     <li key={item.id}>{item.name} (x{item.quantity})</li>
                                                 ))}
                                             </ul>
-                                             {order.status !== 'Delivered' && (
+                                             {order.orderType === 'delivery' && order.status !== 'Delivered' && (
                                                 <div className="text-right mt-4">
                                                      <Button asChild>
                                                         <Link href="/track-order">
