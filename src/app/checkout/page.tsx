@@ -45,6 +45,9 @@ const addressSchema = z.object({
         if (!data.tableNumber) {
             ctx.addIssue({ code: z.ZodIssueCode.custom, message: "Please select a table for dine-in.", path: ['tableNumber']});
         }
+        if (data.paymentMethod === 'cod') {
+            ctx.addIssue({ code: z.ZodIssueCode.custom, message: "Cash on Delivery is not available for dine-in.", path: ['paymentMethod']});
+        }
     }
 });
 
@@ -90,6 +93,9 @@ export default function CheckoutPage() {
     setOrderType(value);
     form.setValue('orderType', value);
     form.clearErrors(); // Clear errors when switching type
+    if (value === 'dine-in' && form.getValues('paymentMethod') === 'cod') {
+        form.setValue('paymentMethod', 'card');
+    }
   }
   
   const handleTableSelection = (table: string) => {
@@ -270,7 +276,7 @@ export default function CheckoutPage() {
                                     <FormField control={form.control} name="paymentMethod" render={({ field }) => (
                                         <FormItem>
                                             <FormControl>
-                                                <RadioGroup onValueChange={field.onChange} defaultValue={field.value} className="grid grid-cols-1 md:grid-cols-3 gap-4">
+                                                <RadioGroup onValueChange={field.onChange} value={field.value} className="grid grid-cols-1 md:grid-cols-3 gap-4">
                                                     <Label htmlFor="card" className="border rounded-lg p-4 flex items-center gap-4 cursor-pointer hover:bg-accent/50 has-[:checked]:bg-accent has-[:checked]:text-accent-foreground has-[:checked]:border-accent-foreground transition-all duration-300 transform hover:scale-105">
                                                         <RadioGroupItem value="card" id="card" />
                                                         <CreditCard />
@@ -281,8 +287,8 @@ export default function CheckoutPage() {
                                                         <Landmark />
                                                         <span>UPI</span>
                                                     </Label>
-                                                    <Label htmlFor="cod" className={cn("border rounded-lg p-4 flex items-center gap-4 cursor-pointer hover:bg-accent/50 has-[:checked]:bg-accent has-[:checked]:text-accent-foreground has-[:checked]:border-accent-foreground transition-all duration-300 transform hover:scale-105")}>
-                                                        <RadioGroupItem value="cod" id="cod" />
+                                                    <Label htmlFor="cod" className={cn("border rounded-lg p-4 flex items-center gap-4 transition-all duration-300 transform", orderType === 'dine-in' ? 'cursor-not-allowed bg-muted text-muted-foreground opacity-50' : 'cursor-pointer hover:bg-accent/50 has-[:checked]:bg-accent has-[:checked]:text-accent-foreground has-[:checked]:border-accent-foreground hover:scale-105' )}>
+                                                        <RadioGroupItem value="cod" id="cod" disabled={orderType === 'dine-in'} />
                                                         <Truck />
                                                         <span>Cash on Delivery</span>
                                                     </Label>
