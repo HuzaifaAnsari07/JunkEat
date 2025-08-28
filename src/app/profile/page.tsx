@@ -10,6 +10,7 @@ import Link from "next/link";
 import { Badge } from '@/components/ui/badge';
 import type { CartItem } from '@/types';
 import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs';
+import { useRouter } from 'next/navigation';
 
 interface Order {
     id: string;
@@ -27,6 +28,7 @@ export default function ProfilePage() {
     const [orders, setOrders] = useState<Order[]>([]);
     const [userName, setUserName] = useState('Valued Customer');
     const [activeTab, setActiveTab] = useState('delivery');
+    const router = useRouter();
 
     useEffect(() => {
         const storedUser = sessionStorage.getItem('loggedInUser');
@@ -68,13 +70,12 @@ export default function ProfilePage() {
     const totalReservations = dineInOrders.length;
     const upcomingReservations = dineInOrders.filter(o => o.status === 'Order Placed').length;
     const completedReservations = dineInOrders.filter(o => o.status !== 'Order Placed' && o.status !== 'Cancelled').length;
-    const cancelledReservations = dineInOrders.filter(o => o.status === 'Cancelled').length;
 
 
     const getStatusVariant = (status: string, orderType: string): "default" | "secondary" | "destructive" | "outline" | null | undefined => {
         if (status === 'Delivered') return 'default';
         if (orderType === 'dine-in' && status === 'Order Placed') return 'secondary';
-        if (orderType === 'dine-in' && status === 'Completed') return 'default';
+        if (orderType === 'dine-in' && (status === 'Completed' || status === 'Delivered')) return 'default';
         if (status === 'Cancelled') return 'destructive';
         if (status === 'Order Placed' || status === 'Preparing' || status === 'Out for Delivery') return 'secondary';
         return 'outline';
@@ -87,6 +88,11 @@ export default function ProfilePage() {
             return 'Completed'; // Assuming dine-in is completed after the fact
         }
         return order.status;
+    }
+    
+    const handleViewReservation = (order: Order) => {
+        sessionStorage.setItem('latestOrder', JSON.stringify(order));
+        router.push('/reservation-confirmed');
     }
 
     const OrderCard = ({ order }: { order: Order }) => (
@@ -120,11 +126,9 @@ export default function ProfilePage() {
                     )}
                     {order.orderType === 'dine-in' && order.status === 'Order Placed' && (
                         <div className="text-right mt-4">
-                                <Button asChild>
-                                <Link href="/reservation-confirmed">
-                                    <Building className="mr-2 h-4 w-4" />
-                                    View Reservation
-                                </Link>
+                            <Button onClick={() => handleViewReservation(order)}>
+                                <Building className="mr-2 h-4 w-4" />
+                                View Reservation
                             </Button>
                         </div>
                     )}
