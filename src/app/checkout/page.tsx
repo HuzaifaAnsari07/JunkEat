@@ -29,9 +29,9 @@ const TOTAL_TABLES = 12;
 
 const addressSchema = z.object({
   name: z.string().optional(),
-  address: z.string().min(5, { message: "Address must be at least 5 characters." }).optional(),
-  city: z.string().min(2, { message: "City must be at least 2 characters." }).optional(),
-  zip: z.string().regex(/^\d{5,6}$/, { message: "Must be a valid zip code." }).optional(),
+  address: z.string().optional(),
+  city: z.string().optional(),
+  zip: z.string().optional(),
   paymentMethod: z.enum(['card', 'upi', 'cod'], { required_error: "You need to select a payment method." }),
   orderType: z.enum(['delivery', 'dine-in'], { required_error: "Please select an order type." }),
   tableNumber: z.string().optional(),
@@ -39,9 +39,9 @@ const addressSchema = z.object({
 }).superRefine((data, ctx) => {
     if (data.orderType === 'delivery') {
         if (!data.name?.trim()) ctx.addIssue({ code: z.ZodIssueCode.custom, message: "Name is required for delivery.", path: ['name'] });
-        if (!data.address) ctx.addIssue({ code: z.ZodIssueCode.custom, message: "Address is required for delivery.", path: ['address'] });
-        if (!data.city) ctx.addIssue({ code: z.ZodIssueCode.custom, message: "City is required for delivery.", path: ['city'] });
-        if (!data.zip) ctx.addIssue({ code: z.ZodIssueCode.custom, message: "Zip code is required for delivery.", path: ['zip'] });
+        if (!data.address || data.address.length < 5) ctx.addIssue({ code: z.ZodIssueCode.custom, message: "Address must be at least 5 characters.", path: ['address'] });
+        if (!data.city || data.city.length < 2) ctx.addIssue({ code: z.ZodIssueCode.custom, message: "City must be at least 2 characters.", path: ['city'] });
+        if (!data.zip || !/^\d{5,6}$/.test(data.zip)) ctx.addIssue({ code: z.ZodIssueCode.custom, message: "Must be a valid zip code.", path: ['zip'] });
     }
     if (data.orderType === 'dine-in') {
         if (!data.tableNumber) {
@@ -386,3 +386,5 @@ export default function CheckoutPage() {
     </div>
   );
 }
+
+    
