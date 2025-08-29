@@ -9,12 +9,18 @@ import { Button } from './ui/button';
 
 const images = [
     "/burger.jpg",
-    "/pizza.jpg",
-    "/SpicyBurger.png",
+    "/ClassicPepperoni.png",
     "/Veggies.png",
+    "/SpicyBurger.png",
     "/margherita.jpg",
-    "/Cake.jpg",
-    "/meat-lovers-pizza-recipe-3.jpg"
+    "/hawwian.jpg",
+    "/BBQ Pizza.jpg",
+    "/meat-lovers-pizza-recipe-3.jpg",
+    "/Four Cheese Pizza.jpg",
+    "/Buffalo chicken pizza.jpg",
+    "/high-angle-plate-pizza-with-flowers.jpg",
+    "/pizza-pizza-filled-with-tomatoes-salami-olives.jpg",
+    "/Cake.jpg"
 ];
 
 export const EllipticalCarousel = () => {
@@ -44,7 +50,7 @@ export const EllipticalCarousel = () => {
         const angle = (offset * 2 * Math.PI) / images.length;
 
         const isCenter = offset === 0;
-        const zIndex = isCenter ? images.length : images.length - offset;
+        const zIndex = isCenter ? images.length : images.length - Math.min(offset, images.length - offset);
         const scale = isCenter ? 1.2 : 0.7;
         const opacity = isCenter ? 1 : 0.5;
         const blur = isCenter ? 0 : 5;
