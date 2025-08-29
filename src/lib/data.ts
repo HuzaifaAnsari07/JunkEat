@@ -128,7 +128,7 @@ export const products: Product[] = [
     description: 'Two beef patties, special sauce, lettuce, cheese, pickles, onions on a sesame seed bun.',
     price: 209,
     category: 'Burgers',
-    image: 'https://placehold.co/600x400.png',
+    image: '/Double Decker Burger.jpg',
     rating: 4.9,
   },
   {
@@ -137,7 +137,7 @@ export const products: Product[] = [
     description: 'A hearty and delicious black bean patty topped with avocado and pico de gallo.',
     price: 169,
     category: 'Burgers',
-    image: 'https://placehold.co/600x400.png',
+    image: '/Vegan Black Bean Burger.jpg',
     rating: 4.4,
   },
   {
@@ -227,7 +227,7 @@ export const products: Product[] = [
     description: 'A juicy beef patty glazed with teriyaki sauce, topped with a grilled pineapple slice.',
     price: 179,
     category: 'Burgers',
-    image: 'https://placehold.co/600x400.png',
+    image: '/Teriyaki Pineapple Burger.jpg',
     rating: 4.5,
   },
   {
@@ -551,4 +551,5 @@ export const products: Product[] = [
     
 
     
+
 
