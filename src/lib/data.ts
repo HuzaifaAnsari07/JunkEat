@@ -101,7 +101,7 @@ export const products: Product[] = [
     description: 'Smoky BBQ sauce, crispy bacon, and melted cheddar top our classic beef patty.',
     price: 159,
     category: 'Burgers',
-    image: 'https://placehold.co/600x400.png',
+    image: '/Bacon BBQ Burger.jpg',
     rating: 4.6,
   },
   {
