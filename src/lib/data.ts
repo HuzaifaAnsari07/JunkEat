@@ -119,7 +119,7 @@ export const products: Product[] = [
     description: 'Sautéed mushrooms and melted Swiss cheese on a juicy beef patty. A savory delight.',
     price: 169,
     category: 'Burgers',
-    image: '/Mashroom Swiss Burger.jpg',
+    image: '/Mushroom Swiss Burger.jpg',
     rating: 4.8,
   },
   {
