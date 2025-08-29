@@ -20,7 +20,8 @@ const images = [
     "/Buffalo chicken pizza.jpg",
     "/high-angle-plate-pizza-with-flowers.jpg",
     "/pizza-pizza-filled-with-tomatoes-salami-olives.jpg",
-    "/Cake.jpg"
+    "/Cake.jpg",
+    "/Bacon BBQ Burger.jpg"
 ];
 
 export const EllipticalCarousel = () => {
