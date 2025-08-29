@@ -236,7 +236,7 @@ export const products: Product[] = [
     description: 'For the bold! A beef patty topped with tangy blue cheese crumbles and caramelized onions.',
     price: 189,
     category: 'Burgers',
-    image: 'https://placehold.co/600x400.png',
+    image: '/Blue Cheese Burger.jpg',
     rating: 4.3,
   },
   {
@@ -551,3 +551,4 @@ export const products: Product[] = [
     
 
     
+

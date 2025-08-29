@@ -24,7 +24,8 @@ const images = [
     "/Bacon BBQ Burger.jpg",
     "/Mushroom Swiss Burger.jpg",
     "/Fish Fillet Burger.jpg",
-    "/Avocado Ranch Burger.jpg"
+    "/Avocado Ranch Burger.jpg",
+    "/Blue Cheese Burger.jpg"
 ];
 
 export const EllipticalCarousel = () => {
