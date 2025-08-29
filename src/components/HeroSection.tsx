@@ -20,20 +20,21 @@ const FloatingIcon = ({ src, className, animationDelay, alt }: { src: string, cl
 );
 
 export const HeroSection = () => {
-    const [mousePosition, setMousePosition] = useState({ x: 0, y: 0 });
+    const [parallax, setParallax] = useState({ x: 0, y: 0 });
 
     useEffect(() => {
         const handleMouseMove = (event: MouseEvent) => {
-            setMousePosition({ x: event.clientX, y: event.clientY });
+            if (typeof window !== 'undefined') {
+                const parallaxX = (event.clientX / window.innerWidth - 0.5) * -40;
+                const parallaxY = (event.clientY / window.innerHeight - 0.5) * -40;
+                setParallax({ x: parallaxX, y: parallaxY });
+            }
         };
         window.addEventListener('mousemove', handleMouseMove);
         return () => {
             window.removeEventListener('mousemove', handleMouseMove);
         };
     }, []);
-
-    const parallaxX = (mousePosition.x / window.innerWidth - 0.5) * -40;
-    const parallaxY = (mousePosition.y / window.innerHeight - 0.5) * -40;
 
     const carouselImages = [
         '/burger.jpg',
@@ -59,8 +60,8 @@ export const HeroSection = () => {
             <motion.div
                 className="absolute inset-0 transition-transform duration-300 ease-out"
                 style={{
-                    translateX: parallaxX,
-                    translateY: parallaxY,
+                    translateX: parallax.x,
+                    translateY: parallax.y,
                     transformStyle: 'preserve-3d',
                 }}
             >
