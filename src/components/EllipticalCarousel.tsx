@@ -28,6 +28,11 @@ const images = [
 export const EllipticalCarousel = () => {
     const [index, setIndex] = useState(0);
     const [isHovered, setIsHovered] = useState(false);
+    const [isClient, setIsClient] = useState(false);
+
+    useEffect(() => {
+        setIsClient(true);
+    }, []);
 
     const nextImage = useCallback(() => {
         setIndex((prev) => (prev + 1) % images.length);
@@ -67,6 +72,10 @@ export const EllipticalCarousel = () => {
             filter: `blur(${blur}px)`,
         };
     };
+    
+    if (!isClient) {
+        return <div className="relative w-full h-[300px]" />; // Return a placeholder or null on the server
+    }
 
     return (
         <div 
