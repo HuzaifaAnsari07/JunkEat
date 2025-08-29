@@ -24,7 +24,7 @@ export default function RootLayout({
         <link rel="preconnect" href="https://fonts.gstatic.com" crossOrigin="" />
         <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;600;700&display=swap" rel="stylesheet" />
       </head>
-      <body className="font-body bg-gradient-to-br from-yellow-100 via-orange-100 to-red-100 text-foreground antialiased">
+      <body className="font-body bg-background text-foreground antialiased">
         <ThemeProvider>
           <CartProvider>
             <div className="flex min-h-screen flex-col">
