@@ -23,7 +23,8 @@ const images = [
     "/Cake.jpg",
     "/Bacon BBQ Burger.jpg",
     "/Mushroom Swiss Burger.jpg",
-    "/Fish Fillet Burger.jpg"
+    "/Fish Fillet Burger.jpg",
+    "/Avocado Ranch Burger.jpg"
 ];
 
 export const EllipticalCarousel = () => {
@@ -109,5 +110,3 @@ export const EllipticalCarousel = () => {
         </div>
     );
 };
-
-    

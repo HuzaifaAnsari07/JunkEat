@@ -245,7 +245,7 @@ export const products: Product[] = [
     description: 'Creamy avocado and zesty ranch dressing meet on top of our signature burger.',
     price: 189,
     category: 'Burgers',
-    image: 'https://placehold.co/600x400.png',
+    image: '/Avocado Ranch Burger.jpg',
     rating: 4.6,
   },
   {
