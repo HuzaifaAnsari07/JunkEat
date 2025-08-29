@@ -67,7 +67,7 @@ export const EllipticalCarousel: React.FC<EllipticalCarouselProps> = ({ images, 
 
   return (
     <div 
-      className="w-full flex flex-col items-center justify-center gap-4"
+      className="w-full flex flex-col items-center justify-center gap-4 group/carousel"
       onMouseEnter={() => setIsHovered(true)}
       onMouseLeave={() => setIsHovered(false)}
     >
@@ -79,12 +79,13 @@ export const EllipticalCarousel: React.FC<EllipticalCarouselProps> = ({ images, 
             {images.map((src, index) => (
               <div
                 key={index}
-                className="absolute top-0 left-0 w-full h-full flex items-center justify-center"
+                className="absolute top-0 left-0 w-full h-full flex items-center justify-center group"
                 style={getStyle(index)}
               >
                 <div className={cn(
-                    "relative w-[200px] h-[200px] md:w-[300px] md:h-[300px] rounded-full overflow-hidden shadow-2xl",
-                    activeIndex === index && "border-4 border-primary"
+                    "relative w-[200px] h-[200px] md:w-[300px] md:h-[300px] rounded-full overflow-hidden shadow-2xl transition-all duration-300",
+                    "transform-gpu group-hover:[transform:rotateY(10deg)_rotateX(-10deg)_scale(1.05)]",
+                    activeIndex === index ? "border-4 border-primary" : ""
                 )}>
                   <Image
                     src={src}

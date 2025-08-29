@@ -7,31 +7,15 @@ import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
 import { Medal, Percent } from 'lucide-react';
 import AIAssistant from '@/components/AIAssistant';
 import Link from 'next/link';
-import { EllipticalCarousel } from '@/components/EllipticalCarousel';
+import { HeroSection } from '@/components/HeroSection';
 
 export default function Home() {
   const bestsellers = products.filter(p => p.bestseller);
   const formatCurrency = (amount: number) => `₹${amount.toFixed(2)}`;
-  const carouselImages = [
-    '/burger.jpg',
-    '/ClassicPepperoni.png',
-    '/SpicyBurger.png',
-    '/Veggies.png',
-    '/Cake.jpg',
-    '/margherita.jpg',
-  ];
 
   return (
     <div className="container mx-auto px-4 py-8 space-y-16">
-      <section className="relative w-full overflow-hidden flex flex-col items-center justify-center min-h-[500px] md:min-h-[600px]">
-        <div className="text-center z-20 mb-8 px-4">
-            <h1 className="font-headline text-5xl md:text-7xl font-bold animate-text-pop-up">Cravings Calling?</h1>
-            <p className="mt-4 max-w-2xl mx-auto text-lg md:text-xl text-muted-foreground">
-                Get your favorite junk food delivered to your door, faster than you can say "extra cheese".
-            </p>
-        </div>
-        <EllipticalCarousel images={carouselImages} />
-      </section>
+      <HeroSection />
 
       <section id="bestsellers">
         <h2 className="font-headline text-4xl font-bold text-center mb-8">Our Bestsellers</h2>
