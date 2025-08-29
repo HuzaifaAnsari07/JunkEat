@@ -254,7 +254,7 @@ export const products: Product[] = [
     description: 'A crispy breaded fish fillet on a soft bun with tartar sauce and lettuce.',
     price: 149,
     category: 'Burgers',
-    image: 'https://placehold.co/600x400.png',
+    image: '/Fish Fillet Burger.jpg',
     rating: 4.2,
   },
   {
@@ -547,5 +547,7 @@ export const products: Product[] = [
     rating: 4.8,
   },
 ];
+
+    
 
     
