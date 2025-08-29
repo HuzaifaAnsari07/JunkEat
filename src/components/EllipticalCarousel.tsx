@@ -43,14 +43,14 @@ export const EllipticalCarousel = () => {
     };
 
     useEffect(() => {
-        if (isHovered) return;
+        if (isHovered || !isClient) return;
 
         const interval = setInterval(() => {
             nextImage();
         }, 3000);
 
         return () => clearInterval(interval);
-    }, [isHovered, nextImage]);
+    }, [isHovered, nextImage, isClient]);
     
     const getStyle = (itemIndex: number) => {
         const offset = (itemIndex - index + images.length) % images.length;
