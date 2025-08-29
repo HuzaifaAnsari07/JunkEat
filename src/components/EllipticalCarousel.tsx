@@ -87,11 +87,11 @@ export const EllipticalCarousel = () => {
                 ))}
             </AnimatePresence>
             <div className="absolute -bottom-16 flex justify-center w-full gap-4">
-                 <Button onClick={prevImage} variant="outline" size="icon" className="rounded-full bg-background/50 backdrop-blur-sm shadow-lg hover:bg-primary/20 hover:scale-110 transition-all duration-300">
-                    <ChevronLeft className="h-6 w-6" />
+                 <Button onClick={prevImage} variant="outline" size="icon" className="w-14 h-14 rounded-full bg-background/50 backdrop-blur-sm shadow-lg hover:bg-primary/20 hover:scale-110 transition-all duration-300 border-2 border-primary/30 hover:shadow-primary/20 hover:shadow-2xl">
+                    <ChevronLeft className="h-8 w-8" />
                 </Button>
-                <Button onClick={nextImage} variant="outline" size="icon" className="rounded-full bg-background/50 backdrop-blur-sm shadow-lg hover:bg-primary/20 hover:scale-110 transition-all duration-300">
-                    <ChevronRight className="h-6 w-6" />
+                <Button onClick={nextImage} variant="outline" size="icon" className="w-14 h-14 rounded-full bg-background/50 backdrop-blur-sm shadow-lg hover:bg-primary/20 hover:scale-110 transition-all duration-300 border-2 border-primary/30 hover:shadow-primary/20 hover:shadow-2xl">
+                    <ChevronRight className="h-8 w-8" />
                 </Button>
             </div>
         </div>
