@@ -25,9 +25,6 @@ export default function Home() {
         <div className="mt-8">
             <EllipticalCarousel />
         </div>
-        <Button asChild size="lg" className="mt-8 font-bold">
-          <Link href="#menu">Order Now</Link>
-        </Button>
       </section>
 
       <section id="bestsellers">
