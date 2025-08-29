@@ -7,6 +7,7 @@ import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
 import { Medal, Percent } from 'lucide-react';
 import AIAssistant from '@/components/AIAssistant';
 import Link from 'next/link';
+import { EllipticalCarousel } from '@/components/EllipticalCarousel';
 
 export default function Home() {
   const bestsellers = products.filter(p => p.bestseller);
@@ -22,7 +23,7 @@ export default function Home() {
           Get your favorite junk food delivered to your door, faster than you can say "extra cheese".
         </p>
         <div className="mt-8">
-            <Image src="https://picsum.photos/1200/400" alt="Junk food feast" width={1200} height={400} className="rounded-lg shadow-lg mx-auto" data-ai-hint="food feast" />
+            <EllipticalCarousel />
         </div>
         <Button asChild size="lg" className="mt-8 font-bold">
           <Link href="#menu">Order Now</Link>
