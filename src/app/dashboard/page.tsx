@@ -40,10 +40,10 @@ export default function Home() {
         </div>
       </section>
 
-      <section id="offers" className="bg-secondary p-8 rounded-2xl">
+      <section id="offers" className="p-8 rounded-2xl">
          <h2 className="font-headline text-4xl font-bold text-center mb-8">Special Offers</h2>
          <div className="grid grid-cols-1 md:grid-cols-2 gap-8">
-            <div className="bg-card p-6 rounded-lg shadow-md flex items-center gap-4">
+            <div className="bg-white/30 backdrop-blur-md p-6 rounded-lg shadow-md flex items-center gap-4">
               <div className="bg-primary/10 p-4 rounded-full">
                 <Percent className="h-8 w-8 text-primary" />
               </div>
@@ -52,7 +52,7 @@ export default function Home() {
                 <p className="text-muted-foreground">Use code: <span className="font-bold text-primary">PIZZA50</span></p>
               </div>
             </div>
-             <div className="bg-card p-6 rounded-lg shadow-md flex items-center gap-4">
+             <div className="bg-white/30 backdrop-blur-md p-6 rounded-lg shadow-md flex items-center gap-4">
               <div className="bg-accent/20 p-4 rounded-full">
                 <Medal className="h-8 w-8 text-accent-foreground" />
               </div>

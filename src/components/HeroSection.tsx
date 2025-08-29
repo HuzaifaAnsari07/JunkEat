@@ -53,7 +53,7 @@ export const HeroSection = () => {
 
     return (
         <section
-            className="relative w-full h-[90vh] min-h-[700px] flex flex-col items-center justify-center overflow-hidden p-4 bg-gradient-to-br from-yellow-100 via-orange-100 to-red-100"
+            className="relative w-full h-[90vh] min-h-[700px] flex flex-col items-center justify-center overflow-hidden p-4"
             style={{ perspective: '1000px' }}
         >
             <motion.div
