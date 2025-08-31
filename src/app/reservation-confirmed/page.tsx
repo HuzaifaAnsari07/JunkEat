@@ -10,6 +10,7 @@ import { Home, XCircle, Clock, MapPin, ClipboardCopy, Check, Share2, CheckCircle
 import Link from "next/link";
 import { useToast } from "@/hooks/use-toast";
 import { Badge } from '@/components/ui/badge';
+import { Loader } from '@/components/ui/loader';
 
 interface OrderDetails {
     id: string;
@@ -122,7 +123,7 @@ function ReservationConfirmedContent() {
     if (!order) {
         return (
             <div className="container mx-auto flex items-center justify-center min-h-[70vh]">
-                <p>Loading your reservation details...</p>
+                <Loader />
             </div>
         );
     }
@@ -236,7 +237,7 @@ function ReservationConfirmedContent() {
 
 export default function ReservationConfirmedPage() {
     return (
-        <Suspense fallback={<div className="container mx-auto flex items-center justify-center min-h-[70vh]">Loading...</div>}>
+        <Suspense fallback={<div className="container mx-auto flex items-center justify-center min-h-[70vh]"><Loader /></div>}>
             <ReservationConfirmedContent />
         </Suspense>
     );

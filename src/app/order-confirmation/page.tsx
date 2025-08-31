@@ -10,6 +10,7 @@ import { Home, UtensilsCrossed, Printer, MapPin } from "lucide-react";
 import Link from "next/link";
 import type { CartItem } from '@/types';
 import Image from 'next/image';
+import { Loader } from '@/components/ui/loader';
 
 interface OrderDetails {
     id: string;
@@ -51,7 +52,7 @@ function OrderConfirmationContent() {
     if (!order) {
         return (
             <div className="container mx-auto flex items-center justify-center min-h-[70vh]">
-                <p>Loading your order details...</p>
+                <Loader />
             </div>
         );
     }
@@ -189,7 +190,7 @@ function OrderConfirmationContent() {
 
 export default function OrderConfirmationPage() {
     return (
-        <Suspense fallback={<div className="container mx-auto flex items-center justify-center min-h-[70vh]">Loading...</div>}>
+        <Suspense fallback={<div className="container mx-auto flex items-center justify-center min-h-[70vh]"><Loader /></div>}>
             <OrderConfirmationContent />
         </Suspense>
     );
