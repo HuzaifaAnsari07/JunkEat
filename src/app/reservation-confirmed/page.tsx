@@ -205,7 +205,7 @@ function ReservationConfirmedContent() {
                             </Button>
                             <div className="grid grid-cols-2 gap-2 w-full">
                                <Button asChild className="w-full">
-                                  <a href="https://www.google.com/maps" target="_blank" rel="noopener noreferrer">
+                                  <a href="https://www.google.com/maps/dir//Ajwa+House+of+Fast+food,+Millat+Nagar,+Road+Number+4,+Nashik+Rd,+Bhiwandi,+Maharashtra+421302/@19.231474,73.0003937,12z/data=!4m8!4m7!1m0!1m5!1m1!1s0x3be7bd8f8836274d:0xc12a62dcc3314628!2m2!1d73.0724032!2d19.3137376?entry=ttu&g_ep=EgoyMDI1MDgyNS4wIKXMDSoASAFQAw%3D%3D" target="_blank" rel="noopener noreferrer">
                                       <MapPin className="mr-2 h-5 w-5" />
                                       Get Directions
                                   </a>
@@ -242,4 +242,5 @@ export default function ReservationConfirmedPage() {
         </Suspense>
     );
 }
+
 
