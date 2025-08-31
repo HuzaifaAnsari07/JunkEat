@@ -1,0 +1,218 @@
+
+.truck-loader {
+    width: 130px;
+    height: 30px;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    overflow: hidden;
+}
+
+.truck-wrapper {
+    animation: drive 5s ease-in-out forwards;
+    display: flex;
+    align-items: flex-end;
+}
+
+.truck .truck-container {
+    position: relative;
+    width: 70px;
+    height: 30px;
+    background: hsl(var(--primary));
+    border-radius: 10px 4px 4px 10px;
+}
+
+.truck .truck-container:after {
+    content: "";
+    position: absolute;
+    background: hsl(var(--background));
+    width: 3px;
+    height: 100%;
+    right: -3px;
+    top: 0;
+}
+
+.truck .glases {
+    position: absolute;
+    top: 5px;
+    left: 8px;
+    width: 15px;
+    height: 10px;
+    background: #6a6a6a;
+    border-radius: 4px;
+}
+
+.truck .glases:after {
+    content: "";
+    position: absolute;
+    width: 2px;
+    height: 100%;
+    background: hsl(var(--primary-foreground));
+    left: 7px;
+}
+
+.truck .bonet {
+    position: absolute;
+    top: 5px;
+    left: 0px;
+    width: 10px;
+    height: 15px;
+    background: hsl(var(--primary));
+    border-radius: 4px;
+}
+
+.truck .base {
+    position: absolute;
+    width: 85px;
+    height: 5px;
+    background: #464646;
+    bottom: 0px;
+    left: 0;
+    border-radius: 2px;
+}
+
+.truck .wheel-back,
+.truck .wheel-front {
+    position: absolute;
+    width: 14px;
+    height: 14px;
+    background: #2b2b2b;
+    border-radius: 50%;
+    bottom: -5px;
+    border: 3px solid #464646;
+    animation: spin 0.8s linear infinite;
+}
+
+.truck .wheel-back {
+    right: 12px;
+}
+
+.truck .wheel-front {
+    left: 12px;
+}
+
+.truck .smoke {
+    position: absolute;
+    width: 10px;
+    height: 10px;
+    border-radius: 50%;
+    background: #d3d3d3;
+    left: -15px;
+    bottom: 5px;
+    animation: smoke 1s linear infinite;
+    opacity: 0;
+}
+
+.box-wrapper {
+    width: 25px;
+    height: 25px;
+    display: flex;
+    align-items: flex-end;
+}
+
+.box {
+    width: 20px;
+    height: 20px;
+    background: #d3a36f;
+    border-radius: 2px;
+    animation: load-box 5s ease-in-out forwards;
+}
+
+@keyframes drive {
+    0%, 10% { transform: translateX(-150px); } /* Start off-screen left */
+    20% { transform: translateX(-60px); } /* Drive in and stop */
+    20.1%, 60% { transform: translateX(-60px); } /* Stay stopped */
+    80% { transform: translateX(20px) scale(1.1); }
+    100% { transform: translateX(150px) scale(0.8); } /* Drive away off-screen right */
+}
+
+@keyframes load-box {
+    0%, 25% { transform: translateX(0) scaleY(1); opacity: 1; }
+    30% { transform: translateX(-15px) scaleY(1.1); }
+    45% { transform: translateX(-45px) scaleY(1); }
+    50%, 100% { transform: translateX(-45px); opacity: 0; }
+}
+
+@keyframes spin {
+    0% { transform: rotate(0deg); }
+    100% { transform: rotate(360deg); }
+}
+
+@keyframes smoke {
+    0% { transform: scale(0); left: -15px; opacity: 0; }
+    50% { transform: scale(1); left: -25px; opacity: 0.3; }
+    100% { transform: scale(1.5); left: -35px; opacity: 0; }
+}
+
+/* Control animations */
+.truck-wrapper {
+    animation-name: drive;
+}
+.box {
+    animation-name: load-box;
+}
+.wheel-back, .wheel-front {
+    animation-name: spin;
+}
+.smoke {
+    animation-name: smoke;
+}
+
+/* Pause spinning when truck stops */
+.truck-wrapper .wheel-back,
+.truck-wrapper .wheel-front {
+    animation-play-state: running;
+}
+
+.truck-wrapper {
+    animation-fill-mode: forwards;
+}
+
+@keyframes pause-spin {
+    0%, 20% { animation-play-state: running; }
+    20.1%, 60% { animation-play-state: paused; }
+    60.1%, 100% { animation-play-state: running; }
+}
+
+.truck-wrapper .wheel-back,
+.truck-wrapper .wheel-front {
+    animation: spin 0.5s linear infinite, pause-spin 5s ease-in-out forwards;
+}
+
+/* Animate doors */
+.truck .truck-container:before {
+    content: '';
+    position: absolute;
+    width: 50%;
+    height: 100%;
+    background: hsl(var(--primary) / 0.9);
+    right: 0;
+    border-radius: 0 4px 4px 0;
+    transform-origin: left;
+    animation: open-door-left 5s ease-in-out forwards;
+    border-left: 2px solid hsl(var(--primary-foreground) / 0.5);
+}
+
+.truck .base-aux {
+    position: absolute;
+    width: 50%;
+    height: 100%;
+    background: hsl(var(--primary) / 0.9);
+    right: 0;
+    border-radius: 0 4px 4px 0;
+    transform-origin: right;
+    animation: open-door-right 5s ease-in-out forwards;
+    border-right: 2px solid hsl(var(--primary-foreground) / 0.5);
+}
+
+@keyframes open-door-left {
+    0%, 25% { transform: perspective(100px) rotateY(0deg); }
+    40% { transform: perspective(100px) rotateY(-80deg); }
+    55%, 100% { transform: perspective(100px) rotateY(0deg); }
+}
+
+@keyframes open-door-right {
+    0%, 25% { transform: perspective(100px) rotateY(0deg); }
+    40% { transform: perspective(100px) rotateY(80deg); }
+    55%, 100% { transform: perspective(100px) rotateY(0deg); }
+}

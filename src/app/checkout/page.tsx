@@ -22,6 +22,7 @@ import { useToast } from "@/hooks/use-toast";
 import { cn } from '@/lib/utils';
 import { Alert, AlertDescription, AlertTitle } from '@/components/ui/alert';
 import { Textarea } from '@/components/ui/textarea';
+import { DeliveryLoadingAnimation } from '@/components/DeliveryLoadingAnimation';
 
 const DINE_IN_ADVANCE_AMOUNT = 100;
 const VACANT_TABLES = 8;
@@ -58,6 +59,7 @@ export default function CheckoutPage() {
   const { toast } = useToast();
   const [userName, setUserName] = useState('');
   const [selectedTable, setSelectedTable] = useState<string | null>(null);
+  const [isPlacingOrder, setIsPlacingOrder] = useState(false);
 
   const tableNumbers = useMemo(() => {
     const numbers = Array.from({ length: TOTAL_TABLES }, (_, i) => i + 1);
@@ -122,6 +124,10 @@ export default function CheckoutPage() {
   const formatCurrency = (amount: number) => `₹${amount.toFixed(2)}`;
 
   const onSubmit = (values: z.infer<typeof addressSchema>) => {
+    if (values.orderType === 'delivery') {
+      setIsPlacingOrder(true);
+    }
+
     const orderDetails = {
         id: `JNK-${Math.floor(Math.random() * 10000)}`,
         items: cartItems,
@@ -150,26 +156,29 @@ export default function CheckoutPage() {
     
     sessionStorage.setItem('latestOrder', JSON.stringify(orderDetails));
     
-    if (values.orderType === 'dine-in') {
-        toast({
-            title: "Table Reserved!",
-            description: `Your table T${orderDetails.tableNumber} has been successfully reserved.`,
-            variant: 'default',
-            duration: 3000,
-        });
-        router.push(`/reservation-confirmed`);
-    } else {
-        toast({
-            title: "Order Placed!",
-            description: "Your order has been successfully placed.",
-            variant: 'default',
-            duration: 3000,
-        });
-        router.push(`/order-confirmation`);
-    }
+    setTimeout(() => {
+        if (values.orderType === 'dine-in') {
+            toast({
+                title: "Table Reserved!",
+                description: `Your table T${orderDetails.tableNumber} has been successfully reserved.`,
+                variant: 'default',
+                duration: 3000,
+            });
+            router.push(`/reservation-confirmed`);
+        } else {
+            toast({
+                title: "Order Placed!",
+                description: "Your order has been successfully placed.",
+                variant: 'default',
+                duration: 3000,
+            });
+            router.push(`/order-confirmation`);
+        }
+        setIsPlacingOrder(false);
+    }, values.orderType === 'delivery' ? 5000 : 0);
   };
 
-  if (cartItems.length === 0) {
+  if (cartItems.length === 0 && !isPlacingOrder) {
     return (
         <div className="container mx-auto flex items-center justify-center min-h-[60vh]">
             <p>Redirecting to dashboard...</p>
@@ -325,7 +334,12 @@ export default function CheckoutPage() {
                                         </FormItem>
                                     )} />
                                 </div>
-                                <Button type="submit" size="lg" className="w-full font-bold transition-all hover:bg-primary/80 active:scale-95">{orderType === 'dine-in' ? `Pay Advance & Place Order` : `Place Order`}</Button>
+                                <Button type="submit" size="lg" className="w-full font-bold transition-all hover:bg-primary/80 active:scale-95 h-12" disabled={isPlacingOrder}>
+                                    {isPlacingOrder ? 
+                                        <DeliveryLoadingAnimation /> : 
+                                        orderType === 'dine-in' ? `Pay Advance & Place Order` : `Place Order`
+                                    }
+                                </Button>
                             </form>
                         </Form>
                     </CardContent>
