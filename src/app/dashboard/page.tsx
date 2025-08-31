@@ -1,4 +1,5 @@
 
+
 import { products } from '@/lib/data';
 import Image from 'next/image';
 import { Button } from '@/components/ui/button';
@@ -8,6 +9,7 @@ import { Medal, Percent } from 'lucide-react';
 import AIAssistant from '@/components/AIAssistant';
 import Link from 'next/link';
 import { EllipticalCarousel } from '@/components/EllipticalCarousel';
+import AnimatedHeading from '@/components/AnimatedHeading';
 
 export default function Home() {
   const bestsellers = products.filter(p => p.bestseller);
@@ -16,12 +18,10 @@ export default function Home() {
   return (
     <div className="container mx-auto px-4 py-8 space-y-16">
       <section id="hero" className="text-center">
-        <h1 className="font-headline text-5xl md:text-7xl font-bold">
-          Cravings Calling?
-        </h1>
-        <p className="mt-4 max-w-2xl mx-auto text-lg text-muted-foreground">
-          Get your favorite junk food delivered to your door, faster than you can say "extra cheese".
-        </p>
+        <AnimatedHeading 
+            text="Cravings Calling?"
+            subtext="Get your favorite junk food delivered to your door, faster than you can say 'extra cheese'."
+        />
         <div className="mt-8">
             <EllipticalCarousel />
         </div>
@@ -59,8 +59,7 @@ export default function Home() {
               </div>
               <div>
                 <h3 className="font-headline text-xl font-bold">50% OFF on Pizzas</h3>
-                <p className="text-muted-foreground">Use code: <span className="font-bold text-primary">PIZZA50</span></p>
-              </div>
+                <p className="text-muted-foreground">Use code: <span className="font-bold text-primary">PIZZA50</span></p>              </div>
             </div>
              <div className="bg-background p-6 rounded-lg shadow-md flex items-center gap-4">
               <div className="bg-accent/20 p-4 rounded-full">
