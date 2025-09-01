@@ -72,7 +72,7 @@ export default function CheckoutPage() {
   }, []);
 
   useEffect(() => {
-    if (cartItems.length === 0) {
+    if (cartItems.length === 0 && !isPlacingOrder) {
       router.push('/dashboard');
     }
     const storedUser = sessionStorage.getItem('loggedInUser');
@@ -80,7 +80,7 @@ export default function CheckoutPage() {
         const user = JSON.parse(storedUser);
         setUserName(user.name);
     }
-  }, [cartItems, router]);
+  }, [cartItems, router, isPlacingOrder]);
 
   const form = useForm<z.infer<typeof addressSchema>>({
     resolver: zodResolver(addressSchema),
