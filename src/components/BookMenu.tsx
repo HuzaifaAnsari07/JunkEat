@@ -48,6 +48,10 @@ export function BookMenu({ allProducts }: BookMenuProps) {
 
     const isMobile = isClient && window.innerWidth <= 768;
 
+    if (!isClient) {
+        return null;
+    }
+
     return (
         <div className={`book-container ${activeCategory ? 'show-menu' : ''}`}>
             {isMobile ? (
@@ -65,7 +69,7 @@ export function BookMenu({ allProducts }: BookMenuProps) {
                         ))}
                     </div>
                     {activeCategory && (
-                        <div className="p-4 bg-card rounded-lg">
+                        <div className="book-page active-page p-4 bg-card rounded-lg">
                              <h3 className="font-headline text-2xl font-bold mb-4 text-center">{activeCategory}</h3>
                              <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
                                 {productsByCategory[activeCategory].length > 0 ? (
@@ -106,7 +110,7 @@ export function BookMenu({ allProducts }: BookMenuProps) {
                                 <div className="book-page-content book-page-front">
                                     <div className="flex justify-between items-center">
                                         <h3 className="font-headline text-3xl font-bold">{category}</h3>
-                                        <div className="flex items-center gap-2 text-primary font-bold">
+                                        <div className="flex items-center gap-2 text-primary font-bold cursor-pointer">
                                             <span>Turn Page</span>
                                             <ArrowRight />
                                         </div>

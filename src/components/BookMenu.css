@@ -50,6 +50,7 @@
     align-items: center;
     gap: 1rem;
     z-index: 2;
+    cursor: pointer;
 }
 
 .book-cover-back {
@@ -72,7 +73,7 @@
     transition: transform 1s ease-in-out, z-index 0.5s;
     border-radius: 0 10px 10px 0;
     padding: 2rem;
-    overflow-y: auto;
+    overflow-y: hidden;
 }
 
 .book-page-content {
@@ -180,14 +181,15 @@
         margin-bottom: 1rem;
         border-radius: 10px;
         min-height: 500px;
+        overflow-y: auto;
     }
     .book-cover-front {
         border-radius: 10px;
     }
-    .book-cover-back, .book-page-back {
+    .book-cover-back, .book-page-back, .book-page-front {
         display: none; /* Hide back pages on mobile */
     }
-    .book-container .book-cover {
+    .book-container.show-menu .book-cover {
         display: none;
     }
     .page-tabs {
