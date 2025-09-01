@@ -18,9 +18,9 @@ export function ProductCard({ product }: ProductCardProps) {
   const formatCurrency = (amount: number) => `₹${amount.toFixed(2)}`;
   
   return (
-    <Card className="flex flex-col overflow-hidden shadow-lg hover:shadow-2xl transition-all duration-300 rounded-lg border-2 border-transparent hover:border-accent group">
+    <Card className="flex flex-col overflow-hidden shadow-lg hover:shadow-2xl transition-all duration-300 rounded-lg border-2 border-transparent hover:border-accent group bg-background/70">
       <CardHeader className="p-0 relative">
-        <Link href={`/product/${product.id}`} className="block h-48 w-full">
+        <Link href={`/product/${product.id}`} className="block h-40 w-full">
             <Image 
               src={product.image} 
               alt={product.name} 
@@ -37,14 +37,14 @@ export function ProductCard({ product }: ProductCardProps) {
       </CardHeader>
       <CardContent className="p-4 flex-grow">
         <Link href={`/product/${product.id}`}>
-            <CardTitle className="font-headline text-xl mb-2 hover:text-primary transition-colors">{product.name}</CardTitle>
+            <CardTitle className="font-headline text-lg mb-1 hover:text-primary transition-colors">{product.name}</CardTitle>
         </Link>
-        <CardDescription className="text-sm h-12">{product.description}</CardDescription>
+        <CardDescription className="text-xs h-10">{product.description}</CardDescription>
       </CardContent>
       <CardFooter className="p-4 flex justify-between items-center">
-        <p className="font-headline text-2xl font-bold text-primary">{formatCurrency(product.price)}</p>
-        <Button onClick={() => addToCart(product)} className="bg-primary hover:bg-primary/90 text-primary-foreground transition-transform transform hover:scale-110">
-          <PlusCircle className="mr-2 h-5 w-5" /> Add
+        <p className="font-headline text-xl font-bold text-primary">{formatCurrency(product.price)}</p>
+        <Button onClick={() => addToCart(product)} size="sm" className="bg-primary hover:bg-primary/90 text-primary-foreground transition-transform transform hover:scale-105">
+          <PlusCircle className="mr-2 h-4 w-4" /> Add
         </Button>
       </CardFooter>
     </Card>

@@ -3,13 +3,13 @@
 import { products } from '@/lib/data';
 import Image from 'next/image';
 import { Button } from '@/components/ui/button';
-import { Menu } from '@/components/Menu';
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
 import { Medal, Percent } from 'lucide-react';
 import AIAssistant from '@/components/AIAssistant';
 import Link from 'next/link';
 import { EllipticalCarousel } from '@/components/EllipticalCarousel';
 import AnimatedHeading from '@/components/AnimatedHeading';
+import { BookMenu } from '@/components/BookMenu';
 
 export default function Home() {
   const bestsellers = products.filter(p => p.bestseller);
@@ -78,8 +78,8 @@ export default function Home() {
       </section>
 
       <section id="menu">
-        <h2 className="font-headline text-4xl font-bold text-center mb-8">Full Menu</h2>
-        <Menu allProducts={products} />
+        <h2 className="font-headline text-4xl font-bold text-center mb-8">Our Full Menu</h2>
+        <BookMenu allProducts={products} />
       </section>
     </div>
   );
