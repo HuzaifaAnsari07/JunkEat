@@ -121,6 +121,7 @@ export default function LoginPage() {
                     variant={locationEnabled ? "secondary" : "outline"}
                     className="w-full"
                     onClick={handleEnableLocation}
+                    disabled={locationEnabled}
                   >
                     <MapPin className="mr-2 h-5 w-5"/>
                     {locationEnabled ? 'Location Enabled' : 'Enable Live Location'}
