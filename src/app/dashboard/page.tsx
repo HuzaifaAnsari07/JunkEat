@@ -1,4 +1,5 @@
 
+'use client';
 
 import { products } from '@/lib/data';
 import Image from 'next/image';
@@ -9,11 +10,20 @@ import AIAssistant from '@/components/AIAssistant';
 import Link from 'next/link';
 import { EllipticalCarousel } from '@/components/EllipticalCarousel';
 import AnimatedHeading from '@/components/AnimatedHeading';
-import { BookMenu } from '@/components/BookMenu';
+import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs';
+import { ProductCard } from '@/components/ProductCard';
+import type { Product } from '@/types';
+
+const categories: Product['category'][] = ['Pizza', 'Burgers', 'Fries', 'Beverages', 'Combos', 'Desserts'];
 
 export default function Home() {
   const bestsellers = products.filter(p => p.bestseller);
   const formatCurrency = (amount: number) => `₹${amount.toFixed(2)}`;
+
+  const productsByCategory = categories.reduce((acc, category) => {
+    acc[category] = products.filter(p => p.category === category);
+    return acc;
+  }, {} as Record<string, Product[]>);
 
   return (
     <div className="container mx-auto px-4 py-8 space-y-16">
@@ -79,7 +89,27 @@ export default function Home() {
 
       <section id="menu">
         <h2 className="font-headline text-4xl font-bold text-center mb-8">Our Full Menu</h2>
-        <BookMenu allProducts={products} />
+        <Tabs defaultValue={categories[0]} className="w-full">
+          <TabsList className="grid w-full grid-cols-2 md:grid-cols-3 lg:grid-cols-6 h-auto">
+            {categories.map(category => (
+              <TabsTrigger key={category} value={category} className="py-2">{category}</TabsTrigger>
+            ))}
+          </TabsList>
+
+          {categories.map(category => (
+            <TabsContent key={category} value={category} className="mt-6">
+              <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-6">
+                {productsByCategory[category].length > 0 ? (
+                  productsByCategory[category].map(product => (
+                    <ProductCard key={product.id} product={product} />
+                  ))
+                ) : (
+                  <p className="text-muted-foreground col-span-full text-center py-8">No items in this category yet.</p>
+                )}
+              </div>
+            </TabsContent>
+          ))}
+        </Tabs>
       </section>
     </div>
   );
