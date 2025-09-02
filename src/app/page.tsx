@@ -128,7 +128,7 @@ export default function LoginPage() {
                   </Button>
               )}
               
-              <Button type="submit" className="w-full font-bold" disabled={!locationEnabled}>
+              <Button type="submit" className="w-full font-bold" disabled={!isClient || !locationEnabled}>
                   <LogIn className="mr-2 h-5 w-5"/>
                   Continue
               </Button>
