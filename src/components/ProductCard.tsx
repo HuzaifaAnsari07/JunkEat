@@ -18,7 +18,7 @@ export function ProductCard({ product }: ProductCardProps) {
   const formatCurrency = (amount: number) => `₹${amount.toFixed(2)}`;
   
   return (
-    <Card className="flex flex-col overflow-hidden shadow-lg hover:shadow-2xl transition-all duration-300 rounded-lg border-2 border-transparent hover:border-accent group bg-background/70 hover:-translate-y-1">
+    <Card className="flex flex-col overflow-hidden shadow-lg hover:shadow-2xl transition-all duration-300 rounded-lg border-2 border-transparent hover:border-accent group bg-card/70 hover:-translate-y-1">
       <CardHeader className="p-0 relative">
         <Link href={`/product/${product.id}`} className="block h-40 w-full">
             <Image 

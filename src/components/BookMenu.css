@@ -223,6 +223,10 @@
     margin-left: 0.5rem;
 }
 
+.mobile-menu-container {
+    display: none;
+}
+
 
 /* RESPONSIVENESS */
 @media (min-width: 1024px) {
@@ -231,7 +235,7 @@
     }
 }
 
-@media (max-width: 768px) {
+@media (max-width: 1023px) {
     .book-container {
         height: auto;
         min-height: 0;
@@ -239,59 +243,36 @@
         padding: 1rem 0;
     }
     .book, .book--open {
-        position: static;
-        width: 100%;
-        height: auto;
-        max-width: 100%;
-        transform: none !important;
-    }
-    .book__cover, .book-page, .book__pages, .book-page-wrapper {
         display: none; /* Hide 3D book on mobile */
     }
-    .book__tabs { /* Use tabs for navigation on mobile */
-        display: flex;
-        position: relative;
+    .mobile-menu-container {
+        display: block;
         width: 100%;
-        right: auto;
-        overflow-x: auto;
-        padding-bottom: 1rem;
-        margin-bottom: 1rem;
     }
-     .book__tab {
-        position: static;
-        transform: none;
-        width: auto;
-        border-radius: 99px;
-        white-space: nowrap;
-        margin: 0 0.25rem;
-    }
-    .book__tab .tab-text {
-        opacity: 1;
-        width: auto;
-        margin-left: 0.5rem;
-    }
-    .book__tab:hover, .book__tab--active {
-        width: auto;
-    }
+}
 
-    .book-page__content--mobile-view {
-        display: block;
-    }
-     .book__controls {
-        display: none;
-    }
-    .mobile-content {
-        display: block;
-        width: 100%;
-        animation: fade-in 0.5s ease;
-    }
-     @keyframes fade-in {
-        from { opacity: 0; transform: translateY(10px); }
-        to { opacity: 1; transform: translateY(0); }
-    }
+@keyframes fade-in {
+    from { opacity: 0; transform: translateY(10px); }
+    to { opacity: 1; transform: translateY(0); }
+}
+
+.mobile-content {
+    animation: fade-in 0.5s ease;
 }
 
 /* Fallback for non-3D supporting browsers */
 @supports not (perspective: 2500px) {
-   /* Mobile-first styles will apply */
+   .book-container {
+        height: auto;
+        min-height: 0;
+        perspective: none;
+        padding: 1rem 0;
+    }
+    .book, .book--open {
+        display: none;
+    }
+    .mobile-menu-container {
+        display: block;
+        width: 100%;
+    }
 }
