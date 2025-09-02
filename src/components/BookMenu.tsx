@@ -58,7 +58,7 @@ export const BookMenu = () => {
 
     const handlePrevPage = useCallback(() => {
         if (currentPage > 0) {
-            setCurrentPage(prev => prev - 1);
+            setCurrentPage(prev => prev + 1);
         }
     }, [currentPage]);
     
