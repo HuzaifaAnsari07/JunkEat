@@ -18,7 +18,7 @@ export function ProductCard({ product }: ProductCardProps) {
   const formatCurrency = (amount: number) => `₹${amount.toFixed(2)}`;
   
   return (
-    <Card className="flex flex-col overflow-hidden shadow-lg hover:shadow-2xl transition-all duration-300 rounded-lg border-2 border-transparent hover:border-accent group bg-background/70">
+    <Card className="flex flex-col overflow-hidden shadow-lg hover:shadow-2xl transition-all duration-300 rounded-lg border-2 border-transparent hover:border-accent group bg-background/70 hover:-translate-y-1">
       <CardHeader className="p-0 relative">
         <Link href={`/product/${product.id}`} className="block h-40 w-full">
             <Image 
@@ -41,7 +41,7 @@ export function ProductCard({ product }: ProductCardProps) {
         </Link>
         <CardDescription className="text-xs h-10">{product.description}</CardDescription>
       </CardContent>
-      <CardFooter className="p-4 flex justify-between items-center">
+      <CardFooter className="p-4 flex justify-between items-center mt-auto">
         <p className="font-headline text-xl font-bold text-primary">{formatCurrency(product.price)}</p>
         <Button onClick={() => addToCart(product)} size="sm" className="bg-primary hover:bg-primary/90 text-primary-foreground transition-transform transform hover:scale-105">
           <PlusCircle className="mr-2 h-4 w-4" /> Add

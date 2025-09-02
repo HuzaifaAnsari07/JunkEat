@@ -1,0 +1,297 @@
+
+.book-container {
+    height: 70vh;
+    min-height: 500px;
+    max-height: 800px;
+    width: 100%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    perspective: 2500px;
+    position: relative;
+    transition: transform 0.5s ease-in-out;
+}
+
+.book {
+    width: 90vw;
+    height: 95%;
+    max-width: 1100px;
+    position: relative;
+    transform-style: preserve-3d;
+    transform: rotateY(-25deg) rotateX(5deg) scale(0.9);
+    transition: transform 1s cubic-bezier(0.68, -0.55, 0.27, 1.55);
+}
+
+.book--open {
+    transform: rotateY(0deg) rotateX(0deg) scale(1);
+}
+
+.book__cover,
+.book-page-wrapper {
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 50%;
+    height: 100%;
+    transform-origin: left center;
+    transition: transform 1.2s cubic-bezier(0.68, -0.55, 0.27, 1.55);
+}
+
+.book__cover {
+    z-index: 20;
+    transform-style: preserve-3d;
+}
+
+.book--open .book__cover {
+    transform: rotateY(-160deg);
+}
+
+.book__cover-front,
+.book__cover-back {
+    position: absolute;
+    width: 100%;
+    height: 100%;
+    backface-visibility: hidden;
+    border-radius: 0 1rem 1rem 0;
+}
+
+.book__cover-front {
+    background-color: hsl(var(--primary));
+    background-image: linear-gradient(to right, hsl(var(--primary) / 0.8), hsl(var(--primary)));
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    border: 2px solid hsl(var(--primary-foreground) / 0.2);
+    box-shadow: inset -2px 0 10px rgba(0,0,0,0.2);
+}
+
+.book-title {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 0.5rem;
+    text-align: center;
+}
+
+.book__cover-back {
+    background-color: hsl(var(--primary) / 0.95);
+    transform: rotateY(180deg);
+    border-radius: 1rem 0 0 1rem;
+    border: 2px solid hsl(var(--primary-foreground) / 0.1);
+}
+
+
+.book__pages {
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    transform-style: preserve-3d;
+}
+
+.book-page-wrapper {
+    left: 50%;
+    transform-origin: left center;
+    border-radius: 0 1rem 1rem 0;
+    overflow: hidden;
+}
+
+.book-page {
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    transform-style: preserve-d;
+    transition: transform 1s cubic-bezier(0.65, 0, 0.35, 1);
+    transform-style: preserve-3d;
+}
+
+.book-page__front,
+.book-page__back {
+    position: absolute;
+    width: 100%;
+    height: 100%;
+    backface-visibility: hidden;
+    background-color: hsl(var(--card));
+    border: 1px solid hsl(var(--border) / 0.5);
+}
+
+.book-page__front {
+    border-radius: 0 1rem 1rem 0;
+}
+.book-page__back {
+    transform: rotateY(180deg);
+    border-radius: 1rem 0 0 1rem;
+}
+
+
+.book-page__content {
+    width: 100%;
+    height: 100%;
+    position: relative;
+    overflow: hidden;
+}
+
+.custom-scrollbar::-webkit-scrollbar {
+  width: 8px;
+}
+.custom-scrollbar::-webkit-scrollbar-track {
+  background: hsl(var(--muted) / 0.5);
+  border-radius: 10px;
+}
+.custom-scrollbar::-webkit-scrollbar-thumb {
+  background: hsl(var(--accent));
+  border-radius: 10px;
+}
+.custom-scrollbar::-webkit-scrollbar-thumb:hover {
+  background: hsl(var(--accent) / 0.8);
+}
+
+
+.book__controls {
+    position: absolute;
+    bottom: -50px;
+    left: 50%;
+    transform: translateX(-50%);
+    display: flex;
+    gap: 1rem;
+    align-items: center;
+    background: hsl(var(--background) / 0.5);
+    backdrop-filter: blur(4px);
+    padding: 0.5rem 1rem;
+    border-radius: 9999px;
+    border: 1px solid hsl(var(--border));
+    z-index: 30;
+}
+
+.book__tabs {
+    position: absolute;
+    top: 0;
+    right: -60px;
+    width: 60px;
+    height: 100%;
+    z-index: 5;
+    display: none; /* Hidden by default, shown on larger screens */
+}
+
+.book__tab {
+    position: absolute;
+    left: 0;
+    width: 120px;
+    height: 40px;
+    background: hsl(var(--accent));
+    color: hsl(var(--accent-foreground));
+    border: none;
+    cursor: pointer;
+    transform-origin: 0 0;
+    transform: rotate(-90deg) translateY(-40px);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 0.5rem;
+    font-weight: bold;
+    font-family: var(--font-headline);
+    border-radius: 8px 8px 0 0;
+    transition: all 0.3s ease;
+    padding: 0 1rem;
+    box-shadow: -2px 0 5px rgba(0,0,0,0.1);
+}
+
+.book__tab:hover {
+    background: hsl(var(--accent) / 0.8);
+    width: 130px;
+}
+.book__tab--active {
+    background: hsl(var(--primary));
+    color: hsl(var(--primary-foreground));
+    width: 140px;
+}
+.book__tab .tab-text {
+    opacity: 0;
+    transition: opacity 0.3s ease;
+    width: 0;
+    overflow: hidden;
+    white-space: nowrap;
+}
+
+.book__tab:hover .tab-text, .book__tab--active .tab-text {
+    opacity: 1;
+    width: auto;
+    margin-left: 0.5rem;
+}
+
+
+/* RESPONSIVENESS */
+@media (min-width: 1024px) {
+    .book__tabs {
+        display: block;
+    }
+}
+
+@media (max-width: 768px) {
+    .book-container {
+        height: auto;
+        min-height: 0;
+        perspective: none;
+        padding: 1rem 0;
+    }
+    .book, .book--open {
+        position: static;
+        width: 100%;
+        height: auto;
+        max-width: 100%;
+        transform: none !important;
+    }
+    .book__cover, .book-page, .book__pages, .book-page-wrapper {
+        display: none; /* Hide 3D book on mobile */
+    }
+    .book__tabs { /* Use tabs for navigation on mobile */
+        display: flex;
+        position: relative;
+        width: 100%;
+        right: auto;
+        overflow-x: auto;
+        padding-bottom: 1rem;
+        margin-bottom: 1rem;
+    }
+     .book__tab {
+        position: static;
+        transform: none;
+        width: auto;
+        border-radius: 99px;
+        white-space: nowrap;
+        margin: 0 0.25rem;
+    }
+    .book__tab .tab-text {
+        opacity: 1;
+        width: auto;
+        margin-left: 0.5rem;
+    }
+    .book__tab:hover, .book__tab--active {
+        width: auto;
+    }
+
+    .book-page__content--mobile-view {
+        display: block;
+    }
+     .book__controls {
+        display: none;
+    }
+    .mobile-content {
+        display: block;
+        width: 100%;
+        animation: fade-in 0.5s ease;
+    }
+     @keyframes fade-in {
+        from { opacity: 0; transform: translateY(10px); }
+        to { opacity: 1; transform: translateY(0); }
+    }
+}
+
+/* Fallback for non-3D supporting browsers */
+@supports not (perspective: 2500px) {
+   /* Mobile-first styles will apply */
+}
