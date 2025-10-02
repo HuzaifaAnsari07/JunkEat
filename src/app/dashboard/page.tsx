@@ -5,12 +5,28 @@ import { products } from '@/lib/data';
 import Image from 'next/image';
 import { Button } from '@/components/ui/button';
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
-import { Medal, Percent } from 'lucide-react';
+import { Medal, Percent, Pizza, Ham, Flame, GlassWater, Utensils, Cake } from 'lucide-react';
 import AIAssistant from '@/components/AIAssistant';
 import Link from 'next/link';
 import { EllipticalCarousel } from '@/components/EllipticalCarousel';
 import AnimatedHeading from '@/components/AnimatedHeading';
-import { BookMenu } from '@/components/BookMenu';
+import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs"
+import { ProductCard } from '@/components/ProductCard';
+import type { Product } from '@/types';
+
+const categories: { name: Product['category'], icon: React.ElementType }[] = [
+    { name: 'Pizza', icon: Pizza },
+    { name: 'Burgers', icon: Ham },
+    { name: 'Fries', icon: Flame },
+    { name: 'Beverages', icon: GlassWater },
+    { name: 'Combos', icon: Utensils },
+    { name: 'Desserts', icon: Cake },
+];
+
+const productsByCategory = categories.map(category => ({
+    ...category,
+    products: products.filter(p => p.category === category.name),
+}));
 
 export default function Home() {
   const bestsellers = products.filter(p => p.bestseller);
@@ -83,7 +99,25 @@ export default function Home() {
          <div className="absolute inset-0 bg-gradient-to-br from-primary/10 via-transparent to-accent/10 opacity-50"></div>
          <div className="relative">
             <h2 className="font-headline text-4xl font-bold text-center mb-12">Our Full Menu</h2>
-            <BookMenu />
+             <Tabs defaultValue={categories[0].name} className="w-full max-w-6xl mx-auto">
+                <TabsList className="grid w-full grid-cols-3 md:grid-cols-6 h-auto p-1.5">
+                    {categories.map(category => (
+                        <TabsTrigger key={category.name} value={category.name} className="flex-col h-16 gap-1 text-xs sm:text-sm">
+                            <category.icon className="h-6 w-6 mb-1"/>
+                            {category.name}
+                        </TabsTrigger>
+                    ))}
+                </TabsList>
+                {productsByCategory.map(category => (
+                    <TabsContent key={category.name} value={category.name} className="animate-in fade-in-50 duration-500">
+                         <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-6 p-4 pt-8">
+                            {category.products.map(product => (
+                                <ProductCard key={product.id} product={product} />
+                            ))}
+                        </div>
+                    </TabsContent>
+                ))}
+            </Tabs>
          </div>
       </section>
     </div>
