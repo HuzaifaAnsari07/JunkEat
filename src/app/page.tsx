@@ -9,21 +9,30 @@ import { Label } from '@/components/ui/label';
 import { Card, CardContent, CardDescription, CardHeader, CardTitle, CardFooter } from '@/components/ui/card';
 import { UtensilsCrossed, LogIn, MapPin } from 'lucide-react';
 import { FloatingIcons } from '@/components/FloatingIcons';
+import { useAuth, useUser } from '@/firebase';
+import { initiateAnonymousSignIn } from '@/firebase/non-blocking-login';
+import { setDocumentNonBlocking } from '@/firebase/non-blocking-updates';
+import { doc, getFirestore } from 'firebase/firestore';
 
 export default function LoginPage() {
   const router = useRouter();
+  const auth = useAuth();
+  const { user, isUserLoading } = useUser();
   const [name, setName] = useState('');
   const [contactNumber, setContactNumber] = useState('');
   const [email, setEmail] = useState('');
-  const [password, setPassword] = useState('');
   const [locationEnabled, setLocationEnabled] = useState(false);
   const [isClient, setIsClient] = useState(false);
 
   useEffect(() => {
     setIsClient(true);
-    // Clear session storage on component mount to ensure a fresh session
-    sessionStorage.clear();
   }, []);
+
+  useEffect(() => {
+    if (user) {
+      router.push('/dashboard');
+    }
+  }, [user, router]);
 
   const handleLogin = (e: React.FormEvent) => {
     e.preventDefault();
@@ -31,12 +40,26 @@ export default function LoginPage() {
       alert('Please enable your location to continue.');
       return;
     }
-    // Mock login logic
-    const user = { name, contactNumber, email };
-    sessionStorage.setItem('loggedInUser', JSON.stringify(user));
-    console.log('Logging in with:', { name, contactNumber, email, password, locationEnabled });
-    router.push('/dashboard');
+    
+    // For now we will use anonymous sign in
+    initiateAnonymousSignIn(auth);
   };
+  
+  // When user is created, we can create a user profile document
+  useEffect(() => {
+    if (user && name && email) {
+      const firestore = getFirestore();
+      const userRef = doc(firestore, 'users', user.uid);
+      const userData = {
+        name: name,
+        email: email,
+        phone: contactNumber,
+        address: 'Default Address' // Placeholder
+      };
+      // We are not awaiting this, it will run in the background
+      setDocumentNonBlocking(userRef, userData, { merge: true });
+    }
+  }, [user, name, email, contactNumber]);
 
   const handleEnableLocation = () => {
     if (navigator.geolocation) {
@@ -56,6 +79,14 @@ export default function LoginPage() {
     }
   };
 
+  if (isUserLoading || user) {
+    return (
+        <div className="container mx-auto flex items-center justify-center min-h-[60vh]">
+            <p>Loading...</p>
+        </div>
+    );
+  }
+
   return (
     <div className="relative min-h-screen w-full bg-gradient-to-br from-orange-400 via-red-500 to-yellow-400 overflow-hidden">
       <FloatingIcons />
@@ -66,7 +97,7 @@ export default function LoginPage() {
               <UtensilsCrossed className="h-10 w-10 text-primary" />
             </div>
             <CardTitle className="font-headline text-3xl">Welcome to JunkEats!</CardTitle>
-            <CardDescription>Log in or sign up to get your junk food fix.</CardDescription>
+            <CardDescription>Sign up to get your junk food fix.</CardDescription>
           </CardHeader>
           <CardContent>
             <form onSubmit={handleLogin} className="space-y-4">
@@ -103,18 +134,7 @@ export default function LoginPage() {
                   required
                 />
               </div>
-              <div className="space-y-2">
-                <Label htmlFor="password">Password</Label>
-                <Input
-                  id="password"
-                  type="password"
-                  placeholder="••••••••"
-                  value={password}
-                  onChange={(e) => setPassword(e.target.value)}
-                  required
-                />
-              </div>
-
+              
               {isClient && (
                   <Button
                     type="button"

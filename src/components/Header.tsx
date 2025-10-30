@@ -1,7 +1,7 @@
 
 "use client";
 
-import { ShoppingCart, UtensilsCrossed, User } from 'lucide-react';
+import { ShoppingCart, UtensilsCrossed, User, LogOut } from 'lucide-react';
 import Link from 'next/link';
 import { Button } from '@/components/ui/button';
 import { Sheet, SheetContent, SheetHeader, SheetTitle, SheetDescription, SheetTrigger } from '@/components/ui/sheet';
@@ -10,6 +10,7 @@ import { useCart } from '@/context/CartProvider';
 import { ThemeToggle } from './ThemeToggle';
 import { usePathname } from 'next/navigation';
 import { useState, useEffect } from 'react';
+import { useAuth, useUser } from '@/firebase';
 
 interface Order {
     status: string;
@@ -18,6 +19,8 @@ interface Order {
 export function Header() {
   const { cartCount } = useCart();
   const pathname = usePathname();
+  const auth = useAuth();
+  const { user } = useUser();
   const [hasPendingOrder, setHasPendingOrder] = useState(false);
   const [isClient, setIsClient] = useState(false);
 
@@ -40,8 +43,7 @@ export function Header() {
     
     checkPendingOrders();
 
-    // Re-check on navigation change
-    const interval = setInterval(checkPendingOrders, 3000); // Check every 3 seconds
+    const interval = setInterval(checkPendingOrders, 3000); 
 
     return () => clearInterval(interval);
   }, [pathname]);
@@ -49,6 +51,10 @@ export function Header() {
 
   if (pathname === '/' || pathname === '/register') {
     return null;
+  }
+  
+  const handleLogout = () => {
+    auth.signOut();
   }
 
   return (
@@ -72,7 +78,7 @@ export function Header() {
           </nav>
           
           <ThemeToggle />
-          {isClient && (
+          {isClient && user && (
             <Button variant="outline" size="icon" className="rounded-full relative" asChild>
               <Link href="/profile">
                   {hasPendingOrder && (
@@ -102,11 +108,14 @@ export function Header() {
               <Cart />
             </SheetContent>
           </Sheet>
-           <div className="hidden md:flex items-center gap-2">
-             <Button variant="outline" asChild>
-                <Link href="/">Logout</Link>
+           {isClient && user && (
+            <div className="hidden md:flex items-center gap-2">
+             <Button variant="outline" onClick={handleLogout}>
+                <LogOut className="mr-2 h-4 w-4" />
+                Logout
             </Button>
           </div>
+           )}
         </div>
       </div>
     </header>

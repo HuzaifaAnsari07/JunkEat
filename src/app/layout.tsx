@@ -6,6 +6,7 @@ import { CartProvider } from '@/context/CartProvider';
 import { Header } from '@/components/Header';
 import { Footer } from '@/components/Footer';
 import { ThemeProvider } from '@/context/ThemeProvider';
+import { FirebaseClientProvider } from '@/firebase';
 
 export const metadata: Metadata = {
   title: 'JunkEats Express',
@@ -26,14 +27,16 @@ export default function RootLayout({
       </head>
       <body className="font-body text-foreground antialiased">
         <ThemeProvider>
-          <CartProvider>
-            <div className="flex min-h-screen flex-col">
-              <Header />
-              <main className="flex-grow">{children}</main>
-              <Footer />
-            </div>
-            <Toaster />
-          </CartProvider>
+          <FirebaseClientProvider>
+            <CartProvider>
+              <div className="flex min-h-screen flex-col">
+                <Header />
+                <main className="flex-grow">{children}</main>
+                <Footer />
+              </div>
+              <Toaster />
+            </CartProvider>
+          </FirebaseClientProvider>
         </ThemeProvider>
       </body>
     </html>
