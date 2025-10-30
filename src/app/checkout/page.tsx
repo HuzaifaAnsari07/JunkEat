@@ -144,7 +144,7 @@ export default function CheckoutPage() {
 
     const orderId = `JNK-${Math.floor(Math.random() * 10000)}`;
 
-    const orderDetails = {
+    const orderDetails: any = {
         id: orderId,
         userId: user.uid,
         items: cartItems.map(item => ({...item, image: item.image.toString()})),
@@ -152,18 +152,24 @@ export default function CheckoutPage() {
         shipping: shippingCost,
         tax: taxAmount,
         total: finalTotal,
-        advancePaid: orderType === 'dine-in' ? DINE_IN_ADVANCE_AMOUNT : null,
-        amountDue: orderType === 'dine-in' ? finalTotal - DINE_IN_ADVANCE_AMOUNT : 0,
         customerName: values.name || userName || 'Valued Customer',
         orderType: values.orderType,
-        tableNumber: values.tableNumber,
         specialRequests: values.specialRequests,
         paymentMethod: values.paymentMethod,
-        address: values.orderType === 'delivery' ? `${values.address}, ${values.city}, ${values.zip}` : `Dine-in at Table ${values.tableNumber}`,
         orderTime: serverTimestamp(),
         status: 'Order Placed',
         placementTime: Date.now(),
     };
+
+    if (values.orderType === 'dine-in') {
+        orderDetails.tableNumber = values.tableNumber;
+        orderDetails.address = `Dine-in at Table ${values.tableNumber}`;
+        orderDetails.advancePaid = DINE_IN_ADVANCE_AMOUNT;
+        orderDetails.amountDue = finalTotal - DINE_IN_ADVANCE_AMOUNT;
+    } else {
+        orderDetails.address = `${values.address}, ${values.city}, ${values.zip}`;
+        orderDetails.amountDue = 0;
+    }
     
     const sessionOrderDetails = {
         ...orderDetails,
