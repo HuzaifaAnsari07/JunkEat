@@ -12,6 +12,7 @@ import { UtensilsCrossed, LogIn } from 'lucide-react';
 import { FloatingIcons } from '@/components/FloatingIcons';
 import { useAuth, useUser } from '@/firebase';
 import { initiateEmailSignIn } from '@/firebase/non-blocking-login';
+import { FirebaseError } from 'firebase/app';
 
 export default function LoginPage() {
   const router = useRouter();
@@ -19,6 +20,7 @@ export default function LoginPage() {
   const { user, isUserLoading } = useUser();
   const [email, setEmail] = useState('');
   const [password, setPassword] = useState('');
+  const [error, setError] = useState<string | null>(null);
 
   useEffect(() => {
     if (user) {
@@ -28,7 +30,14 @@ export default function LoginPage() {
 
   const handleLogin = (e: React.FormEvent) => {
     e.preventDefault();
-    initiateEmailSignIn(auth, email, password);
+    setError(null);
+    initiateEmailSignIn(auth, email, password, (err: FirebaseError) => {
+        if (err.code === 'auth/invalid-credential') {
+            setError('Invalid credentials. Please try again.');
+        } else {
+            setError('An unexpected error occurred. Please try again.');
+        }
+    });
   };
   
   if (isUserLoading || user) {
@@ -75,6 +84,8 @@ export default function LoginPage() {
                   required
                 />
               </div>
+
+              {error && <p className="text-sm font-medium text-destructive">{error}</p>}
               
               <Button type="submit" className="w-full font-bold">
                   <LogIn className="mr-2 h-5 w-5"/>
