@@ -1,0 +1,348 @@
+{
+  "entities": {
+    "User": {
+      "$schema": "http://json-schema.org/draft-07/schema#",
+      "title": "User",
+      "type": "object",
+      "description": "Represents a user of the JunkEats Express application.",
+      "properties": {
+        "id": {
+          "type": "string",
+          "description": "Unique identifier for the user."
+        },
+        "name": {
+          "type": "string",
+          "description": "The user's full name."
+        },
+        "email": {
+          "type": "string",
+          "description": "The user's email address.",
+          "format": "email"
+        },
+        "address": {
+          "type": "string",
+          "description": "The user's shipping address."
+        },
+        "phone": {
+          "type": "string",
+          "description": "The user's phone number."
+        }
+      },
+      "required": [
+        "id",
+        "name",
+        "email",
+        "address",
+        "phone"
+      ]
+    },
+    "Product": {
+      "$schema": "http://json-schema.org/draft-07/schema#",
+      "title": "Product",
+      "type": "object",
+      "description": "Represents a food item available for purchase.",
+      "properties": {
+        "id": {
+          "type": "string",
+          "description": "Unique identifier for the product."
+        },
+        "name": {
+          "type": "string",
+          "description": "The name of the product."
+        },
+        "category": {
+          "type": "string",
+          "description": "The category the product belongs to (e.g., Pizza, Burger, Fries)."
+        },
+        "description": {
+          "type": "string",
+          "description": "A detailed description of the product."
+        },
+        "price": {
+          "type": "number",
+          "description": "The price of the product."
+        },
+        "image": {
+          "type": "string",
+          "description": "URL of the product image.",
+          "format": "uri"
+        },
+        "combo": {
+          "type": "boolean",
+          "description": "Indicates whether the product is part of a combo."
+        },
+        "offers": {
+          "type": "array",
+          "description": "A list of offer IDs applicable to the product. (Relationship: Product 1:N Offer)",
+          "items": {
+            "type": "string"
+          }
+        }
+      },
+      "required": [
+        "id",
+        "name",
+        "category",
+        "description",
+        "price",
+        "image"
+      ]
+    },
+    "Order": {
+      "$schema": "http://json-schema.org/draft-07/schema#",
+      "title": "Order",
+      "type": "object",
+      "description": "Represents a customer order.",
+      "properties": {
+        "id": {
+          "type": "string",
+          "description": "Unique identifier for the order."
+        },
+        "userId": {
+          "type": "string",
+          "description": "Reference to User. (Relationship: User 1:N Order)"
+        },
+        "items": {
+          "type": "array",
+          "description": "List of items (product IDs) included in the order.",
+          "items": {
+            "type": "string"
+          }
+        },
+        "status": {
+          "type": "string",
+          "description": "The current status of the order (e.g., Received, Cooking, Out for Delivery, Delivered)."
+        },
+        "totalPrice": {
+          "type": "number",
+          "description": "The total price of the order."
+        },
+        "paymentMethod": {
+          "type": "string",
+          "description": "The payment method used for the order."
+        },
+        "orderTime": {
+          "type": "string",
+          "description": "The timestamp when the order was placed.",
+          "format": "date-time"
+        }
+      },
+      "required": [
+        "id",
+        "userId",
+        "items",
+        "status",
+        "totalPrice",
+        "paymentMethod",
+        "orderTime"
+      ]
+    },
+    "Cart": {
+      "$schema": "http://json-schema.org/draft-07/schema#",
+      "title": "Cart",
+      "type": "object",
+      "description": "Represents the user's shopping cart.",
+      "properties": {
+        "id": {
+          "type": "string",
+          "description": "Unique identifier for the cart."
+        },
+        "userId": {
+          "type": "string",
+          "description": "Reference to User. (Relationship: User 1:1 Cart)"
+        },
+        "items": {
+          "type": "array",
+          "description": "List of items (product IDs) in the cart.",
+          "items": {
+            "type": "string"
+          }
+        }
+      },
+      "required": [
+        "id",
+        "userId",
+        "items"
+      ]
+    },
+    "Offer": {
+      "$schema": "http://json-schema.org/draft-07/schema#",
+      "title": "Offer",
+      "type": "object",
+      "description": "Represents a discount or promotion.",
+      "properties": {
+        "id": {
+          "type": "string",
+          "description": "Unique identifier for the offer."
+        },
+        "code": {
+          "type": "string",
+          "description": "The code required to redeem the offer."
+        },
+        "discount": {
+          "type": "number",
+          "description": "The discount amount or percentage."
+        },
+        "expiry": {
+          "type": "string",
+          "description": "The date and time when the offer expires.",
+          "format": "date-time"
+        },
+        "applicableItems": {
+          "type": "array",
+          "description": "List of product IDs to which the offer applies.",
+          "items": {
+            "type": "string"
+          }
+        }
+      },
+      "required": [
+        "id",
+        "code",
+        "discount",
+        "expiry"
+      ]
+    },
+    "Admin": {
+      "$schema": "http://json-schema.org/draft-07/schema#",
+      "title": "Admin",
+      "type": "object",
+      "description": "Represents an administrator user who manages the system.",
+      "properties": {
+        "id": {
+          "type": "string",
+          "description": "Unique identifier for the admin user."
+        },
+        "name": {
+          "type": "string",
+          "description": "The admin's name."
+        },
+        "email": {
+          "type": "string",
+          "description": "The admin's email address.",
+          "format": "email"
+        }
+      },
+      "required": [
+        "id",
+        "name",
+        "email"
+      ]
+    }
+  },
+  "auth": {
+    "providers": [
+      "password",
+      "anonymous"
+    ]
+  },
+  "firestore": {
+    "structure": [
+      {
+        "path": "/users/{userId}",
+        "definition": {
+          "entityName": "User",
+          "schema": {
+            "$ref": "#/backend/entities/User"
+          },
+          "description": "Stores user profile information. Accessible only by the user themselves and potentially admins. No denormalization needed as access is based on path and auth.uid.",
+          "params": [
+            {
+              "name": "userId",
+              "description": "The unique identifier for the user."
+            }
+          ]
+        }
+      },
+      {
+        "path": "/users/{userId}/carts/{cartId}",
+        "definition": {
+          "entityName": "Cart",
+          "schema": {
+            "$ref": "#/backend/entities/Cart"
+          },
+          "description": "Stores user's cart data. Accessible only by the user themselves and potentially admins.",
+          "params": [
+            {
+              "name": "userId",
+              "description": "The unique identifier for the user."
+            },
+            {
+              "name": "cartId",
+              "description": "The unique identifier for the cart."
+            }
+          ]
+        }
+      },
+      {
+        "path": "/users/{userId}/orders/{orderId}",
+        "definition": {
+          "entityName": "Order",
+          "schema": {
+            "$ref": "#/backend/entities/Order"
+          },
+          "description": "Stores order information for a specific user. Accessible only by the user themselves and potentially admins.",
+          "params": [
+            {
+              "name": "userId",
+              "description": "The unique identifier for the user."
+            },
+            {
+              "name": "orderId",
+              "description": "The unique identifier for the order."
+            }
+          ]
+        }
+      },
+      {
+        "path": "/products/{productId}",
+        "definition": {
+          "entityName": "Product",
+          "schema": {
+            "$ref": "#/backend/entities/Product"
+          },
+          "description": "Stores product information. Publicly readable. No user-specific data.",
+          "params": [
+            {
+              "name": "productId",
+              "description": "The unique identifier for the product."
+            }
+          ]
+        }
+      },
+      {
+        "path": "/offers/{offerId}",
+        "definition": {
+          "entityName": "Offer",
+          "schema": {
+            "$ref": "#/backend/entities/Offer"
+          },
+          "description": "Stores offer information. Publicly readable. No user-specific data.",
+          "params": [
+            {
+              "name": "offerId",
+              "description": "The unique identifier for the offer."
+            }
+          ]
+        }
+      },
+      {
+        "path": "/roles_admin/{userId}",
+        "definition": {
+          "entityName": "Admin",
+          "schema": {
+            "$ref": "#/backend/entities/Admin"
+          },
+          "description": "Indicates admin privileges. The existence of a document grants admin rights. Access is checked in rules using `exists()`",
+          "params": [
+            {
+              "name": "userId",
+              "description": "The unique identifier for the admin user."
+            }
+          ]
+        }
+      }
+    ],
+    "reasoning": "The Firestore structure is designed to ensure Authorization Independence, DBAC, and support secure list operations (QAPs). User data and related entities like Carts and Orders are stored under the `/users/{userId}` path to establish clear ownership. Products and Offers are stored in root-level collections since they are global data. Admin roles are managed through a dedicated `/roles_admin/{uid}` collection. This structure avoids hierarchical authorization dependencies by denormalizing data where necessary and segregates data based on access requirements.\n\n*   **Authorization Independence:** The structure avoids `get()` calls in security rules. User-owned data is nested under `/users/{userId}`, granting straightforward access control based on `request.auth.uid`. Collaborative data, if implemented in future features like shared carts, would require denormalization of membership maps into each document.\n*   **DBAC:** Admin privileges are determined by the existence of a document in `/roles_admin/{uid}`, eliminating the need for custom claims.\n*   **QAPs:** The segregation of user-owned data and global data (products, offers) facilitates secure `list` operations. Rules can easily filter lists based on user ID or apply global read rules to products and offers."
+  }
+}
