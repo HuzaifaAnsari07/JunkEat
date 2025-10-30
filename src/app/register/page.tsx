@@ -1,7 +1,7 @@
 
 "use client";
 
-import { useState } from 'react';
+import { useState, useEffect } from 'react';
 import { useRouter } from 'next/navigation';
 import Link from 'next/link';
 import { Button } from '@/components/ui/button';
@@ -9,18 +9,41 @@ import { Input } from '@/components/ui/input';
 import { Label } from '@/components/ui/label';
 import { Card, CardContent, CardDescription, CardHeader, CardTitle, CardFooter } from '@/components/ui/card';
 import { UserPlus } from 'lucide-react';
+import { useAuth, useUser, setDocumentNonBlocking } from '@/firebase';
+import { initiateEmailSignUp } from '@/firebase/non-blocking-login';
+import { doc, getFirestore } from 'firebase/firestore';
 
 export default function RegisterPage() {
   const router = useRouter();
+  const auth = useAuth();
+  const { user } = useUser();
   const [name, setName] = useState('');
   const [email, setEmail] = useState('');
   const [password, setPassword] = useState('');
+  const [confirmPassword, setConfirmPassword] = useState('');
+  const [error, setError] = useState<string | null>(null);
+
+  useEffect(() => {
+    if (user && name && email) {
+      const firestore = getFirestore();
+      const userRef = doc(firestore, 'users', user.uid);
+      const userData = {
+        name: name,
+        email: email,
+      };
+      setDocumentNonBlocking(userRef, userData, { merge: true });
+      router.push('/dashboard');
+    }
+  }, [user, name, email, router]);
 
   const handleRegister = (e: React.FormEvent) => {
     e.preventDefault();
-    // Mock registration logic
-    console.log('Registering with:', { name, email, password });
-    router.push('/dashboard');
+    if (password !== confirmPassword) {
+      setError("Passwords do not match.");
+      return;
+    }
+    setError(null);
+    initiateEmailSignUp(auth, email, password);
   };
 
   return (
@@ -68,6 +91,18 @@ export default function RegisterPage() {
                 required
               />
             </div>
+            <div className="space-y-2">
+              <Label htmlFor="confirm-password">Confirm Password</Label>
+              <Input
+                id="confirm-password"
+                type="password"
+                placeholder="••••••••"
+                value={confirmPassword}
+                onChange={(e) => setConfirmPassword(e.target.value)}
+                required
+              />
+            </div>
+            {error && <p className="text-sm font-medium text-destructive">{error}</p>}
             <Button type="submit" className="w-full font-bold">
               Sign Up
             </Button>
