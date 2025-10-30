@@ -65,7 +65,7 @@ export default function AnimatedHeading({ text, subtext, className }: AnimatedHe
   return (
     <div className={`relative flex flex-col items-center justify-center ${className}`}>
       <motion.h1
-        className="font-headline text-4xl sm:text-5xl md:text-7xl font-bold flex flex-wrap justify-center items-center glassy-text"
+        className="font-headline text-4xl sm:text-5xl md:text-6xl lg:text-7xl font-bold flex flex-wrap justify-center items-center glassy-text whitespace-nowrap"
         variants={containerVariants}
         initial="hidden"
         animate="visible"
