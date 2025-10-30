@@ -23,6 +23,8 @@ import { cn } from '@/lib/utils';
 import { Alert, AlertDescription, AlertTitle } from '@/components/ui/alert';
 import { Textarea } from '@/components/ui/textarea';
 import { DeliveryLoadingAnimation } from '@/components/DeliveryLoadingAnimation';
+import { useFirestore, useUser, addDocumentNonBlocking } from '@/firebase';
+import { collection, serverTimestamp } from 'firebase/firestore';
 
 const DINE_IN_ADVANCE_AMOUNT = 100;
 const VACANT_TABLES = 8;
@@ -57,6 +59,9 @@ export default function CheckoutPage() {
   const router = useRouter();
   const [orderType, setOrderType] = useState<'delivery' | 'dine-in'>('delivery');
   const { toast } = useToast();
+  const { user } = useUser();
+  const firestore = useFirestore();
+
   const [userName, setUserName] = useState('');
   const [selectedTable, setSelectedTable] = useState<string | null>(null);
   const [isPlacingOrder, setIsPlacingOrder] = useState(false);
@@ -124,13 +129,25 @@ export default function CheckoutPage() {
   const formatCurrency = (amount: number) => `₹${amount.toFixed(2)}`;
 
   const onSubmit = (values: z.infer<typeof addressSchema>) => {
+    if (!user) {
+        toast({
+            title: "Not Logged In",
+            description: "You must be logged in to place an order.",
+            variant: "destructive",
+        });
+        return;
+    }
+
     if (values.orderType === 'delivery') {
       setIsPlacingOrder(true);
     }
 
+    const orderId = `JNK-${Math.floor(Math.random() * 10000)}`;
+
     const orderDetails = {
-        id: `JNK-${Math.floor(Math.random() * 10000)}`,
-        items: cartItems,
+        id: orderId,
+        userId: user.uid,
+        items: cartItems.map(item => ({...item, image: item.image.toString()})),
         subtotal: cartTotal,
         shipping: shippingCost,
         tax: taxAmount,
@@ -143,18 +160,23 @@ export default function CheckoutPage() {
         specialRequests: values.specialRequests,
         paymentMethod: values.paymentMethod,
         address: values.orderType === 'delivery' ? `${values.address}, ${values.city}, ${values.zip}` : `Dine-in at Table ${values.tableNumber}`,
-        date: new Date().toISOString(),
+        orderTime: serverTimestamp(),
         status: 'Order Placed',
         placementTime: Date.now(),
     };
+    
+    const sessionOrderDetails = {
+        ...orderDetails,
+        date: new Date().toISOString(),
+        id: orderId,
+    };
 
-    const history = JSON.parse(sessionStorage.getItem('orderHistory') || '[]');
-    history.unshift(orderDetails);
-    sessionStorage.setItem('orderHistory', JSON.stringify(history));
+    const ordersRef = collection(firestore, `users/${user.uid}/orders`);
+    addDocumentNonBlocking(ordersRef, orderDetails);
+
+    clearCart(true); 
     
-    clearCart(true); // pass true to suppress the "cart cleared" message
-    
-    sessionStorage.setItem('latestOrder', JSON.stringify(orderDetails));
+    sessionStorage.setItem('latestOrder', JSON.stringify(sessionOrderDetails));
     
     setTimeout(() => {
         if (values.orderType === 'dine-in') {

@@ -8,39 +8,53 @@ import { Separator } from "@/components/ui/separator";
 import { User, Package, Clock, MapPin, Building, Utensils, XCircle, CheckCircle } from "lucide-react";
 import Link from "next/link";
 import { Badge } from '@/components/ui/badge';
-import type { CartItem } from '@/types';
+import type { CartItem, Product } from '@/types';
 import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs';
 import { useRouter } from 'next/navigation';
+import { useUser, useFirestore, useCollection, useDoc, useMemoFirebase } from '@/firebase';
+import { collection, doc, query, orderBy } from 'firebase/firestore';
+import { Loader } from '@/components/ui/loader';
 
 interface Order {
     id: string;
-    date: string;
+    orderTime: { toDate: () => Date };
     total: number;
     status: string;
-    items: CartItem[];
+    items: (CartItem | Product)[];
     placementTime?: number;
     orderType: 'delivery' | 'dine-in';
+}
+
+interface UserProfile {
+    name: string;
+    email: string;
 }
 
 const ESTIMATED_DELIVERY_TIME_MS = 20 * 1000; // 20 seconds for simulation
 
 export default function ProfilePage() {
-    const [orders, setOrders] = useState<Order[]>([]);
-    const [userName, setUserName] = useState('Valued Customer');
     const [activeTab, setActiveTab] = useState('delivery');
     const router = useRouter();
+    const { user, isUserLoading } = useUser();
+    const firestore = useFirestore();
 
+    const userProfileRef = useMemoFirebase(() => {
+        if (!user) return null;
+        return doc(firestore, 'users', user.uid);
+    }, [firestore, user]);
+    const { data: userProfile, isLoading: isProfileLoading } = useDoc<UserProfile>(userProfileRef);
+
+    const ordersRef = useMemoFirebase(() => {
+        if (!user) return null;
+        return query(collection(firestore, `users/${user.uid}/orders`), orderBy('orderTime', 'desc'));
+    }, [firestore, user]);
+    const { data: orders, isLoading: areOrdersLoading } = useCollection<Order>(ordersRef);
+    
+    // This logic needs to be moved to an effect or server-side logic in a real app
+    // For now, we are leaving it as is for simulation purposes
     useEffect(() => {
-        const storedUser = sessionStorage.getItem('loggedInUser');
-        if (storedUser) {
-            const user = JSON.parse(storedUser);
-            setUserName(user.name);
-        }
-
-        const storedOrders = sessionStorage.getItem('orderHistory');
-        if (storedOrders) {
-            const parsedOrders: Order[] = JSON.parse(storedOrders);
-            const updatedOrders = parsedOrders.map(order => {
+        if (orders) {
+             const updatedOrders = orders.map(order => {
                 if (order.status === 'Order Placed' && order.placementTime && order.orderType === 'delivery') {
                     const elapsedTime = Date.now() - order.placementTime;
                     if (elapsedTime > ESTIMATED_DELIVERY_TIME_MS) {
@@ -49,24 +63,22 @@ export default function ProfilePage() {
                 }
                 return order;
             });
-            setOrders(updatedOrders);
-            // Persist the updated statuses back to session storage
-            sessionStorage.setItem('orderHistory', JSON.stringify(updatedOrders));
+            // In a real app, you would update these statuses in Firestore, not just in session storage
+            // sessionStorage.setItem('orderHistory', JSON.stringify(updatedOrders));
         }
-    }, []);
+    }, [orders]);
+    
 
-    const deliveryOrders = orders.filter(o => o.orderType === 'delivery');
-    const dineInOrders = orders.filter(o => o.orderType === 'dine-in');
+    const deliveryOrders = orders?.filter(o => o.orderType === 'delivery') || [];
+    const dineInOrders = orders?.filter(o => o.orderType === 'dine-in') || [];
 
     const formatCurrency = (amount: number) => `₹${amount.toFixed(2)}`;
-    const formatDate = (dateString: string) => new Date(dateString).toLocaleDateString('en-US', { year: 'numeric', month: 'long', day: 'numeric' });
+    const formatDate = (date: { toDate: () => Date }) => date ? date.toDate().toLocaleDateString('en-US', { year: 'numeric', month: 'long', day: 'numeric' }) : 'N/A';
     
-    // Delivery Stats
     const totalDeliveries = deliveryOrders.length;
     const deliveredOrders = deliveryOrders.filter(o => o.status === 'Delivered').length;
     const pendingDeliveries = totalDeliveries - deliveredOrders;
 
-    // Dine-in Stats
     const totalReservations = dineInOrders.length;
     const upcomingReservations = dineInOrders.filter(o => o.status === 'Order Placed').length;
     const completedReservations = dineInOrders.filter(o => o.status === 'Completed').length;
@@ -88,16 +100,28 @@ export default function ProfilePage() {
     }
     
     const handleViewReservation = (order: Order) => {
-        sessionStorage.setItem('latestOrder', JSON.stringify(order));
+        const sessionOrder = { ...order, date: order.orderTime.toDate().toISOString() };
+        sessionStorage.setItem('latestOrder', JSON.stringify(sessionOrder));
         router.push('/reservation-confirmed');
     }
 
+    if (isUserLoading || isProfileLoading || areOrdersLoading) {
+        return <div className="container mx-auto flex items-center justify-center min-h-[70vh]"><Loader /></div>
+    }
+
+    if (!user) {
+        return <div className="container mx-auto flex flex-col items-center justify-center min-h-[70vh] gap-4">
+            <p>You need to be logged in to view this page.</p>
+            <Button asChild><Link href="/">Login</Link></Button>
+        </div>
+    }
+    
     const OrderCard = ({ order }: { order: Order }) => (
         <Card className="overflow-hidden">
             <CardHeader className="flex flex-row justify-between items-center p-4 bg-secondary/30">
                 <div>
                     <p className="font-bold">Order ID: {order.id}</p>
-                    <p className="text-sm text-muted-foreground">Date: {formatDate(order.date)}</p>
+                    <p className="text-sm text-muted-foreground">Date: {formatDate(order.orderTime)}</p>
                 </div>
                 <div className="text-right">
                         <p className="font-bold text-lg text-primary">{formatCurrency(order.total)}</p>
@@ -107,8 +131,8 @@ export default function ProfilePage() {
             <CardContent className="p-4">
                 <p className="font-semibold mb-2">Items:</p>
                 <ul className="list-disc list-inside text-sm text-muted-foreground">
-                    {order.items.map(item => (
-                        <li key={item.id}>{item.name} (x{item.quantity})</li>
+                    {order.items.map((item, index) => (
+                        <li key={item.id || index}>{item.name} (x{'quantity' in item ? item.quantity : 1})</li>
                     ))}
                 </ul>
                     {order.orderType === 'delivery' && (order.status !== 'Delivered' && order.status !== 'Cancelled') && (
@@ -142,8 +166,8 @@ export default function ProfilePage() {
                             <User className="h-10 w-10 text-primary" />
                         </div>
                         <div>
-                            <CardTitle className="font-headline text-3xl">{userName}</CardTitle>
-                            <CardDescription>Welcome back to your JunkEats dashboard.</CardDescription>
+                            <CardTitle className="font-headline text-3xl">{userProfile?.name || 'Valued Customer'}</CardTitle>
+                            <CardDescription>{userProfile?.email || 'Welcome back to your JunkEats dashboard.'}</CardDescription>
                         </div>
                     </div>
                 </CardHeader>
@@ -227,3 +251,5 @@ export default function ProfilePage() {
         </div>
     );
 }
+
+    
