@@ -43,10 +43,15 @@ export async function suggestCombo(input: SuggestComboInput): Promise<SuggestCom
 
 const prompt = ai.definePrompt({
   name: 'suggestComboPrompt',
-  model: 'googleai/gemini-pro',
-  input: {schema: SuggestComboInputSchema.extend({ products: z.any(), creativitySeed: z.number() })},
-  output: {schema: SuggestComboOutputSchema},
-  prompt: `You are a personalized junk food combo suggestion expert. You will use the user's order history and preferences to create a combo suggestion from the available menu items.
+  model: 'googleai/gemini-1.5-flash', // ✅ FIXED
+  input: {
+    schema: SuggestComboInputSchema.extend({
+      products: z.any(),
+      creativitySeed: z.number(),
+    }),
+  },
+  output: { schema: SuggestComboOutputSchema },
+  prompt: `You are a personalized junk food combo suggestion expert.
 
 Available Menu Items:
 {{#each products}}
@@ -60,11 +65,13 @@ User Order History:
 
 User Preferences: {{preferences}}
 
-Based on the user's order history, preferences, and the available menu items, suggest a personalized and creative junk food combo. Avoid suggesting the most obvious pairings. Provide a detailed reasoning behind the suggestion. The combo should have items from different categories. Return the combo suggestion in JSON format. The combo suggestion should be an array of objects with id, itemName, category and description (optional) fields. Make sure that your response follows the schema description and only contains items from the menu. Ensure that the description is enticing and makes the user want to try it. Be creative and do not suggest the same combo every time.
-
-To ensure variety, use this random seed as inspiration for your creativity: {{creativitySeed}}.
+Suggest a creative junk food combo from different categories.
+Avoid obvious pairings.
+Return only valid menu items.
+Use the creativity seed for randomness: {{creativitySeed}}.
 `,
 });
+
 
 const suggestComboFlow = ai.defineFlow(
   {
