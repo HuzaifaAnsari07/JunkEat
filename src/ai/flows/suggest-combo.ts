@@ -43,7 +43,6 @@ export async function suggestCombo(input: SuggestComboInput): Promise<SuggestCom
 
 const prompt = ai.definePrompt({
   name: 'suggestComboPrompt',
-  model: 'googleai/gemini-1.0-pro',
   input: {
     schema: SuggestComboInputSchema.extend({
       products: z.any(),
