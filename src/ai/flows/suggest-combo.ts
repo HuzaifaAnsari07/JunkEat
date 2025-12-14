@@ -43,7 +43,7 @@ export async function suggestCombo(input: SuggestComboInput): Promise<SuggestCom
 
 const prompt = ai.definePrompt({
   name: 'suggestComboPrompt',
-  model: 'googleai/gemini-1.5-flash', // ✅ FIXED
+  model: 'googleai/gemini-1.0-pro',
   input: {
     schema: SuggestComboInputSchema.extend({
       products: z.any(),
@@ -65,12 +65,15 @@ User Order History:
 
 User Preferences: {{preferences}}
 
-Suggest a creative junk food combo from different categories.
-Avoid obvious pairings.
-Return only valid menu items.
-Use the creativity seed for randomness: {{creativitySeed}}.
+Suggest a creative junk food combo:
+- Use different categories
+- Avoid obvious pairings
+- Only return items from menu
+- Follow JSON schema strictly
+- Use creativity seed: {{creativitySeed}}
 `,
 });
+
 
 
 const suggestComboFlow = ai.defineFlow(
