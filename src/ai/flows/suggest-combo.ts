@@ -10,8 +10,9 @@
  */
 
 import {ai} from '@/ai/genkit';
-import {z} from 'genkit';
+import {z} from 'zod';
 import { products } from '@/lib/data';
+import { googleAI } from '@genkit-ai/googleai';
 
 const SuggestComboInputSchema = z.object({
   userOrderHistory: z.array(
@@ -43,6 +44,7 @@ export async function suggestCombo(input: SuggestComboInput): Promise<SuggestCom
 
 const prompt = ai.definePrompt({
   name: 'suggestComboPrompt',
+  model: googleAI.model('gemini-1.0-pro'),
   input: {
     schema: SuggestComboInputSchema.extend({
       products: z.any(),
