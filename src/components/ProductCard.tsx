@@ -18,9 +18,9 @@ export function ProductCard({ product }: ProductCardProps) {
   const formatCurrency = (amount: number) => `₹${amount.toFixed(2)}`;
   
   return (
-    <Card className="flex flex-col overflow-hidden shadow-lg hover:shadow-2xl transition-all duration-300 rounded-lg border-2 border-transparent hover:border-accent group bg-card/70 hover:-translate-y-1">
+    <Card className="flex flex-col overflow-hidden shadow-md hover:shadow-xl transition-all duration-300 rounded-xl border group bg-card/70 hover:-translate-y-1">
       <CardHeader className="p-0 relative">
-        <Link href={`/product/${product.id}`} className="block h-40 w-full">
+        <Link href={`/product/${product.id}`} className="block h-48 w-full">
             <Image 
               src={product.image} 
               alt={product.name} 
@@ -30,21 +30,21 @@ export function ProductCard({ product }: ProductCardProps) {
               data-ai-hint={product.id === 6 ? 'spicy burger' : product.id === 1 ? 'cheeseburger' : `${product.name.split(' ')[0].toLowerCase()} ${product.category.slice(0, -1).toLowerCase()}`} 
             />
         </Link>
-        <div className="absolute top-2 right-2 bg-background/80 backdrop-blur-sm rounded-full px-3 py-1 text-sm font-bold flex items-center gap-1">
-          <Star className="w-4 h-4 text-accent" fill="currentColor" />
+        <div className="absolute top-3 right-3 bg-background/80 backdrop-blur-sm rounded-full px-3 py-1.5 text-xs font-bold flex items-center gap-1.5 border">
+          <Star className="w-3.5 h-3.5 text-accent" fill="currentColor" />
           <span>{product.rating}</span>
         </div>
       </CardHeader>
       <CardContent className="p-4 flex-grow">
         <Link href={`/product/${product.id}`}>
-            <CardTitle className="font-headline text-lg mb-1 hover:text-primary transition-colors">{product.name}</CardTitle>
+            <CardTitle className="font-headline text-xl mb-1 hover:text-primary transition-colors">{product.name}</CardTitle>
         </Link>
-        <CardDescription className="text-xs h-10">{product.description}</CardDescription>
+        <CardDescription className="text-sm h-12">{product.description}</CardDescription>
       </CardContent>
       <CardFooter className="p-4 flex justify-between items-center mt-auto">
-        <p className="font-headline text-xl font-bold text-primary">{formatCurrency(product.price)}</p>
-        <Button onClick={() => addToCart(product)} size="sm" className="bg-primary hover:bg-primary/90 text-primary-foreground transition-transform transform hover:scale-105">
-          <PlusCircle className="mr-2 h-4 w-4" /> Add
+        <p className="font-headline text-2xl font-bold text-primary">{formatCurrency(product.price)}</p>
+        <Button onClick={() => addToCart(product)} size="sm" className="bg-primary hover:bg-primary/90 text-primary-foreground transition-transform transform hover:scale-105 active:scale-95 rounded-full px-5">
+          <PlusCircle className="mr-2 h-5 w-5" /> Add
         </Button>
       </CardFooter>
     </Card>
