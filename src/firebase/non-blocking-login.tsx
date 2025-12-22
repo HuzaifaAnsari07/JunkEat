@@ -1,3 +1,4 @@
+
 'use client';
 import {
   Auth, // Import Auth type for type hinting
@@ -15,9 +16,10 @@ export function initiateAnonymousSignIn(authInstance: Auth): void {
 }
 
 /** Initiate email/password sign-up (non-blocking). */
-export function initiateEmailSignUp(authInstance: Auth, email: string, password: string): void {
+export function initiateEmailSignUp(authInstance: Auth, email: string, password: string, onError?: (error: any) => void): void {
   // CRITICAL: Call createUserWithEmailAndPassword directly. Do NOT use 'await createUserWithEmailAndPassword(...)'.
-  createUserWithEmailAndPassword(authInstance, email, password);
+  createUserWithEmailAndPassword(authInstance, email, password)
+    .catch(onError);
   // Code continues immediately. Auth state change is handled by onAuthStateChanged listener.
 }
 

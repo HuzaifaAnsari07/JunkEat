@@ -12,6 +12,7 @@ import { UserPlus } from 'lucide-react';
 import { useAuth, useUser, setDocumentNonBlocking } from '@/firebase';
 import { initiateEmailSignUp } from '@/firebase/non-blocking-login';
 import { doc, getFirestore } from 'firebase/firestore';
+import { FirebaseError } from 'firebase/app';
 
 export default function RegisterPage() {
   const router = useRouter();
@@ -43,7 +44,13 @@ export default function RegisterPage() {
       return;
     }
     setError(null);
-    initiateEmailSignUp(auth, email, password);
+    initiateEmailSignUp(auth, email, password, (err: FirebaseError) => {
+        if (err.code === 'auth/email-already-in-use') {
+            setError('This email is already in use. Please log in or use a different email.');
+        } else {
+            setError('An unexpected error occurred. Please try again.');
+        }
+    });
   };
 
   return (
